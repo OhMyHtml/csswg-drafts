@@ -97,18 +97,14 @@ Module Interactions</h3>
 The CSS Box Model {#box-model}
 =================
 
-	<p export>Each box has a <dfn>content area</dfn>
-	(which contains its content--
-	text, descendant boxes, an image or other <a>replaced element</a> content, etc.)
-	and optional surrounding
-	<dfn lt="padding area">padding</dfn>,
-	<dfn lt="border area">border</dfn>,
-	and <dfn lt="margin area">margin areas</dfn>;
-	the size of each area is specified by corresponding properties,
-	and can be zero
-	(or in the case of margins, negative).
-	The following diagram shows how these areas relate
-	and the terminology used to refer to the various parts of the box:
+	<p export>每个盒子具有一个 <dfn>content area</dfn>，
+	（包含了它的内容，包括文本、后代盒子、图片或其他 <a>replaced element</a> 内容等等。）
+	可选地被
+	<dfn lt="padding area">padding</dfn>、
+	<dfn lt="border area">border</dfn>、
+	和<dfn lt="margin area">margin areas</dfn>所包围。
+	每个区域的尺寸由对应的属性所给定，可以为0。特别地，margin可为负值。
+	下图展示了这些区域的关系，并指出了标识各区域的术语：
 
 	<div class="figure">
 		<p><img src="images/box.png" alt="Diagram of a typical box, showing the
@@ -117,10 +113,7 @@ The CSS Box Model {#box-model}
 		<p class="caption">The various areas and edges of a typical box.
 	</div>
 
-	The margin, border, and padding can be broken down into
-	top, right, bottom, and left segments,
-	each of which can be controlled independently
-	by its corresponding property.
+	margin、border以及padding可被拆分为上右下左四段，每段都可被对应属性单独控制。
 
 	The perimeter of each of the four areas
 	(content, padding, border, and margin)
