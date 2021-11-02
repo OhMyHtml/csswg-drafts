@@ -115,115 +115,89 @@ The CSS Box Model {#box-model}
 
 	margin、border以及padding可被拆分为上右下左四段，每段都可被对应属性单独控制。
 
-	The perimeter of each of the four areas
-	(content, padding, border, and margin)
-	is called an <dfn export lt="box edge" local-lt="edge">edge</dfn>
-	and each [=edge=] can be broken down into
-	a top, right, bottom, and left side.
-	Thus each <a>box</a> has four [=edges=]
-	each composed of four sides:
+	四个区域(content, padding, border, and margin)的边界被叫做
+	<dfn export lt="box edge" local-lt="edge">edge</dfn>，
+	每个 [=edge=] 可被分为上右下左四边。
+	因此每个 <a>box</a> 具有四个由下列边所组成的 [=edges=]：
 
 	<dl export>
 		<dt><dfn>content edge</dfn> or <dfn>inner edge</dfn>
 		<dd>
-			The content edge surrounds
-			the rectangle given by the width and height of the box,
-			which often depend on the element's content
-			and/or its <a>containing block</a> size.
-			The four sides of the <a>content edge</a> together
-			define the box's <dfn>content box</dfn>.
+			内容边缘围绕着一个由宽和高所给定的矩形，通常依赖于元素的内容，
+			或是<a>containing block</a>尺寸。
+			<a>content edge</a>的四边构成了盒子的<dfn>content box</dfn>。
 
 		<dt><dfn>padding edge</dfn>
 		<dd>
-			The padding edge surrounds
-			the box’s padding.
-			If the padding has zero width on a given side,
-			the padding edge coincides with the content edge on that side.
-			The four sides of the <a>padding edge</a> together
-			define the box's <dfn>padding box</dfn>,
-			which contains both the
-			<a lt="content area">content</a>
-			and <a>padding areas</a>.
+			填充边缘围绕着盒子的填充。
+			若某一边的填充宽度给了0，那么在那一边的填充边缘将和内容边缘相同。
+			<a>padding edge</a> 的四边构成了盒子的 <dfn>padding box</dfn>，
+			同时它也包括了<a lt="content area">content area</a>
+			和<a>padding area</a>。
 
 		<dt><dfn>border edge</dfn>
 		<dd>
-			The border edge surrounds the box’s border.
-			If the border has zero width on a given side,
-			the border edge coincides with the padding edge on that side.
-			The four sides of the <a>border edge</a> together
-			define the box's <dfn>border box</dfn>,
-			which contains the box’s
-			<a lt="content area">content</a>,
-			<a lt="padding area">padding</a>,
-			and <a>border areas</a>.
+			边框边缘围绕着盒子的边框。
+			若某一边的边框宽度给了0，那么在那一边的边框边缘将和填充边缘相同。
+			<a>border edge</a> 的四边构成了盒子的 <dfn>border box</dfn>，
+			同时它也包括了<a lt="content area">content area</a>、
+			<a>padding area</a>和<a>border areas</a>。
 
 		<dt><dfn>margin edge</dfn> or <dfn>outer edge</dfn>
 		<dd>
-			The margin edge surrounds the box’s margin.
-			If the margin has zero width on a given side,
-			the margin edge coincides with the border edge on that side.
-			The four sides of the <a>margin edge</a> together
-			define the box's <dfn>margin box</dfn>,
-			which contains the all of the box’s
-			<a lt="content area">content</a>,
-			<a lt="padding area">padding</a>,
-			<a lt="border area">border</a>,
-			and <a>margin areas</a>.
+			留白边缘围绕着盒子的留白。
+			若某一边的留白宽度给了0，那么在那一边的留白边缘将和边框边缘相同。
+			<a>margin edge</a> 的四边构成了盒子的 <dfn>margin box</dfn>，
+			同时它也包括了<a lt="content area">content area</a>、
+			<a>padding area</a>、<a>border areas</a>和<a>margin areas</a>。
 	</dl>
 
-	The background of the content, padding, and border areas of a box
-	is specified by its 'background' properties.
-	The border area can additionally be painted with a border style
-	using the 'border' properties.
-	Margins are always transparent.
-	See [[css-backgrounds-3]].
+	盒子背景的内容、填充和边框区域是由它的 'background' 属性所给定的。
+	边框区域能够使用 'border' 来额外地加上一些边框样式。
+	留白总是透明的。
+	请参阅 [[css-backgrounds-3]]。
 
-	When a box <a href="https://www.w3.org/TR/css-break-3/#fragmentation-model">fragments</a>--
-	is broken, as across lines or across pages, into separate <a>box fragments</a>--
-	each of its boxes
-	(<a>content box</a>, <a>padding box</a>, <a>border box</a>, <a>margin box</a>)
-	also fragments.
-	How the content/padding/border/margin areas react to fragmentation
-	is specified in [[css-break-3]]
-	and controlled by the 'box-decoration-break' property.
+	当一个盒子 <a href="https://www.w3.org/TR/css-break-3/#fragmentation-model">fragments</a> 由于跨行或跨页，
+	被破坏了而分成了<a>box fragments</a>，那么每个盒子的（(<a>content box</a>、<a>padding box</a>、<a>border box</a>、<a>margin box</a>)）
+	也会被碎片化。
+	content/padding/border/margin 区域对于碎片所做的一些处理在 [[css-break-3]] 中有定义，且由 'box-decoration-break' 属性控制。
 
-Box-edge Keywords {#keywords}
+盒子边缘关键字 {#keywords}
 -----------------
 
-	The following CSS keywords are defined for use
-	in properties (such as 'transform-box' and 'background-clip')
-	that need to refer to various box edges:
+	下列CSS关键字被定义用在一些需要引用不同的盒子边缘的属性
+	（例如 'transform-box' 、'background-clip' ）：
 
 	<dl dfn-for="<box>,<shape-box>,<geometry-box>" dfn-type=value>
 		<dt><dfn>content-box</dfn>
 			<dd>
-				Refers to the [=content box=] or [=content edge=].
-				(In an SVG context, treated as ''<box>/fill-box''.)
+				引用了[=content box=] 或 [=content edge=]。
+				（SVG 上下文中，被作为 ''<box>/fill-box''。）
 
 		<dt><dfn>padding-box</dfn>
 			<dd>
-				Refers to the [=padding box=] or [=padding edge=].
-				(In an SVG context, treated as ''<box>/fill-box''.)
+				引用了[=padding box=] 或 [=padding edge=]。
+				（SVG 上下文中，被作为 ''<box>/fill-box''。）
 
 		<dt><dfn>border-box</dfn>
 			<dd>
-				Refers to the [=border box=] or [=border edge=].
-				(In an SVG context, treated as ''<box>/stroke-box''.)
+				引用了[=border box=] 或 [=border edge=]。
+				（SVG 上下文中，被作为 ''<box>/stroke-box''。）
 
 		<dt><dfn>margin-box</dfn>
 			<dd>
-				Refers to the [=margin box=] or [=margin edge=].
-				(In an SVG context, treated as ''<box>/stroke-box''.)
+				引用了[=margin box=] 或 [=margin edge=]。
+				（SVG 上下文中，被作为 ''<box>/stroke-box''。）
 
 		<dt><dfn>fill-box</dfn>
 			<dd>
-				Refers to the [=object bounding box=] or its edges.
-				(In a CSS box context, treated as ''<box>/content-box''.)
+				引用了[=object bounding box=] 或它的边缘。
+				（CSS 盒子上下文中，被作为 ''<box>/content-box''。）
 
 		<dt><dfn>stroke-box</dfn>
 			<dd>
-				Refers to the [=stroke bounding box=] or its edges.
-				(In a CSS box context, treated as ''<box>/border-box''.)
+				引用了[=stroke bounding box=] 或它的边缘。
+				（CSS 盒子上下文中，被作为 ''<box>/border-box''。）
 
 		<dt><dfn>view-box</dfn>
 			<dd>
@@ -243,7 +217,7 @@ Box-edge Keywords {#keywords}
 				     See https://github.com/w3c/csswg-drafts/issues/4662 -->
 	</dl>
 
-	For convenience, the following value types are defined:
+	方便起见定义了下列值类型：
 	<pre class="prod">
 		<dfn><<visual-box>></dfn> = content-box | padding-box | border-box
 		<dfn><<layout-box>></dfn> = content-box | padding-box | border-box | margin-box
@@ -254,24 +228,21 @@ Box-edge Keywords {#keywords}
 Margins {#margins}
 =======
 
-	<dfn export lt="margin">Margins</dfn> surround the border edge of a box,
-	providing spacing between boxes.
-	The <dfn export>margin properties</dfn> specify the thickness
-	of the <a>margin area</a> of a box.
+	<dfn export lt="margin">Margins</dfn> 围绕着盒子的边框边缘，在两个盒子之间提供了空隙。
+ 	<dfn export>margin properties</dfn> 指定了盒子 <a>margin area</a> 的厚度。
 	The 'margin' <a>shorthand property</a>
 	sets the margin for all four sides
 	while the margin <a>longhand properties</a> only set their respective side.
-	This specification defines the <a>physical</a> 'margin' <a>longhands</a>;
-	[[css-logical-1#margin-properties]] additionally
-	defines <a>flow-relative</a> 'margin' <a>longhands</a>.
-	Both sets of properties control the same set of margins:
-	they are just different ways of indexing each side.
+	规范定义了 <a>physical</a> 'margin' <a>longhands</a>；
+	[[css-logical-1#margin-properties]] 额外定义了<a>flow-relative</a> 'margin' <a>longhands</a>。
+	两组属性控制同一组留白：
+	它们只是索引每条边的不同方法。
 
-	Note: Adjoining margins in <a>block layout</a> <em>collapse</em>.
-	See <a href="https://www.w3.org/TR/CSS2/box.html#collapsing-margins">CSS2&sect;8.3.1 Collapsing Margins</a>
-	for details.
-	Also, margins adjoining a <a>fragmentation break</a> are sometimes truncated.
-	See [[css-break-3#break-margins]] for details.
+	请注意：在<a>block layout</a>中相邻留白<em>collapse</em>。
+	请参阅 <a href="https://www.w3.org/TR/CSS2/box.html#collapsing-margins">CSS2&sect;8.3.1 Collapsing Margins</a>
+	以查看详情。
+	同样，与<a>fragmentation break</a>相邻的留白有时也会被截断。
+	请参阅[[css-break-3#break-margins]] 以查看详情。
 
 Page-relative (Physical) Margin Properties: the 'margin-top', 'margin-right', 'margin-bottom', and 'margin-left' properties {#margin-physical}
 -------------------------------------------
@@ -290,8 +261,8 @@ Page-relative (Physical) Margin Properties: the 'margin-top', 'margin-right', 'm
 	These properties set the top, right, bottom, and left
 	<a>margin</a> of a <a>box</a>, respectively.
 
-	Negative values for margin properties are allowed,
-	but there may be implementation-specific limits.
+	允许为为留白属性设为负值，
+	但可能会存在实现特定的限制。
 
 Margin Shorthand: the 'margin' property {#margin-shorthand}
 -----------------
@@ -357,13 +328,9 @@ Margins at Container Edges: the 'margin-trim' property {#margin-trim}
 		Animation type: discrete
 	</pre>
 
-	Oftentimes, margins are desired between siblings,
-	but not at the start/end of the container
-	where spacing can be controlled with padding.
-	This property allows the container
-	to trim the margins of its children
-	where they adjoin the container’s edges.
-	Values have the following meanings:
+	通常，兄弟元素之间会需要留白，但容器开始或结束的地方不需要。那里空间可以通过填充来控制。
+	该属性使得容器能够裁剪它和与它边缘相邻的子元素的留白。
+	包括下列可选值：
 
 	<dl dfn-type=value dfn-for=margin-trim>
 		<dt><dfn>none</dfn>
