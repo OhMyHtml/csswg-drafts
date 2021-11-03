@@ -38,15 +38,12 @@ spec:css-align-3; type:value; for:align-content; text:center
 <h2 id="intro">
 Introduction</h2>
 
-	This module defines [=inline layout=], the CSS model
-	for laying out a mixed stream of text and [=inline-level=] boxes,
-	and defines controls for the [=block-axis=] alignment and sizing
-	of this content within each line.
-	It also adds a [[#initial-letter-styling|special layout mode for drop caps and similar initial letter styling]].
+	本模块定义了 [=inline layout=] —— 用于布局文本及[=inline-level=]混合流的CSS模型
+	定义了每一行中对该内容相对 [=block-axis=] 进行对齐以及尺寸的控制。
+	它同时也加入了[[#initial-letter-styling|特别的布局模式来drop caps and similar initial letter styling]]。
 
-	Note: Line-breaking, justification, and other aspects of
-	inline-axis positioning of [=inline-level=] content
-	are handled in the <a href="https://www.w3.org/TR/css-text/">CSS Text Module</a>.
+	Note: 断行、对齐以及其它[=inline-level=]内联轴定位相关的内容
+	由<a href="https://www.w3.org/TR/css-text/">CSS Text Module</a>来处理。
 
 	ISSUE: Many aspects of layout here depend on font metrics.
 	While the relevant metrics exist in OpenType for Latin/Cyrillic/Greek
