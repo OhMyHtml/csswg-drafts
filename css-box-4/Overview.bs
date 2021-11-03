@@ -234,11 +234,11 @@ Margins {#margins}
 	sets the margin for all four sides
 	while the margin <a>longhand properties</a> only set their respective side.
 	规范定义了 <a>physical</a> 'margin' <a>longhands</a>；
-	[[css-logical-1#margin-properties]] 额外定义了<a>flow-relative</a> 'margin' <a>longhands</a>。
+	同时也额外定义了<a>flow-relative</a> 'margin' <a>longhands</a>：[[css-logical-1#margin-properties]]。
 	两组属性控制同一组留白：
 	它们只是索引每条边的不同方法。
 
-	请注意：在<a>block layout</a>中相邻留白<em>collapse</em>。
+	Note: 在<a>block layout</a>中相邻留白<em>collapse</em>。
 	请参阅 <a href="https://www.w3.org/TR/CSS2/box.html#collapsing-margins">CSS2&sect;8.3.1 Collapsing Margins</a>
 	以查看详情。
 	同样，与<a>fragmentation break</a>相邻的留白有时也会被截断。
@@ -402,27 +402,20 @@ Margins at Container Edges: the 'margin-trim' property {#margin-trim}
 
 Padding {#paddings}
 =======
-
-	<dfn export>Padding</dfn> is inserted between the content edge
-	and the padding edge of a box,
-	providing spacing between the content and the border.
-	The <dfn export>padding properties</dfn> specify the thickness
-	of the <a>padding area</a> of a box.
+	<dfn export>Padding</dfn>被插入在盒子的内容边缘到填充边缘之间，
+	为内容与边框之间提供了空间。
+	<dfn export>padding properties</dfn>指定了盒子中<a>padding area</a>的厚度。
 	The 'padding' <a>shorthand property</a>
 	sets the padding for all four sides
 	while the padding <a>longhand properties</a> only set their respective side.
-	This specification defines the <a>physical</a> 'padding' <a>longhands</a>;
-	[[css-logical-1#padding-properties]] additionally
-	defines <a>flow-relative</a> 'padding' <a>longhands</a>.
+	本规范定义了 <a>physical</a> 'padding' <a>longhands</a>;
+	同时也额外定义了<a>flow-relative</a> 'padding' <a>longhands</a>：[[css-logical-1#padding-properties]]。
 	Both sets of properties control the same set of padding:
 	they are just different ways of indexing each side.
 
-	Note: Backgrounds specified on the box
-	are by default laid out and painted within the padding edges.
-	(They are additionally painted underneath the border,
-	in the <a>border area</a>.)
-	This behavior can be adjusted
-	using the 'background-origin' and 'background-clip' properties.
+	Note: 在盒子上指定的背景默认在填充边缘内进行绘制与布局
+	（它们也在<a>border area</a>内、边框下面被绘制。）
+	这里的绘制操作可以通过使用 'background-origin' 、 'background-clip'属性来调整。
 
 Page-relative (Physical) Padding Properties: the 'padding-top', 'padding-right', 'padding-bottom', and 'padding-left' properties {#padding-physical}
 -------------------------------------------
@@ -494,17 +487,13 @@ Padding Shorthand: the 'padding' property {#padding-shorthand}
 Borders {#borders}
 =======
 
-	<dfn export lt="border">Borders</dfn> fill the <a>border area</a>,
-	to visually delineate the edges of the box,
-	The <dfn export>border properties</dfn> specify the thickness
-	of the <a>border area</a> of a box,
-	as well as its drawing style and color.
-	See [[css-backgrounds-3#borders]] for the definition
-	of the physical variants of these properties;
-	[[css-logical-1#border-properties]] additionally
-	defines <a>flow-relative</a> border <a>longhands</a>.
-	Both sets of properties control the same set of borders:
-	they are just different ways of indexing each side.
+	<dfn export lt="border">Borders</dfn> 填充了 <a>border area</a>，
+	用以可视化地描绘出盒子的边缘。
+	<dfn export>border properties</dfn> 指定了盒子 <a>border area</a> 的厚度
+	以及绘图样式与颜色。
+	请参阅 [[css-backgrounds-3#borders]] 来了解这些属性physical variants的定义。
+	[[css-logical-1#border-properties]] 额外地定义了
+	<a>flow-relative</a> 边框 <a>longhands</a>。
 
 Changes Since CSS Level 3 {#changes-since-3}
 =========================
