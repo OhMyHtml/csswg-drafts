@@ -78,21 +78,18 @@ table.align-details { width: 100%; }
 <h2 id="intro">
 Introduction</h2>
 
-	CSS Levels 1 and 2 allowed for the alignment of text via 'text-align'
-	and the alignment of blocks by balancing ''margin/auto'' margins.
-	However, except in table cells,
-	vertical alignment was not possible.
-	As CSS adds further capabilities,
-	the ability to align boxes in various dimensions becomes more critical.
-	This module attempts to create a cohesive and common box alignment model to share among all of CSS.
+	CSS Levels 1 与 2 能够使用'text-align'来对齐文本，
+	并通过平衡 ''margin/auto'' 边距来对齐块级元素。
+	然而，除非是在单元格里，
+	否则没法做到垂直对齐。
+	因此CSS加入了更多能力，让盒子在不同维度的排布变得更加critical。
+	本模块尝试来建立一个更有凝聚力、更通用的盒子对齐模型，来在CSS属性之间进行共享。
 
-	Note: The alignment of text and inline-level content is defined in [[CSS-TEXT-3]] and [[CSS-INLINE-3]].
+	Note: 文本与行内元素内容的对齐定义在[[CSS-TEXT-3]] 与 [[CSS-INLINE-3]] 中。
 
-	Note: This specification is not intended to change any of the behavior
-	defined in <a href="https://www.w3.org/TR/CSS2/">CSS2.1</a>
-	when the properties defined here are set to their initial values.
-	If implementors or anyone else notices a discrepancy,
-	please report this to the CSSWG as an error.
+	Note: 当在此定义的各属性设置为初始值时，
+	本规范并不期望改变任何在 <a href="https://www.w3.org/TR/CSS2/">CSS2.1</a> 中定义的行为。
+	如果实现者或其他人注意到了差异，请将其作为错误报告给 CSSWG。
 
 	<em>This section (above) is not normative.</em>
 
@@ -153,8 +150,7 @@ Partial Implementations</h3>
 <h2 id="overview">
 Overview of Alignment Properties</h2>
 
-	The <dfn export>box alignment properties</dfn> in CSS are a set of 6 properties
-	that control alignment of boxes within other boxes.
+	CSS 中的 <dfn export>box alignment properties</dfn> 系列共有6个属性，控制了盒子在其他盒子内的对齐方式。
 	They can be described along two axises:
 
 	<ul>
@@ -162,14 +158,14 @@ Overview of Alignment Properties</h2>
 		<li>whether they control the position of the box within its parent, or the box's content within itself.
 	</ul>
 
-	Note: This specification uses the terms “justify” and “align” to distinguish
-	between alignment in the main/inline and cross/block dimensions, respectively.
-	The choice is somewhat arbitrary, but having the two terms allows for
-	a consistent naming scheme that works across all of CSS's layout models
-	(including [[css-flexbox-1#box-model]])
+	Note: 本规范使用“justify” 和 “align” 来区分
+	在主轴/内联和交叉轴/块轴向上的对齐
+	某种程度上来说，这样的选择有一些随意，但具有这两个术语，
+	使得一致的命名方案能够适用于所有CSS布局模型
+	（包括[[css-flexbox-1#box-model]]）。
 
-	The following table summarizes the <a>box alignment properties</a>
-	and the display types they can apply to.
+	下列表格总结了 <a>box alignment properties</a>
+	并展示了它们可以应用的 display 类型。
 
 	<table class=data>
 	<colgroup span=1></colgroup>
@@ -184,7 +180,7 @@ Overview of Alignment Properties</h2>
 	<tbody>
 		<tr>
 			<th>'justify-content'
-			<td>main/inline
+			<td>主轴/内联
 			<td rowspan=2>
 				<img src="images/content-example.svg" width=106 height=106 alt="">
 				content within element
@@ -192,11 +188,11 @@ Overview of Alignment Properties</h2>
 			<td rowspan=2>[=block containers=], <a>flex containers</a>, and <a>grid containers</a>
 		<tr>
 			<th>'align-content'
-			<td>cross/block
+			<td>交叉轴/块
 	<tbody>
 		<tr>
 			<th>'justify-self'
-			<td>inline
+			<td>行内
 			<td rowspan=2>
 				<img src="images/self-example.svg" width=106 height=106 alt="">
 				element within parent
@@ -204,12 +200,12 @@ Overview of Alignment Properties</h2>
 			<td>block-level boxes, absolutely-positioned boxes, and <a>grid items</a>
 		<tr>
 			<th>'align-self'
-			<td>cross/block
+			<td>交叉轴/块
 			<td>absolutely-positioned boxes, <a>flex items</a>, and <a>grid items</a>
 	<tbody>
 		<tr>
 			<th>'justify-items'
-			<td>inline
+			<td>内联
 			<td rowspan=2>
 				<img src="images/items-example.svg" width=106 height=106 alt="">
 				items inside box
@@ -217,44 +213,48 @@ Overview of Alignment Properties</h2>
 			<td>[=block containers=] and <a>grid containers</a>
 		<tr>
 			<th>'align-items'
-			<td>cross/block
-			<td><a>flex containers</a> and <a>grid containers</a>
+			<td>交叉轴/块
+			<td><a>flex 容器</a> and <a>grid 容器</a>
 	</table>
 
-	Note: The '*-items' properties don't affect the element itself.
-	When set on a container,
+	Note: '*-items' 属性不会影响元素自身。
+	在当设置在容器上时，
 	they specify the interpretation of any ''*-self: auto'' used on children of the container element.
 
 <h2 id='terms'>
 Alignment Terminology</h2>
 
-	Since this module defines alignment properties for all layout modes in CSS,
-	some abstract terminology is introduced:
+	由于该模块为所有CSS布局模式定义了对齐属性，
+	因此就需要来介绍一些抽象的术语：
 
 	<dl>
 		<dt><dfn export>alignment subject</dfn>
 		<dd>
-			The <a>alignment subject</a> is the thing or things being aligned by the property.
-			For 'justify-self' and 'align-self',
+			<a>alignment subject</a>是指被这一属性进行布局的事物。
+			对于'justify-self' 和 'align-self'来说，
+			<a>alignment subject</a>指的是 TODO:
 			the <a>alignment subject</a> is the margin box of the box the property is set on,
 			and assumes the <a>writing mode</a> of that box.
-			For 'justify-content' and 'align-content',
+			对于'justify-content' 和 'align-content'来说，
+			<a>alignment subject</a>是由布局模式所指定的，TODO:
 			the <a>alignment subject</a> is defined by the layout mode
 			and refers to some aspect of its contents;
 			it also assumes the <a>writing mode</a> of the box the property is set on.
 
 		<dt><dfn export>alignment container</dfn>
 		<dd>
-			The <a>alignment container</a> is the rectangle that the <a>alignment subject</a> is aligned within.
-			This is defined by the layout mode,
-			but is usually the <a>alignment subject</a>’s containing block,
-			and assumes the [=writing mode=] of the box establishing the containing block.
+			<a>alignment container</a> 是一个的矩形，<a>alignment subject</a>在其中进行布局。
+			它由布局模式进行制定，
+			但通常它是<a>alignment subject</a>的包含块，
+			且假设盒子的 [=writing mode=] 建立了包含块。
 
 		<dt><dfn export>fallback alignment</dfn>
 		<dd>
+			一些排布（？）仅能够在特定情况下被排满，或限制于它们能够消费多少空间。
 			Some alignments can only be fulfilled in certain situations
 			or are limited in how much space they can consume;
-			for example, ''space-between'' can only operate when there is more than one <a>alignment subject</a>,
+			例如，''space-between''仅仅能够在有超过一个<a>alignment subject</a>时发挥作用；TODO:
+			for example, ''space-between'' can only operate when there is more than one <a>alignment subject</a>, -----
 			and baseline alignment, once fulfilled, might not be enough to absorb all the excess space.
 			In these cases a fallback alignment takes effect
 			(as defined below)
@@ -264,41 +264,42 @@ Alignment Terminology</h2>
 <h2 id='alignment-values'>
 Alignment Keywords</h2>
 
-	All of the alignment properties use a common set of keyword values,
-	which are defined in this section.
-	Keywords fall into three categories:
+	所有的对齐属性共用一系列在本章节中定义的关键字，
+	这些关键字共分为三类：
 
 	<dl>
 		<dt><a href="#positional-values">positional alignment</a>
-		<dd>These keywords define alignment as an absolute position within the <a>alignment container</a>.
+		<dd>These keywords define alignment as an 绝对位置 within the <a>alignment container</a>.
 
 		<dt><a href="#baseline-values">baseline alignment</a>
-		<dd>These keywords define alignment as a relationship
-			among the baselines of multiple [=alignment subjects=] within an <a>alignment context</a>.
+		<dd>These keywords define alignment as a 关系
+			among the 基线 of 多个 [=alignment subjects=] within an <a>alignment context</a>.
 
 		<dt><a href="#distribution-values">distributed alignment</a>
-		<dd>These keywords define alignment as a distribution of space among <a>alignment subjects</a>.
+		<dd>These keywords define alignment as 空间分配 among <a>alignment subjects</a>.
 	</dl>
 
 <h3 id='positional-values'>
 Positional Alignment: the ''center'', ''start'', ''end'', ''self-start'', ''self-end'', ''flex-start'', ''flex-end'', ''left'', and ''right'' keywords</h3>
 
-	The <dfn>positional alignment</dfn> keywords specify a position for an <a>alignment subject</a>
+	The <dfn>positional alignment</dfn> 关键字指定了<a>alignment subject</a>的位置
 	with respect to its <a>alignment container</a>.
 
 	Values have the following meanings:
 
 	<dl dfn-type="value">
 		<dt><dfn for="<self-position>, <content-position>, justify-self, align-self, justify-content, align-content">center</dfn> <small>([[#self-alignment|self]], [[#content-distribution|content]])</small>
-		<dd>Centers the <a>alignment subject</a> within its <a>alignment container</a>.
+		<dd>在<a>alignment container</a>中居中放置<a>alignment subject</a>。
 
 		<dt><dfn for="<self-position>, <content-position>, justify-self, align-self, justify-content, align-content">start</dfn> <small>([[#self-alignment|self]], [[#content-distribution|content]])</small>
-		<dd>Aligns the <a>alignment subject</a> to be flush with the <a>alignment container</a>’s start edge in the appropriate axis.
+		<dd>使<a>alignment subject</a>对齐到<a>alignment container</a>上相应轴的开始边缘。
 
 		<dt><dfn for="<self-position>, <content-position>, justify-self, align-self, justify-content, align-content">end</dfn> <small>([[#self-alignment|self]], [[#content-distribution|content]])</small>
 		<dd>Aligns the <a>alignment subject</a> to be flush with the <a>alignment container</a>’s end edge in the appropriate axis.
 
 		<dt><dfn for="<self-position>, justify-self, align-self">self-start</dfn> <small>([[#self-alignment|self]])</small>
+		<dd>使<a>alignment subject</a>对齐到<a>alignment container</a>上与<a>alignment subject</a>在对应轴上起始侧的边缘
+			corresponding to the <a>alignment subject</a>’s start side in the appropriate axis.
 		<dd>Aligns the <a>alignment subject</a> to be flush with the edge of the <a>alignment container</a>
 			corresponding to the <a>alignment subject</a>’s start side in the appropriate axis.
 
@@ -307,7 +308,7 @@ Positional Alignment: the ''center'', ''start'', ''end'', ''self-start'', ''self
 			corresponding to the <a>alignment subject</a>’s end side in the appropriate axis.
 
 		<dt><dfn for="<self-position>, <content-position>, justify-self, align-self, justify-content, align-content">flex-start</dfn> <small>([[#self-alignment|self]], [[#content-distribution|content]])</small>
-		<dd><strong>Only used in flex layout.</strong> [[!CSS-FLEXBOX-1]]
+		<dd><strong>仅在flex布局中使用。</strong> [[!CSS-FLEXBOX-1]]
 			Aligns the <a>alignment subject</a> to be flush with the edge of the <a>alignment container</a>
 			corresponding to the <a>flex container</a>’s main-start or cross-start side, as appropriate.
 
@@ -321,7 +322,7 @@ Positional Alignment: the ''center'', ''start'', ''end'', ''self-start'', ''self
 			this value behaves as ''start'' when used in the <a>content-distribution properties</a>.
 
 		<dt><dfn for="<self-position>, <content-position>, justify-self, align-self, justify-content, align-content">flex-end</dfn> <small>([[#self-alignment|self]], [[#content-distribution|content]])</small>
-		<dd><strong>Only used in flex layout.</strong>
+		<dd><strong>仅在flex布局中使用。</strong>
 			Aligns the <a>alignment subject</a> to be flush with the edge of the <a>alignment container</a>
 			corresponding to the <a>flex container</a>’s main-end or cross-end side, as appropriate.
 
