@@ -40,6 +40,7 @@ spec:css-sizing-3; type:value; for:width; text:min-content
 spec:css-sizing-3; type:value; for:width; text:max-content
 spec:css-syntax-3; type:dfn; text:identifier
 spec:css-values-4; type:dfn; text:relative length
+spec:web-animations-1; type:dfn; text:effect values
 </pre>
 
 <h2 id='intro'>
@@ -163,7 +164,7 @@ Container Queries</h2>
 	</div>
 
 <h3 id="container-type">
-Creating Query Containers: the 'container-type' property</h2>
+Creating Query Containers: the 'container-type' property</h3>
 
 	<pre class='propdef'>
 		Name: container-type
@@ -189,7 +190,7 @@ Creating Query Containers: the 'container-type' property</h2>
 	<dl dfn-type=value dfn-for=container-type>
 		<dt><dfn>size</dfn>
 		<dd>
-			Establishes a [=query container=] for [=dimensional queries=]
+			Establishes a [=query container=] for [=size queries=]
 			on both the [=inline axis|inline=] and [=block axis=].
 			Applies [=layout containment=],
 			[=style containment=],
@@ -197,7 +198,7 @@ Creating Query Containers: the 'container-type' property</h2>
 			to the [=principal box=].
 		<dt><dfn>inline-size</dfn>
 		<dd>
-			Establishes a [=query container=] for [=dimensional queries=]
+			Establishes a [=query container=] for [=size queries=]
 			on the container’s own [=inline axis=].
 			Applies [=layout containment=],
 			[=style containment=],
@@ -205,7 +206,7 @@ Creating Query Containers: the 'container-type' property</h2>
 			to the [=principal box=].
 		<dt><dfn>block-size</dfn>
 		<dd>
-			Establishes a [=query container=] for [=dimensional queries=]
+			Establishes a [=query container=] for [=size queries=]
 			on the container’s own [=block axis=].
 			Applies [=layout containment=],
 			[=style containment=],
@@ -262,7 +263,7 @@ Creating Query Containers: the 'container-type' property</h2>
 
 
 <h3 id="container-name">
-Naming Query Containers: the 'container-name' property</h2>
+Naming Query Containers: the 'container-name' property</h3>
 
 	<pre class='propdef'>
 		Name: container-name
@@ -305,19 +306,19 @@ Naming Query Containers: the 'container-name' property</h2>
 		<pre class=lang-css>
 		main {
 		  container-type: size;
-		  container-name: layout;
+		  container-name: page-layout;
 		}
 
-		.grid-item {
+		.my-component {
 		  container-type: inline-size;
-		  container-name: component;
+		  container-name: component-library;
 		}
 
-		@container layout (block-size > 12em) {
+		@container page-layout (block-size > 12em) {
 		  .card { margin-block: 2em; }
 		}
 
-		@container component (inline-size > 30em) {
+		@container component-library (inline-size > 30em) {
 		  .card { margin-inline: 2em; }
 		}
 		</pre>
@@ -339,7 +340,7 @@ Naming Query Containers: the 'container-name' property</h2>
 
 
 <h3 id="container-shorthand">
-Creating Named Containers: the 'container' shorthand</h2>
+Creating Named Containers: the 'container' shorthand</h3>
 
 	<pre class='propdef shorthand'>
 		Name: container
@@ -368,44 +369,67 @@ Creating Named Containers: the 'container' shorthand</h2>
 
 
 <h3 id="container-rule">
-Container Queries: the ''@container'' rule</h2>
+Container Queries: the ''@container'' rule</h3>
 
 	The <dfn at-rule id="at-ruledef-container">@container</dfn> rule
-	is a [=conditional group rule=] whose condition is a [=container query=].
+	is a [=conditional group rule=] whose condition is
+	a <dfn export>container query</dfn>,
+	which is a boolean combination of [=size queries=] and/or [=style queries=].
+	Style declarations within the <<stylesheet>> block of an ''@container'' rule
+	are [[css-cascade-4#filtering|filtered]] by its condition
+	to only match when the [=container query=]
+	is true for their element’s [=query container=].
+
 
 	The syntax of the ''@container'' rule is:
 
 	<pre class="prod def">
-	@container <<container-name>> | [ name(<<container-name>>) || type(<<container-type>>+) ]? <<container-query-list>> {
-	  <<stylesheet>>
+	@container
+	  [ <<container-name>> | [ name(<<container-name>>) || type(<<container-type>>+) ] ]?
+	  <<container-query>> {
+	    <<stylesheet>>
 	}
 	</pre>
 
-	The <dfn>&lt;container-query-list></dfn> represents the <dfn export>container query</dfn>
-	and has the same syntax, parsing, and boolean interpretation as
-	<<media-condition>> in [[MEDIAQUERIES-4]],
-	but with [=container features=] instead of [=media features=].
+	where:
 
-	Styles in the <<stylesheet>> block of the ''@container'' rule
-	are [[css-cascade-4#filtering|filtered]] by its condition
-	to only match when the [=container query=]
-	is true for the element’s [=query container=].
+	<pre class="prod def">
+	<dfn><<container-condition>></dfn> = not <<container-query>>
+	                      | <<container-query>> [ and <<container-query>> ]*
+	                      | <<container-query>> [ or <<container-query>> ]*
+	<dfn><<container-query>></dfn>     = ( <<container-condition>> )
+	                      | size( <<size-query>> )
+	                      | style( <<style-query>> )
+
+	<dfn><<size-query>></dfn>     = <<size-feature>> | <<size-condition>>
+	<dfn><<size-condition>></dfn> = not ( <<size-query>> )
+	                 | ( <<size-query>> ) [ and ( <<size-query>> ) ]*
+	                 | ( <<size-query>> ) [ or  ( <<size-query>> ) ]*
+
+	<dfn><<style-query>></dfn>     = <<style-feature>> | <<style-condition>>
+	<dfn><<style-condition>></dfn> = not ( <<style-query>> )
+	                  | ( <<style-query>> ) [ and ( <<style-query>> ) ]*
+	                  | ( <<style-query>> ) [ or  ( <<style-query>> ) ]*
+	</pre>
+
 
 	For each element,
 	the [=query container=] to be queried
-	is selected from the element’s ancestor [=query containers=].
+	is selected from among the element’s ancestor [=query containers=].
 	The optional <dfn><<container-name>></dfn>
 	filters the set of [=query containers=] considered
 	to just those with a matching [=query container name=],
 	and the optional <dfn><<container-type>></dfn>
-	filters the set to just those with matching 'container-type's.
+	filters the set to just those with a matching 'container-type'.
 	The nearest remaining [=query container=] ancestor is selected.
 
-	Note: A [=query container=] with a 'container-type' of ''container-type/size''
-	is a match for both ''container-type/inline-size'' and ''container-type/block-size''
-	<<container-type>>s.
+	ISSUE: Should the UA automatically filter to the nearest compatible query container
+	if no specific type is provided?
 
-	Issue(6393): Provide a syntax to query a specific container-type
+	ISSUE(6393): Do we like this syntax for querying specific container types?
+
+	A [=query container=] with a 'container-type' of ''container-type/size''
+	is a match for both ''container-type/inline-size'' and ''container-type/block-size''.
 
 	Once an eligible [=query container=] has been selected for an element,
 	each [=container feature=] in the <<container-query-list>>
@@ -431,33 +455,103 @@ Container Queries: the ''@container'' rule</h2>
 	</div>
 
 	Style rules defined on an element inside multiple nested [=container queries=]
-	apply when all of the wrapping [=container queries=] are ''true'' for that element.
+	apply when all of the wrapping [=container queries=] are true for that element.
 
-	Note: Nested [=container queries=] may evaluate in relation to different containers,
-	so it is not possible to merge the individual <<container-query-list>>s
+	Note: Nested [=container queries=] can evaluate in relation to different containers,
+	so it is not always possible to merge the individual <<container-query-list>>s
 	into a single query.
+
+<h3 id="animated-containers">
+Animated Containers</h3>
+
+	A change in the evaluation of a [=container query=] must be part of a [=style change event=],
+	even when the change occurred because of [=effect values|animation effects=].
+
+	<div class=example>
+		A transition on a sibling element can indirectly affect the size of a
+		container, triggering [=style change events=] whenever container queries
+		change their evaluation as a result:
+
+		<pre class=lang-css>
+			main {
+			  display: flex;
+			  width: 300px;
+			}
+
+			#container {
+			  container: inline-size;
+			  flex: 1;
+			}
+
+			/* Resolved width is initially 200px, but changes as the transition
+			   on #sibling progresses. */
+			#inner {
+			  transition: 1s background-color;
+			  background-color: tomato;
+			}
+
+			/* When this container query starts (or stops) applying, a transition
+			   must start on background-color on #inner. */
+			@container (width <= 150px) {
+			  #inner {
+			    background-color: skyblue;
+			  }
+			}
+
+			#sibling {
+			  width: 100px;
+			  transition: width 1s;
+			}
+
+			#sibling:hover {
+			  width: 200px;
+			}
+		</pre>
+
+		<pre class=lang-html>
+			&lt;main>
+			  &lt;div id=container>
+			    &lt;div id=inner>Inner&lt;/div>
+			  &lt;/div>
+			  &lt;div id=sibling>Sibling&lt;/div>
+			&lt;/main>
+		</pre>
+
+	</div>
+
+	Changes in [=computed values=] caused by [=container query length=] units
+	must also be part of a [=style change event=].
+
 
 <h2 id="container-features">
 Container Features</h2>
 
 	A <dfn export>container feature</dfn>
 	queries a specific aspect of a [=query container=].
-	Its syntax is the same as for a [=media feature=]:
-	a feature name, a comparator, and a value, all wrapped in parentheses.
-	[[mediaqueries-5]]
 
 	Issue(5989): What container features can be queried?
 
-<h3 id="dimensional-container">
-Dimensional Container Features</h3>
+<h3 id="size-container">
+Size Container Features</h3>
 
-	<dfn export>Dimensional queries</dfn> allow querying
+	A <dfn export>size query</dfn>
+	(syntactically represented as <<size-query>>)
+	allows querying
 	the size of the [=query container=]’s [=principal box=].
+	It is a boolean combination of
+	individual <dfn>size features</dfn> (<<size-feature>>)
+	that each query a single, specific dimensional feature of the [=query container=].
+	The syntax of a <dfn><<size-feature>></dfn> is the same as for a [=media feature=]:
+	a feature name, a comparator, and a value.
+	[[mediaqueries-5]]
+	The boolean syntax and logic combining [=size features=] into a <<size-query>>
+	is the same as for [=feature queries=].
+	(See ''@supports''. [[!CSS-CONDITIONAL-3]])
 
 	If the [=query container=] does not have a [=principal box=],
 	or the principal box is not a [=layout containment box=],
-	or the [=query container=] does not support [=dimensional queries=] on the relevant axes,
-	then the result of evaluating any dimensional container feature is ''unknown''.
+	or the [=query container=] does not support [=size queries=] on the relevant axes,
+	then the result of evaluating the [=size feature=] is unknown.
 
 	[=Relative length=] units in [=container query=] conditions
 	are evaluated based on the the [=computed values=] of the [=query container=].
@@ -591,10 +685,26 @@ Orientation: the '@container/orientation' feature</h4>
 <h3 id="style-container">
 Style Container Features</h3>
 
-	<dfn export>Style queries</dfn> allow querying
+	A <dfn export>style queries</dfn>
+	(syntactically represented by <<style-query>>)
+	allows querying
 	the [=computed values=] of the [=query container=].
+	It is a boolean combination of
+	individual <dfn>style features</dfn> (<<style-feature>>)
+	that each query a single, specific property of the [=query container=].
+	The syntax of a <dfn><<style-feature>></dfn> is the same as for a [=declaration=]
+	[[!CSS-SYNTAX-3]],
+	and its query is true if
+	the [=computed value=] of the given property on the [=query container=]
+	matches the given value
+	(which is also [=computed value|computed=] with respect to the [=query container=]),
+	unknown if the property or its value is unsupported,
+	and false otherwise.
+	The boolean syntax and logic combining [=style features=] into a <<style-query>>
+	is the same as for [=feature queries=].
+	(See ''@supports''. [[!CSS-CONDITIONAL-3]])
 
-	Issue(6396): Define a syntax for style-based container queries
+	Issue(6396): Do we like this proposed syntax for style queries?
 
 <h3 id="state-container">
 State Container Features</h3>
@@ -607,14 +717,14 @@ State Container Features</h3>
 Issue(6402): Define a syntax for state-based container queries
 
 <h2 id="container-lengths">
-Container Relative Lengths: the ''qw'', ''qh'', ''qi'', ''qb'', ''qmin'', ''qmax'' units</h2>
+Container Relative Lengths: the ''cqw'', ''cqh'', ''cqi'', ''cqb'', ''cqmin'', ''cqmax'' units</h2>
 
-	<dfn lt="query length">Query length units</dfn>
+	<dfn lt="container query length">Container query length units</dfn>
 	specify a length relative to the dimensions of a [=query container=].
-	Style sheets that use [=query length=] units can more easily move components
+	Style sheets that use [=container query length=] units can more easily move components
 	from one [=query container=] to another.
 
-	The [=query length=] units are:
+	The [=container query length=] units are:
 
 	<table class="data">
 	<caption>Informative Summary of Container Units</caption>
@@ -622,42 +732,42 @@ Container Relative Lengths: the ''qw'', ''qh'', ''qi'', ''qb'', ''qmin'', ''qmax
 		<tr><th>unit<th>relative to
 	</thead>
 	<tbody>
-		<tr><td>''qw''
+		<tr><td>''cqw''
 			<td>1% of a [=query container=]’s [=width=]
-		<tr><td>''qh''
+		<tr><td>''cqh''
 			<td>1% of a [=query container=]’s [=height=]
-		<tr><td>''qi''
+		<tr><td>''cqi''
 			<td>1% of a [=query container=]’s [=inline size=]
-		<tr><td>''qb''
+		<tr><td>''cqb''
 			<td>1% of a [=query container=]’s [=block size=]
-		<tr><td>''qmin''
-			<td>The smaller value of ''qi'' or ''qb''
-		<tr><td>''qmax''
-			<td>The larger value of ''qi'' or ''qb''
+		<tr><td>''cqmin''
+			<td>The smaller value of ''cqi'' or ''cqb''
+		<tr><td>''cqmax''
+			<td>The larger value of ''cqi'' or ''cqb''
 	</tbody>
 	</table>
 
 	For each element,
-	[=query length=] units are evaluated
-	as [=dimensional queries=] on the relevant axis (or axes)
+	[=container query length=] units are evaluated
+	as [=size queries=] on the relevant axis (or axes)
 	described by the unit.
 	The [=query container=] for each axis
 	is the nearest ancestor container
-	that accepts [=dimensional queries=] on that axis.
+	that accepts [=size queries=] on that axis.
 	If no eligible [=query container=] is available,
 	then use the [=small viewport size=] for that axis.
 
-	Note: In some cases ''qi'' and ''qb'' units on the same element
+	Note: In some cases ''cqi'' and ''cqb'' units on the same element
 	will evaluate in relation to different [=query containers=].
-	Similarly, ''qmin'' and ''qmax'' units represent
-	the larger or smaller of the ''qi'' and ''qb'' units,
+	Similarly, ''cqmin'' and ''cqmax'' units represent
+	the larger or smaller of the ''cqi'' and ''cqb'' units,
 	even when those dimensions come from different [=query containers=].
 
 	Child elements do not inherit the relative values as specified for their parent;
 	they inherit the <a>computed values</a>.
 
 	<div class=example>
-		Authors can ensure that [=query length=] units
+		Authors can ensure that [=container query length=] units
 		have an appropriate [=query container=]
 		by applying them inside a [=container query=] with the required <<container-type>>.
 		Custom fallback values can be defined outside the [=container query=]:
@@ -668,12 +778,10 @@ Container Relative Lengths: the ''qw'', ''qh'', ''qi'', ''qb'', ''qmin'', ''qmax
 
 		@container type(inline-size) {
 		  /* only applies when an inline-size container is available */
-		  h2 { font-size: calc(1.2em + 1qi); }
+		  h2 { font-size: calc(1.2em + 1cqi); }
 		}
 		</pre>
 	</div>
-
-	Issue(5888): "container width" and "container height" units
 
 
 Suppressing An Element’s Contents Entirely: the 'content-visibility' property {#content-visibility}

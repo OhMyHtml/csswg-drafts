@@ -122,7 +122,7 @@ Terminology {#terminology}
 	''rotateY(0)'',
 	''rotateZ(0)''
 	and ''matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)''.
-	A special case is perspective: ''perspective(infinity)''.
+	A special case is perspective: ''perspective(none)''.
 	The value of m<sub>34</sub> becomes infinitesimal small
 	and the transform function is therefore assumed to be equal to the identity matrix.
 
@@ -466,7 +466,7 @@ The final value of the transform used to render an element in a <a>3D rendering 
 4. While <var>current element</var> is not the element that establishes the transformed element's <a>3D rendering context</a>:
 
 		1. If <var>current element</var> has a value for 'transform' which is not ''transform/none'', pre-multiply <var>current element</var>'s <a>transformation matrix</a> with the <var>transform</var>.
-		2. Compute a translation matrix which represents the offset of <var>current element</var> from its <var>parent element</var>, and pre-multiply that matrix into the <var>transform</var>.
+		2. Compute a translation matrix which represents the offset (including the scroll offset) of <var>current element</var> from its <var>parent element</var>, and pre-multiply that matrix into the <var>transform</var>.
 		3. If <var>parent element</var> has a value for 'perspective' which is not ''perspective/none'', pre-multiply the <var>parent element</var>'s <a>perspective matrix</a> into the <var>transform</var>.
 		4. Let <var>current element</var> be the <var>parent element</var>.
 		5. Let <var>parent element</var> be the <var>current element</var>'s parent.
@@ -794,7 +794,12 @@ Used value: flat if a <a href="#grouping-property-values">grouping property</a> 
 Animation type: discrete
 </pre>
 
-A computed value of ''transform-style/preserve-3d'' for 'transform-style' establishes both a stacking context and a [=containing block for all descendants=]. If the used value is ''transform-style/preserve-3d'' then it also establishes or extends a <a>3D rendering context</a>.
+A computed value of ''transform-style/preserve-3d'' for 'transform-style'
+on a <a>transformable element</a>
+establishes both a stacking context and
+a [=containing block for all descendants=].
+If the used value is ''transform-style/preserve-3d''
+then it also establishes or extends a <a>3D rendering context</a>.
 
 Grouping property values {#grouping-property-values}
 ------------------------
@@ -983,7 +988,7 @@ In the following <dfn export>3d transform functions</dfn>, a <<zero>> behaves th
 :: same as ''rotate3d(0, 1, 0, &lt;angle>)''.
 : <span class='prod'><dfn>rotateZ()</dfn> = rotateZ( [ <<angle>> | <<zero>> ] )</span>
 :: same as ''rotate3d(0, 0, 1, &lt;angle>)'', which is a 3d transform equivalent to the 2d transform ''rotate(&lt;angle>)''.
-: <span class='prod'><dfn>perspective()</dfn> = perspective( <<length [0,∞]>> )</span>
+: <span class='prod'><dfn>perspective()</dfn> = perspective( <<length [0,∞]>> | <dfn dfn-type="value" for="perspective()">none</dfn> )</span>
 :: specifies a <a href="#PerspectiveDefined">perspective projection matrix</a>. This matrix scales points in X and Y based on their Z value, scaling points with positive Z values away from the origin, and those with negative Z values towards the origin. Points on the z=0 plane are unchanged. The parameter represents the distance of the z=0 plane from the viewer. Lower values give a more flattened pyramid and therefore a more pronounced perspective effect. For example, a value of 1000px gives a moderate amount of foreshortening and a value of 200px gives an extreme amount.
 
 	If the depth value is less than ''1px'',
@@ -1165,8 +1170,8 @@ if (abs(product) == 1.0)
 	 quaternionDst = quaternionA
 	 return
 
-theta = acos(dot)
-w = sin(t * theta) * 1 / sqrt(1 - product * product)
+theta = acos(product)
+w = sin(t * theta) / sqrt(1 - product * product)
 
 for (i = 0; i < 4; i++)
 	quaternionA[i] *= cos(t * theta) - product * w
@@ -1378,9 +1383,12 @@ One translation unit on a matrix is equivalent to 1 pixel in the local coordinat
 			</div>
 
 	<li id="PerspectiveDefined">
-			A perspective projection matrix with the parameter <em>d</em> is equivalent to the matrix:
+			A perspective projection matrix with the parameter <var>d</var> is equivalent to the matrix:
 
-		$$\begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & -1/d & 1 \end{bmatrix}$$
+			$$\begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & -1/d & 1 \end{bmatrix}$$
+
+			If the parameter <var>d</var> is ''perpective()/none'' it is treated as infinity
+			(and the resulting matrix is the identity matrix).
 
 </ul>
 

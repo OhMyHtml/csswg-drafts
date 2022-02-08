@@ -38,6 +38,12 @@ WPT Path Prefix: css/css-color/
 			"authors": "G. Sharma, W. Wu, E. N. Dalal",
 			"journal": "Color Research and Application, vol. 30. No. 1, pp. 21-30",
 			"date": "February 2005"
+		},
+		"OKLab": {
+			"href": "https://bottosson.github.io/posts/oklab/",
+			"title": "A perceptual color space for image processing",
+			"authors": "Björn Ottosson",
+			"date": "December 2020"
 		}
 	}
 </pre>
@@ -49,7 +55,7 @@ table.named-color-table thead th { text-align:center; background:var(--text); co
 table.named-color-table th, table.named-color-table td { padding: 0 .25em; }
 table.named-color-table td { text-align:center; text-transform:uppercase; }
 table.named-color-table td:nth-child(-n+2) { border:1px solid var(--text); }
-table.named-color-table td:nth-child(n+4) { background: ; }
+/* table.named-color-table td:nth-child(n+4) { background: ; } */
 .color-table {
 	background: rgb(46.63% 46.63% 46.63%);
 	color: black;
@@ -76,24 +82,13 @@ table.deltaE td.dE5 { background: rgb(243, 103, 68); color: white}
 
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
-	const testEl = document.createElement("div");
-	document.body.appendChild(testEl);
 	[...document.querySelectorAll(".swatch")].forEach(e=>{
-		/* test that the swatch color is recognized */
-		const testColor = getComputedStyle(e).getPropertyValue("--color");
-		testEl.style.color = "#010203";
-		const controlColor = getComputedStyle(testEl).color;
-		testEl.style.color = testColor;
-		const resultColor = getComputedStyle(testEl).color;
-		if(resultColor != controlColor) {
-			/* success! */
-			return
+		const swatchColor = getComputedStyle(e).getPropertyValue("--color");
+		if(!CSS.supports('color', swatchColor)) {
+			e.style.background = "repeating-linear-gradient(135deg, red 0, red 4px, white 4px, white 8px)";
+			e.setAttribute("title", "Your browser does not recognize this color value, so we can't preview it.");
 		}
-		/* otherwise, indicate it's a failure */
-		e.style.background = "repeating-linear-gradient(135deg, red 0, red 4px, white 4px, white 8px)";
-		e.setAttribute("title", "Your browser does not recognize this color value, so we can't preview it.");
 	});
-	document.body.removeChild(testEl);
 });
 </script>
 
@@ -254,6 +249,69 @@ Value Definitions</h3>
 	Three colors form a plane, and the resulting colors
 	will lie in the triangle they form on the diagram.
 
+	<figure>
+		<img src="images/UCS-display-p3.svg"
+		width=500 height=464
+			alt="uv chromaticity diagram of the display-p3 colorspace">
+		<figcaption>A chromaticity diagram showing
+			(in solid colors) the ''display-p3'' colorspace
+			and for comparison
+			(faded) the ''sRGB'' colorspace.
+			The white point (D65) is also shown.
+		</figcaption>
+	</figure>
+
+	RGB colorspaces are additive,
+	and their gamut is defined
+	by the chromaticities of the red, green and blue primaries,
+	plus the chromaticity of the <dfn export>white point</dfn>
+	(the color formed by all three primaries at full intensity).
+
+	Most colorspaces use one of a few
+	daylight-simulating [=white points=],
+	which are named by the color temperature
+	of the corresponding black-body radiator.
+	For example, [=D65=] is a daylight whitepoint
+	corresponding to a correlated color temperature
+	of 6500 Kelvin
+	(actually 6504,
+	because the value of Plank's constant has changed
+	since the color was originally defined).
+
+	To avoid cumulative round-trip errors,
+	it is important that the identical chromaticity values
+	are used consistently,
+	at all places in a calculation. Thus,
+	for maximum compatibility,
+	for this specification,
+	the following two standard
+	daylight-simulating [=white points=] are defined:
+
+	<table class="data">
+		<thead>
+			<tr>
+				<th>Name&nbsp;</th>
+				<th>x</th>
+				<th>y</th>
+				<th>CCT</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><dfn export lt="D50 whitepoint" local-lt="D50">D50</dfn></td>
+				<td>0.345700</td>
+				<td>0.358500</td>
+				<td>5003K</td>
+			</tr>
+			<tr>
+				<td><dfn export lt="D65 whitepoint" local-lt="D65">D65</dfn></td>
+				<td>0.312700</td>
+				<td>0.329000</td>
+				<td>6504K</td>
+			</tr>
+		</tbody>
+	</table>
+
 
 	When the measured physical characteristics
 	(such as the <abbr title="measured color, irrespective of lightness">chromaticities</abbr> of the primary colors it uses,
@@ -399,19 +457,22 @@ Representing Colors: the <<color>> type</h2>
 	Colors in CSS are represented by the <dfn export><<color>></dfn> type:
 
 	<pre class='prod'>
-	&lt;color> = <<hex-color>> | <<named-color>> | currentcolor | transparent |
+	&lt;color> = <<absolute-color-base>> | currentcolor | <<system-color>> | <<device-cmyk()>>
+
+	<dfn>&lt;absolute-color-base></dfn> = <<hex-color>> | <<named-color>> | transparent |
 	    <<rgb()>> | <<rgba()>> | <<hsl()>> | <<hsla()>> | <<hwb()>> |
 	    <<lab()>> | <<lch()>> |
-	    <<color()>> | <<device-cmyk()>> |
-	    <<system-color>>
+	    <<oklab()>> | <<oklch()>> |
+	    <<color()>>
 	</pre>
 
 	The <dfn export>color-functions</dfn> are <<rgb()>>, <<rgba()>>,
 		<<hsl()>>, <<hsla()>>, <<hwb()>>,
-		<<lab()>>, <<lch()>>, and
+		<<lab()>>, <<lch()>>,
+		<<oklab()>>, <<oklch()>>, and
 		<<color()>>.
 
-	Of those, <<hsl()>>, <<hsla()>>, <<hwb()>> and <<lch()>>
+	Of those, <<hsl()>>, <<hsla()>>, <<hwb()>>, <<lch()>>, and <<oklch>>
 		are <dfn export>cylindrical polar color</dfn> representations,
 		which specify color using a <<hue>> angle,
 		a central axis representing lightness
@@ -438,7 +499,7 @@ Hue is represented as an angle of the color circle
 (the rainbow, twisted around into a circle, and with purple added between violet and red).
 
 <pre class='prod'>
-	<dfn>&lt;hue></dfn> = <<number>> | <<angle>>
+	<dfn>&lt;hue></dfn> = <<number>> | <<angle>> | ''none''
 </pre>
 
 Because this value is so often given in degrees,
@@ -463,15 +524,110 @@ a98-rgb green is 145.97 degrees
 and prophoto-rgb green is 141.04 degrees
 (because these are all different shades of green).
 
-For colors very close to the neutral axis,
-the hue angle becomes indeterminate
-(for example, in Lab,
-minute changes in near-zero a and b values
-give huge changes in LCH hue angle).
-<span id="NaN-hue">Therefore, sometimes a hue angle of NaN
-(not a number) may be returned.</span>
-This impacts, for example,
-<a href="#hue-interpolation">hue interpolation</a>.
+<<hue>> components are the most common components to become [=powerless=];
+any achromatic color will have a [=powerless=] hue component.
+
+
+<h3 id="missing">
+"Missing"/''none'' Color Components</h3>
+
+	In certain cases,
+	a color can have one or more
+	<dfn export lt="missing color component" local-lt="missing|missing component">missing color components</dfn>.
+
+	In this specification,
+	this happens automatically due to [[#hue-interpolation|hue-based interpolation]]
+	for some colors (such as ''white'');
+	other specifications can define additional situations
+	in which components are automatically missing.
+
+	It can also be specified explicitly,
+	by providing the keyword <dfn value for="<color>">none</dfn> for a component in a color function.
+	All color functions allow any of their components to be specified as ''none''.
+
+	If a color with a [=missing component=] is interpolated with another color,
+	the [=missing component=] is treated as having the other color's component value.
+	If both colors are [=missing=] the given component,
+	the interpolated color will also be [=missing=] that component.
+
+	For all other purposes, a [=missing component=] behaves as a zero value,
+	in the appropriate unit for that component: ''0'', ''0%'', or ''0deg''.
+	This includes rendering the color directly,
+	converting it to another color space,
+	etc.
+
+	If a color with a [=missing component=] is serialized
+	or otherwise presented directly to an author,
+	it represents that component as being the ''none'' keyword.
+
+	<div class=example id="ex-missing-hue">
+		A missing hue is common when interpolating in cylindrical color spaces.
+		For example, using the ''color-mix()'' function specified in [[CSS-COLOR-5]]
+		one could write ''color-mix(in hsl, white 30%, green 70%)''.
+		Since ''white'' is an achromatic color,
+		it has a [=missing=] hue when expressed in ''hsl()''
+		(effectively ''hsl(none none 100%))'',
+		since <em>any</em> hue or saturation will produce the same color)
+		which means that the color-mix function
+		will treat it as having the same hue and saturation as ''green''
+		(effectively ''hsl(120deg 100% 100%)''),
+		and then interpolate based on those components.
+
+		The result will be a color that truly looks like a blend of green and white,
+		rather than perhaps looking reddish
+		(if ''white''’s hue was defaulted to ''0deg'')
+		or grayish
+		(if ''white''’s saturation was defaulted to ''0%'').
+	</div>
+
+	<div class=example id="ex-grayscale-with-missing">
+		Explicitly specifying missing components can be useful
+		to achieve an effect where you only <em>want</em> to interpolate certain components of a color.
+
+		For example, to animate a color to "grayscale", no matter what the color is,
+		one can interpolate it with ''lch(none 0% none)''.
+		This will take the hue and lightness from the starting color,
+		but animate its chroma down to 0%,
+		rendering it into an equal-lightness gray
+		with a steady hue across the whole animation.
+
+		Doing this manually would require matching the hue and lightness of the starting color explicitly.
+	</div>
+
+
+<h4 id="powerless">
+"Powerless" Color Components</h4>
+
+	Individual color syntaxes can specify that,
+	in some cases,
+	a given component of their syntax becomes a
+	<dfn export local-lt="powerless|powerless component">powerless color component</dfn>.
+	This indicates that the value of the component doesn't affect the rendered color;
+	any value you give it will result in the same color displayed in the screen.
+
+	For example, in ''hsl()'', the hue component is [=powerless=]
+	when the saturation component is ''0%'';
+	a ''0%'' saturation indicates a grayscale color,
+	which has no hue at all,
+	so ''0deg'' and ''180deg'', or any other angle,
+	will give the exact same result.
+
+	If a [=powerless component=] is manually specified,
+	it acts as normal;
+	the fact that it's [=powerless=] has no effect.
+	However, if a color is automatically produced by color space conversion,
+	then any [=powerless components=] in the result must instead be set to [=missing=],
+	instead of whatever value was produced by the conversion process.
+
+	User agents <em>may</em> treat a component as [=powerless=]
+	if the color is "sufficiently close" to the precise conditions specified.
+	For example, a gray color converted into ''lch()'' may,
+	due to numerical errors,
+	have an <em>extremely small</em> chroma rather than precisely ''0%'';
+	this can, at the user agent's discretion,
+	still treat the hue component as [=powerless=].
+	It is intentionally unspecified exactly what "sufficiently close" means for this purpose.
+
 
 <h3 id="notes">
 Accessibility and Conveying Information By Color</h3>
@@ -697,29 +853,29 @@ Resolving <<color>> Values</h3>
 			Note: As with all colors, the used value is not available to script.
 		</div>
 
-	<h4 id="resolving-other-colors">Resolving other colors</h4>
+<h4 id="resolving-other-colors">Resolving other colors</h4>
 
-	This applies to [=system colors=],
-	<a href="#deprecated-system-colors">deprecated-colors</a>,
-	''transparent'', and
-	''currentcolor''.
+	This applies to [=system colors=]
+	(including the <<deprecated-color>>s),
+	''transparent'',
+	and ''currentcolor''.
 
-		Each <<system-color>> keyword computes to itself.
-		Its used value is the corresponding color in its color space.
+	Each <<system-color>> keyword computes to itself.
+	Its used value is the corresponding color in its color space.
 
-		The computed and used value of ''transparent'' is [=transparent black=].
+	The computed and used value of ''transparent'' is [=transparent black=].
 
-		The ''currentcolor'' keyword computes to itself.
+	The ''currentcolor'' keyword computes to itself.
 
-		In the 'color' property,
-		the used value of ''currentcolor'' is the [=inherited value=].
-		In any other property,
-		its used value is the used value of the 'color' property on the same element.
+	In the 'color' property,
+	the used value of ''currentcolor'' is the [=inherited value=].
+	In any other property,
+	its used value is the used value of the 'color' property on the same element.
 
-		Note: This means that if the ''<color>/currentcolor'' value is inherited,
-		it’s inherited as a keyword,
-		not as the value of the 'color' property,
-		so descendants will use their own 'color' property to resolve it.
+	Note: This means that if the ''<color>/currentcolor'' value is inherited,
+	it’s inherited as a keyword,
+	not as the value of the 'color' property,
+	so descendants will use their own 'color' property to resolve it.
 
 <!--
  ██████  ████████ ████████  ████    ███    ██
@@ -1195,8 +1351,8 @@ The RGB functions: ''rgb()'' and ''rgba()''</h3>
 	Its syntax is:
 
 	<pre class='prod'>
-	<dfn>rgb()</dfn> = rgb( <<percentage>>{3} [ / <<alpha-value>> ]? ) |
-	  rgb( <<number>>{3} [ / <<alpha-value>> ]? )
+	<dfn>rgb()</dfn> = rgb( [<<percentage>> | none]{3} [ / [<<alpha-value>> | none] ]? ) |
+	  rgb( [<<number>> | none]{3} [ / [<<alpha-value>> | none] ]? )
 	<dfn>&lt;alpha-value></dfn> = <<number>> | <<percentage>>
 	</pre>
 
@@ -1991,7 +2147,7 @@ HSL Colors: ''hsl()'' and ''hsla()'' functions</h2>
 	The syntax of the ''hsl()'' function is:
 
 	<pre class='prod'>
-	<dfn>hsl()</dfn> = hsl( <<hue>> <<percentage>> <<percentage>> [ / <<alpha-value>> ]? )
+	<dfn>hsl()</dfn> = hsl( [<<hue>> | none] [<<percentage>> | none] [<<percentage>> | none] [ / [<<alpha-value>> | none] ]? )
 	</pre>
 
 	<wpt>
@@ -2004,7 +2160,7 @@ HSL Colors: ''hsl()'' and ''hsla()'' functions</h2>
 		hsl-007.html
 		hsl-008.html
 		<!--
-		the rel=help for these points to this spec, but bikeshed can't fnd them
+		the rel=help for these points to this spec, but bikeshed can't find them
 		background-color-hsl-001.html
 		background-color-hsl-002.html
 		background-color-hsl-003.html
@@ -2035,6 +2191,11 @@ HSL Colors: ''hsl()'' and ''hsla()'' functions</h2>
 	If omitted, it defaults to ''100%''.
 
 	HSL colors resolve to sRGB.
+
+	If the saturation of an HSL color is ''0%'',
+	then the hue component is [=powerless=].
+	If the lightness of an HSL color is ''0%'' or ''100%'',
+	both the saturation and hue components are [=powerless=].
 
 	<div class='example' id="ex-hsl-primary-red">
 		For example, an ordinary red,
@@ -2159,36 +2320,23 @@ Converting HSL colors to sRGB colors</h3>
 
 	Converting an HSL color to sRGB is straightforward mathematically.
 	Here's a simple implementation of the conversion algorithm in JavaScript.
-	For simplicity, this algorithm assumes that the hue has been normalized to
-	a number in the half-open range [0, 6),
-	and the saturation and lightness have been normalized to the range [0, 1].
 	It returns an array of three numbers
 	representing the red, green, and blue channels of the colors,
 	normalized to the range [0, 1].
 
-	<pre class='lang-javascript'>
-	function hslToRgb(hue, sat, light) {
-		if( light &lt;= .5 ) {
-			var t2 = light * (sat + 1);
-		} else {
-			var t2 = light + sat - (light * sat);
-		}
-		var t1 = light * 2 - t2;
-		var r = hueToRgb(t1, t2, hue + 2);
-		var g = hueToRgb(t1, t2, hue);
-		var b = hueToRgb(t1, t2, hue - 2);
-		return [r,g,b];
-	}
+	<pre class="include-code lang-javascript">
+		path: hslToRgb.js
+		highlight: js
+	</pre>
 
-	function hueToRgb(t1, t2, hue) {
-		if(hue &lt; 0) hue += 6;
-		if(hue >= 6) hue -= 6;
+<h3 id='rgb-to-hsl'>
+Converting sRGB colors to HSL colors</h3>
 
-		if(hue &lt; 1) return (t2 - t1) * hue + t1;
-		else if(hue &lt; 3) return t2;
-		else if(hue &lt; 4) return (t2 - t1) * (4 - hue) + t1;
-		else return t1;
-	}
+	Conversion in the reverse direction proceeds similarly.
+
+	<pre class="include-code lang-javascript">
+		path: rgbToHsl.js
+		highlight: js
 	</pre>
 
 <h3 id='hsl-examples'>
@@ -2506,7 +2654,7 @@ HWB Colors: ''hwb()'' function</h2>
 	The syntax of the ''hwb()'' function is:
 
 	<pre class='prod'>
-		<dfn>hwb()</dfn> = hwb( <<hue>> <<percentage>> <<percentage>> [ / <<alpha-value>> ]? )
+		<dfn>hwb()</dfn> = hwb( [<<hue>> | none] [<<percentage>> | none] [<<percentage>> | none] [ / [<<alpha-value>> | none] ]? )
 	</pre>
 
 	The first argument specifies the hue,
@@ -2534,6 +2682,7 @@ HWB Colors: ''hwb()'' function</h2>
 	it defines an achromatic color,
 	i.e. some shade of gray,
 	without any hint of the chosen hue.
+	In this case, the hue component is [=powerless=].
 
 	<wpt>
 		hwb-001.html
@@ -2553,35 +2702,19 @@ Converting HWB colors to sRGB colors</h3>
 	first normalizes the white and black components,
 	so their sum is no larger than 100%.
 
-	<pre class="lang-javascript">
-	white /= 100;
-	black /= 100;
-	if (white + black >= 1) {
-		var gray = white / (white + black);
-		return [gray, gray, gray];
-	  }
-	function hwbToRgb(hue, white, black) {
-		var rgb = hslToRgb(hue, 1, .5);
-		for(var i = 0; i &lt; 3; i++) {
-			rgb[i] *= (1 - white - black);
-			rgb[i] += white;
-		}
-		return rgb;
-	}
+	<pre class="include-code lang-javascript">
+		path: hwbToRgb.js
+		highlight: js
 	</pre>
 
 <h3 id="rgb-to-hwb">Converting sRGB colors to HWB colors</h3>
 
 	Conversion in the reverse direction proceeds similarly.
 
-<pre class="lang-javascript">
-	function rgbToHwb(red, green, blue) {
-		var hsl = rgbToHsl(rgb);
-		var white = Math.min(...rgb);
-		var black = 1 - Math.max(...rgb);
-		return([hsl[0], white*100, black*100]);
-	}
-</pre>
+	<pre class="include-code lang-javascript">
+		path: rgbToHwb.js
+		highlight: js
+	</pre>
 
 <h3 id='hwb-examples'>
 Examples of HWB Colors</h3>
@@ -2839,18 +2972,21 @@ Examples of HWB Colors</h3>
 -->
 
 <h2 id='lab-colors'>
-Device-independent Colors: Lab and LCH</h2>
+Device-independent Colors: CIE Lab and LCH, OKLab and OKLCH</h2>
+
+<h3 id="cie-lab">CIE Lab and LCH</h3>
 
 	Physical measurements of a color are typically expressed in the CIE L*a*b* [[!CIELAB]] color space,
 	created in 1976 by the <abbr title='Commission Internationale de l'Eclairage'>CIE</abbr>
 	and commonly referred to simply as Lab.
-	Color conversions from one device to another also use Lab as an intermediate step.
+	Color conversions from one device to another may also use Lab as an intermediate step.
 	Derived from human vision experiments,
 	Lab represents the entire range of color that humans can see.
 
 	<!-- Simplify by saying Lab throughout rather than CIELab or
 	CIE L*a*b*, because that is what people write in practice.
 	No-one has used Hunter Lab for anything for decades.  -->
+	<!-- But now we have OKLab so where it matters, be more specific -->
 
 	Lab is a rectangular coordinate system with a central Lightness axis.
 	This value is usually written as a unitless number;
@@ -2886,7 +3022,7 @@ Device-independent Colors: Lab and LCH</h2>
 
 	<!-- diagram here -->
 
-	The illuminant is D50 white, a standardized daylight spectrum with a color temperature of 5000K,
+	The illuminant is [=D50=] white, a standardized daylight spectrum with a color temperature of 5000K,
 	as reflected by a perfect diffuse reflector; it approximates the color of sunlight on a sunny day.
 	D50 is also the whitepoint used for the profile connection space in ICC color interconversion,
 	the whitepoint used in image editors which offer Lab editing,
@@ -2899,7 +3035,7 @@ Device-independent Colors: Lab and LCH</h2>
 	is the industry standard chromatic adaptation transform,
 	and is easy to calculate as it is a simple matrix multiplication.
 
-	LCH has the same L axis as Lab,
+	CIE LCH has the same L axis as Lab,
 	but uses polar coordinates C (chroma) and H (hue),
 	making it a polar, cylindrical coordinate system.
 	C is the geometric distance from the L axis
@@ -2936,7 +3072,115 @@ Device-independent Colors: Lab and LCH</h2>
 	to give similar usability benefits for RGB that LCH gave to Lab,
 	but are significantly less accurate.</p>
 
+	Although the use of CIE Lab and LCH is widespread,
+	it is known to have some problems. In particular:
 
+	<dl>
+		<dt>Hue linearity</dt>
+		<dd>
+			In the blue region (LCH Hue between 270° and 330°),
+			visual hue departs from what LCH predicts.
+			Plotting a set of blues of the same hue and differing Chroma,
+			which should lie on a straight line from the neutral axis,
+			instead form a curve.
+			Put another way,
+			as a saturated blue has it's Chroma progressively reduced,
+			it becomes noticeably purple.
+		</dd>
+		<dt>Hue uniformity</dt>
+		<dd>
+			While hues in LCH are in general evenly spaced,
+			(and far better than HSL or HWB),
+			uniformity is not perfect.
+		</dd>
+		<dt>Over-prediction of high Chroma differences</dt>
+		<dd>
+			For high Chroma colors,
+			changes in Chroma are less noticeable
+			than for more neutral colors.
+		</dd>
+	</dl>
+
+	These deficiencies affect, for example,
+	creation of evenly spaced gradients,
+	gamut mapping from one colorspace to a smaller one,
+	and computation of the visual difference between two colors.
+
+	To compensate for this,
+	formulae to predict the visual difference betwen two colors
+	(delta E)
+	have been made more accurate over time
+	(but also, much more complex to compute).
+	The current industry standard formula,
+	delta E 2000,
+	works well to mitigate some of the Lab and LCH problems.
+	A sample implementation is given in
+	[[#color-difference-2000]].
+
+	This does not help with hue curvature, however.
+
+	<h3 id="ok-lab">OKLab and OKLCH</h3>
+
+	Recently, OKLab, an improved Lab-like space has been developed [[!OKLab]].
+	The corresponding polar form is called OKLCH.
+	It was produced by numerical optimisation
+	of a large dataset of visually similar colors,
+	and has improved hue linearity,
+	hue uniformity,
+	and chroma uniformity
+	compared to CIE LCH.
+
+	Like CIE Lab, there is a central lightness axis
+	which is usually written as a unitless number in the range [0,1];
+	for compatibility with the rest of CSS,
+	it is written as a percentage. 100% means an L value of 1.0.
+	L=0% is deep black (no light at all) while L=100% is a diffuse white.
+
+	Note: Unlike CIE Lab, which assumes adaptation to the diffuse white,
+	OKLab assumes adaptation to the color being defined,
+	which is intended to make it scale invariant.
+
+	As with CIE Lab, the a and b axes convey hue;
+	positive values along the a axis are a purplish red
+	while negative values are the complementary color, a green.
+	Similarly, positive values along the b axis are yellow
+	and negative are the complementary blue/violet.
+
+	The illuminant is [=D65=], the same white point
+	as most RGB colorspaces.
+
+	OKLCH has the same L axis as OKLab,
+	but uses polar coordinates C (chroma) and H (hue).
+
+	Note: Unlike CIE LCH, where Chroma can reach values of 200 or more,
+	OKLCH Chroma ranges to 0.5 or so.
+	The hue angles between CIE LCH and OKLCH are broadly similar,
+	but not identical.
+
+	<figure>
+		<img src="images/CIELCH-blue-slice.png" width="541" height="411"
+			alt="diagram showing purpling in CIE LCH">
+		<figcaption>A constant CIE LCH hue slice,
+			showing the sRGB gamut around primary blue.
+			A noticeable purpling is immediately evident.
+		</figcaption>
+	</figure>
+
+	<figure>
+		<img src="images/OKLCH-blue-slice.png" width="552" height="405"
+			alt="diagram showing hue constancy in OKLCH">
+		<figcaption>A constant OKLCH hue slice,
+			showing the sRGB gamut around primary blue.
+			The visual hue remains constant.
+		</figcaption>
+	</figure>
+
+	Because OKLab is more perceptually uniform,
+	the color difference is a straightforward distance in 3D space
+	(root sum of squares).
+	Although trivial,
+	a sample implementation is give in
+	[[#color-difference-OK]].
 
 <h3 id="specifying-lab-lch">
 Specifying Lab and LCH: the ''lab()'' and ''lch()'' functional notations</h3>
@@ -2961,7 +3205,7 @@ Specifying Lab and LCH: the ''lab()'' and ''lch()'' functional notations</h3>
 	CSS allows colors to be directly expressed in Lab and LCH.
 
 	<pre class='prod'>
-	<dfn>lab()</dfn> = lab( <<percentage>> <<number>> <<number>> [ / <<alpha-value>> ]? )
+	<dfn>lab()</dfn> = lab( [<<percentage>> | none] [<<number>> | none] [<<number>> | none] [ / [<<alpha-value>> | none] ]? )
 	</pre>
 
 	<wpt>
@@ -3001,6 +3245,10 @@ Specifying Lab and LCH: the ''lab()'' and ''lch()'' functional notations</h3>
 	separated by a slash,
 	and interpreted identically to the <<alpha-value>> in ''rgb()''.
 
+	If the lightness of a Lab color is ''0%'',
+	both the a and b components are [=powerless=].
+
+	Issue: Unsure about when/if a and b become powerless for Lab whites.
 
 	<div class="example" id="ex-lab-samples">
 		<pre class="lang-css">
@@ -3013,7 +3261,7 @@ Specifying Lab and LCH: the ''lab()'' and ''lch()'' functional notations</h3>
 	</div>
 
 	<pre class='prod'>
-	<dfn>lch()</dfn> = lch( <<percentage>> <<number>> <<hue>> [ / <<alpha-value>> ]? )
+	<dfn>lch()</dfn> = lch( [<<percentage>> | none] [<<number>> | none] [<<hue>> | none] [ / [<<alpha-value>> | none] ]? )
 	</pre>
 
 	<wpt>
@@ -3052,6 +3300,13 @@ Specifying Lab and LCH: the ''lab()'' and ''lch()'' functional notations</h3>
 	separated by a slash,
 	and interpreted identically to the <<alpha-value>> in ''rgb()''.
 
+	If the chroma of an LCH color is ''0%'',
+	the hue component is [=powerless=].
+	If the lightness of an LCH color is ''0%'',
+	both the hue and chroma components are [=powerless=].
+
+	Issue: Unsure about when/if hue and chroma become powerless for LCH whites.
+
 	<div class="example" id="ex-lch-samples">
 		<pre class="lang-css">
 			<span class="swatch" style="--color: rgb(49.06% 13.87% 15.9%)"></span> lch(29.2345% 44.2 27);
@@ -3062,48 +3317,98 @@ Specifying Lab and LCH: the ''lab()'' and ''lch()'' functional notations</h3>
 		</pre>
 	</div>
 
-<h3 id='rgb-to-lab'>
-Converting RGB colors to Lab colors</h3>
+<h3 id="specifying-oklab-oklch">
+	Specifying OKLab and OKLCH: the ''oklab()'' and ''oklch()'' functional notations</h3>
 
-	Conversion from an RGB color space to Lab requires several steps,
-	although in practice all but the first and last step are linear calculations and can be combined. Taking sRGB as an example:
 
-	<!-- make these steps links to the appropriate section in a calculations appendix -->
-	<ol>
-		<li>Convert from sRGB to <dfn id="linear-light-sRGB" export>linear-light sRGB</dfn> (undo gamma encoding).
-			This has the same gamut as sRGB,
-			but is now additive,
-			so that arithmetic operations on the values
-			give the correct results.
-		<li>Convert from linear sRGB to CIE XYZ
-		<li>Convert from a D65 whitepoint (used by sRGB) to the D50 whitepoint used
-			in Lab, with the Bradford transform [[!Bradford-CAT]]
-		<li>Convert D50-adapted XYZ to Lab
-	</ol>
+	CSS allows colors to be directly expressed in OKLab and OKLCH.
 
-	There is sample JavaScript code for this conversion
-	for various RGB color spaces, in [[#color-conversion-code]].
+	<pre class='prod'>
+	<dfn>oklab()</dfn> = oklab( [<<percentage>> | none] [<<number>> | none] [<<number>> | none] [ / [<<alpha-value>> | none] ]? )
+	</pre>
 
-<h3 id='lab-to-rgb'>
-Converting Lab colors to RGB colors</h3>
+	The first argument specifies the OKLab Lightness.
+	This is typically a number between ''0%''
+	(representing black)
+	and ''100%''
+	(representing white).
 
-	For display on a screen,
-	Lab colors will need to be converted
-	to the color space of the display.
+	Values less than ''0%'' must be clamped to ''0%''
+	at computed-value time;
+	values greater than ''100%'' are permitted
+	for forwards compatibility,
+	and must not be clamped.
 
-	Conversion from Lab to an RGB space also requires multiple steps,
-	and again in practice all but the first and last step are linear calculations and can be combined. Taking display-p3 as an example,
+	The second and third arguments are the distances along
+	the "a" and "b" axes
+	in the OKLab color space,
+	as described in the previous section.
+	These values are signed
+	(allow both positive and negative values)
+	and theoretically unbounded
+	(but in practice do not exceed ±0.5).
 
-	<ol>
-		<li>Convert Lab to (D50-adapted) XYZ
-		<li>Convert from a D50 whitepoint (used by Lab) to the D65 whitepoint used
-			in display-p3, with the Bradford transform
-		<li>Convert from (D65-adapted) CIE XYZ to linear-light display-p3
-		<li>Convert from linear-light display-p3 to display-p3 (do gamma encoding)
-	</ol>
+	There is an optional fourth alpha value,
+	separated by a slash,
+	and interpreted identically to the <<alpha-value>> in ''rgb()''.
 
-	There is sample JavaScript code for this conversion
-	for various RGB color spaces, in [[#color-conversion-code]].
+	If the lightness of an OKLab color is ''0%'',
+	both the a and b components are [=powerless=].
+
+	<div class="example" id="ex-oklab-samples">
+		<pre class="lang-css">
+			<span class="swatch" style="--color: rgb(49.06% 13.87% 15.9%)"></span> oklab(40.101% 0.1147 0.0453);
+			<span class="swatch" style="--color: rgb(77.61% 36.34% 2.45%)"></span> oklab(59.686% 0.1009 0.1192);
+			<span class="swatch" style="--color: rgb(61.65% 57.51% 9.28%)"></span> oklab(65.125% -0.0320 0.1274);
+			<span class="swatch" style="--color: rgb(40.73% 65.12% 22.35%)"></span> oklab(66.016% -0.1084 0.1114);
+			<span class="swatch" style="--color: rgb(38.29% 67.27% 93.85%)"></span> oklab(72.322% -0.0465 -0.1150);
+		</pre>
+	</div>
+
+	<pre class='prod'>
+		<dfn>oklch()</dfn> = oklch( [<<percentage>> | none] [<<number>> | none] [<<hue>> | none] [ / [<<alpha-value>> | none] ]? )
+		</pre>
+
+		The first argument specifies the OKLCH Lightness,
+		interpreted identically to the Lightness argument of ''oklab()''.
+
+		The second argument is the chroma.
+		Its minimum useful value is ''0'',
+		while its maximum is theoretically unbounded
+		(but in practice does not exceed ''0.5'').
+		If the provided value is negative,
+		it is clamped to ''0'' at computed-value time.
+
+		The third argument is the hue angle.
+		It's interpreted similarly to the <<hue>> arguments
+			of ''hsl()'' and ''lch()'',
+		but doesn't map hues to angles in the same way.
+		''0deg'' points along the positive "a" axis (toward purplish red),
+		(as does ''360deg'', ''720deg'', etc.);
+		''90deg'' points along the positive "b" axis (toward mustard yellow),
+		''180deg'' points along the negative "a" axis (toward greenish cyan),
+		and ''270deg'' points along the negative "b" axis (toward sky blue).
+
+		There is an optional fourth alpha value,
+		separated by a slash,
+		and interpreted identically to the <<alpha-value>> in ''rgb()''.
+
+		If the chroma of an OKLCH color is ''0%'',
+		the hue component is [=powerless=].
+		If the lightness of an OKLCH color is ''0%'',
+		both the hue and chroma components are [=powerless=].
+
+
+		<div class="example" id="ex-oklch-samples">
+			<pre class="lang-css">
+				<span class="swatch" style="--color: rgb(49.06% 13.87% 15.9%)"></span> oklch(40.101% 0.12332 21.555);
+				<span class="swatch" style="--color: rgb(77.61% 36.34% 2.45%)"></span> oklch(59.686% 0.15619 49.7694);
+				<span class="swatch" style="--color: rgb(61.65% 57.51% 9.28%)"></span> oklch(65.125% 0.13138 104.097);
+				<span class="swatch" style="--color: rgb(40.73% 65.12% 22.35%)"></span> oklch(66.016% 0.15546 134.231);
+				<span class="swatch" style="--color: rgb(38.29% 67.27% 93.85%)"></span> oklch(72.322% 0.12403 247.996);
+			</pre>
+		</div>
+
 
 <h3 id="cmyk-to-lab">
 Converting CMYK colors to Lab
@@ -3123,9 +3428,9 @@ Converting CMYK colors to Lab
 	This is typically done by looking up the CMYK values in an ICC profile.
 
 <h3 id='lab-to-lch'>
-Converting Lab colors to LCH colors</h3>
+Converting Lab or OKLab colors to LCH or OKLCH colors</h3>
 
-	Conversion to LCH is trivial:
+	Conversion to the polar form is trivial:
 
 	<ol>
 		<li>H = atan2(b, a)
@@ -3133,16 +3438,27 @@ Converting Lab colors to LCH colors</h3>
 		<li>L is the same
 	</ol>
 
-For extremely small values of a and b (near zero Chroma), although the visual color does not change from being on the neutral axis, small changes to the values can result in the reported hue angle swinging about wildly and being essentially random. To account for this, some conversion routines will report a missing value, such as NaN.
+For extremely small values of a and b (near-zero Chroma),
+although the visual color does not change from being on the neutral axis,
+small changes to the values can result in the reported hue angle swinging about wildly
+and being essentially random.
+In CSS, this means the hue is [=powerless=],
+and treated as [=missing=] when converted into LCH or OKLCH;
+in non-CSS contexts this might be reflected as a missing value, such as NaN.
 
 <h3 id='lch-to-lab'>
-Converting LCH colors to Lab  colors</h3>
+Converting LCH or OKLCH colors to Lab or OKLab colors</h3>
 
-	Conversion to Lab is trivial:
+	Conversion to the rectangular form is trivial:
 
 	<ol>
-		<li>a = C cos(H)
-		<li>b = C sin(H)
+		<li>If H is missing, a = b = 0</li>
+		<li>Otherwise,
+		<ol>
+			<li>a = C cos(H)
+			<li>b = C sin(H)
+		</ol>
+		</li>
 		<li>L is the same
 	</ol>
 
@@ -3229,7 +3545,7 @@ Profiled, Device-dependent Colors</h2>
 	Its syntax is:
 
 	<pre class='prod'>
-		<dfn>color()</dfn> = color( [<<ident>> | <<dashed-ident>>] [ <<number-percentage>>+ ] [ / <<alpha-value>> ]? )
+		<dfn>color()</dfn> = color( [<<ident>> | <<dashed-ident>>] [<<number-percentage>> | none]+ [ / [<<alpha-value>> | none] ]? )
 	</pre>
 
 	<!-- check this test, remove any fallback testing -->
@@ -3386,10 +3702,10 @@ and ''xyz''.</h3>
 		<dt><dfn>srgb</dfn>
 		<dd>
 			The ''srgb'' [[!SRGB]] color space accepts three numeric parameters,
-			representing the red, green, and blue channels of the color,
-			with each having a valid range of [0, 1].
-			The whitepoint is D65
-			(a daylight white, with a correlated color temperature of 6504°K).
+			representing the red, green, and blue channels of the color.
+			In-gamut colors have all three components in the range [0, 1].
+			The whitepoint is [=D65=].
+
 
 			[[!SRGB]] specifies two viewing conditions, <em>encoding</em>
 			and <em>typical</em>. The [[ICC]] recommends using the <em>encoding</em>
@@ -3402,11 +3718,11 @@ and ''xyz''.</h3>
 			It has the following characteristics:
 
 			<table>
-				<thead><td></td><td>x</td><td>y</td><td>notes</td></thead>
+				<thead><td></td><td>x</td><td>y</td></thead>
 				<tr><th>Red chromaticity</th><td>0.640</td><td>0.330</td></tr>
 				<tr><th>Green chromaticity</th><td>0.300</td><td>0.600</td></tr>
 				<tr><th>Blue chromaticity</th><td>0.150</td><td>0.060</td></tr>
-				<tr><th>White chromaticity</th><td>0.31272</td><td>0.32903</td><td>(D65)</td></tr>
+				<tr><th>White chromaticity</th> <td  colspan="2">[=D65=]</td></tr>
 				<tr><th>Transfer function</th><td colspan="2">see below</td></tr>
 				<tr><th>White luminance</th><td colspan="2">80.0 cd/m<sup>2</sup></td></tr>
 				<tr><th>Black luminance</th><td colspan="2">0.80 cd/m<sup>2</sup></td></tr>
@@ -3445,10 +3761,10 @@ and ''xyz''.</h3>
 		<dt><dfn>display-p3</dfn>
 		<dd>
 			The ''display-p3'' color space accepts three numeric parameters,
-			representing the red, green, and blue channels of the color,
-			with each having a valid range of [0, 1].
+			representing the red, green, and blue channels of the color.
+			In-gamut colors have all three components in the range [0, 1].
 			It uses the same primary chromaticities as [[!DCI-P3]],
-			but with a D65 whitepoint, and the same transfer curve as sRGB.
+			but with a [=D65=] whitepoint, and the same transfer curve as sRGB.
 
 			Modern displays, TVs, laptop screens and phone screens
 			are able to display all, or nearly all,
@@ -3457,11 +3773,11 @@ and ''xyz''.</h3>
 			It has the following characteristics:
 
 			<table>
-				<thead><td></td><td>x</td><td>y</td><td>notes</td></thead>
+				<thead><td></td><td>x</td><td>y</td></thead>
 				<tr><th>Red chromaticity</th><td>0.680</td><td>0.320</td></tr>
 				<tr><th>Green chromaticity</th><td>0.265</td><td>0.690</td></tr>
 				<tr><th>Blue chromaticity</th><td>0.150</td><td>0.060</td></tr>
-				<tr><th>White chromaticity</th><td>0.31272</td><td>0.32903</td><td>(D65)</td></tr>
+				<tr><th>White chromaticity</th> <td  colspan="2">[=D65=]</td></tr>
 				<tr><th>Transfer function</th><td colspan="2">same as srgb</td></tr>
 				<tr><th>White luminance</th><td colspan="2">80.0 cd/m<sup>2</sup></td></tr>
 				<tr><th>Black luminance</th><td colspan="2">0.80 cd/m<sup>2</sup></td></tr>
@@ -3493,18 +3809,19 @@ and ''xyz''.</h3>
 		<dt><dfn>a98-rgb</dfn>
 		<dd>
 			The ''a98-rgb'' color space accepts three numeric parameters,
-			representing the red, green, and blue channels of the color,
-			with each having a valid range of [0, 1]. The transfer curve is
+			representing the red, green, and blue channels of the color.
+			In-gamut colors have all three components in the range [0, 1].
+			The transfer curve is
 			a gamma function, close to but not exactly 1/2.2.
 
 			It has the following characteristics:
 
 			<table>
-				<thead><td></td><td>x</td><td>y</td><td>notes</td></thead>
+				<thead><td></td><td>x</td><td>y</td></thead>
 				<tr><th>Red chromaticity</th><td>0.6400</td><td>0.3300</td></tr>
 				<tr><th>Green chromaticity</th><td>0.2100</td><td>0.7100</td></tr>
 				<tr><th>Blue chromaticity</th><td>0.1500</td><td>0.0600</td></tr>
-				<tr><th>White chromaticity</th><td>0.31272</td><td>0.32903</td><td>(D65)</td></tr>
+				<tr><th>White chromaticity</th> <td  colspan="2">[=D65=]</td></tr>
 				<tr><th>Transfer function</th><td colspan="2">256/563 </td></tr>
 				<tr><th>White luminance</th><td colspan="2">160.0 cd/m<sup>2</sup></td></tr>
 				<tr><th>Black luminance</th><td colspan="2">0.5557 cd/m<sup>2</sup></td></tr>
@@ -3540,11 +3857,12 @@ and ''xyz''.</h3>
 		<dt><dfn>prophoto-rgb</dfn>
 			<dd>
 				The ''prophoto-rgb'' color space accepts three numeric parameters,
-				representing the red, green, and blue channels of the color,
-				with each having a valid range of [0, 1]. The transfer curve is
+				representing the red, green, and blue channels of the color.
+				In-gamut colors have all three components in the range [0, 1].
+				The transfer curve is
 				a gamma function with a value of 1/1.8,
 				and a small linear portion near black.
-				The white point is D50, the same as is used by CIE Lab. Thus,
+				The white point is [=D50=], the same as is used by CIE Lab. Thus,
 				conversion to Lab does not require the chromatic adaptation step.
 
 				The ProPhoto RGB space uses hyper-saturated,
@@ -3565,11 +3883,11 @@ and ''xyz''.</h3>
 				It has the following characteristics:
 
 				<table>
-					<thead><td></td><td>x</td><td>y</td><td>notes</td></thead>
+					<thead><td></td><td>x</td><td>y</td></thead>
 					<tr><th>Red chromaticity</th><td>0.734699</td><td>0.265301</td></tr>
 					<tr><th>Green chromaticity</th><td>0.159597</td><td>0.840403</td></tr>
 					<tr><th>Blue chromaticity</th><td>0.036598</td><td>0.000105</td></tr>
-					<tr><th>White chromaticity</th><td>0.345704</td><td>0.358540</td><td>(D50)</td></tr>
+					<tr><th>White chromaticity</th><td  colspan="2">[=D50=]</td></tr>
 					<tr><th>Transfer function</th><td colspan="2">see below </td></tr>
 					<tr><th>White luminance</th><td colspan="2">160.0 to 640.0 cd/m<sup>2</sup></td></tr>
 					<tr><th>Black luminance</th><td colspan="2">See text</td></tr>
@@ -3621,24 +3939,28 @@ and ''xyz''.</h3>
 		<dt><dfn>rec2020</dfn>
 		<dd>
 			The ''rec2020'' [[!Rec.2020]] color space accepts three numeric parameters,
-			representing the red, green, and blue channels of the color,
-			with each having a valid range of [0, 1]. ITU Reference 2020 is used for High Definition, 4k and 8k television.
+			representing the red, green, and blue channels of the color.
+			In-gamut colors have all three components in the range [0, 1],
+			("full-range", in video terminology).
+			ITU Reference 2020 is used for
+			Ultra High Definition, 4k and 8k television.
 
 			The primaries are physically realizable,
 			but with difficulty
 			as they lie very close to the spectral locus.
 
-			Current displays are unable to reproduce the full gamut of rec2020. Coverage is expected to increase over time as displays improve.
+			Current displays are unable to reproduce the full gamut of rec2020.
+			Coverage is expected to increase over time as displays improve.
 
 			It has the following characteristics:
 
 			<table>
-				<thead><td></td><td>x</td><td>y</td><td>notes</td></thead>
+				<thead><td></td><td>x</td><td>y</td></thead>
 				<tr><th>Red chromaticity</th><td>0.708</td><td>0.292</td></tr>
 				<tr><th>Green chromaticity</th><td>0.170</td><td>0.797</td></tr>
 				<tr><th>Blue chromaticity</th><td>0.131</td><td>0.046</td></tr>
-				<tr><th>White chromaticity</th><td>0.31272</td><td>0.32903</td><td>(D65)</td></tr>
-				<tr><th>Transfer function</th><td colspan="2">see below</td></tr>
+				<tr><th>White chromaticity</th> <td  colspan="2">[=D65=]</td></tr>
+				<tr><th>Transfer function</th><td colspan="2">see below, from [[!Rec.2020]] table 4</td></tr>
 				<tr><th>Image state</th><td colspan="2">display-referred</td></tr>
 				<tr>
 					<th>Percentages</th>
@@ -3684,12 +4006,15 @@ and ''xyz''.</h3>
 				rec2020-005.html
 			</wpt>
 
-		<dt><dfn>xyz</dfn>
+		<dt><dfn>xyz-d50</dfn>, <dfn>xyz-d65</dfn>, <dfn>xyz</dfn>
 			<dd>The ''xyz'' color space accepts three numeric parameters,
 				representing the X,Y and Z values.
 				It represents the CIE XYZ color space,
-				scaled such that diffuse white has a luminance (Y) of 1.0
-				and, if necessary, chromatically adapted to a D50 reference white.
+				scaled such that diffuse white has a luminance (Y) of 1.0.
+				and, if necessary, chromatically adapted to the reference white.
+
+				The reference white for ''xyz-d50'' is [=D50=], while
+				the reference white for ''xyz-d65''  and ''xyz'' is [=D65=].
 
 				Values greater than 1.0 are allowed and must not be clamped;
 				they represent colors brighter than diffuse white.
@@ -3713,7 +4038,7 @@ and ''xyz''.</h3>
 						<span class="swatch" style="--color: #7654CD"></span> #7654CD
 						<span class="swatch" style="--color: #7654CD"></span> rgb(46.27% 32.94% 80.39%)
 						<span class="swatch" style="--color: #7654CD"></span> lab(44.36% 36.05 -58.99)
-						<span class="swatch" style="--color: #7654CD"></span> color(xyz 0.2005 0.14089 0.4472)
+						<span class="swatch" style="--color: #7654CD"></span> color(xyz-d50 0.2005 0.14089 0.4472)
 					</pre>
 				</div>
 
@@ -3734,36 +4059,73 @@ and ''xyz''.</h3>
 					predefined-013.html
 				</wpt> -->
 
-<h4 id="predefined-to-lab">
-Converting predefined color spaces to Lab</h4>
+<h4 id="predefined-to-lab-oklab">
+Converting predefined color spaces to Lab or OKLab</h4>
 
-	For all predefined color spaces,
+	For all predefined RGB color spaces,
 	conversion to Lab requires several steps,
 	although in practice all but the first step are linear calculations and can be combined.
 
 	<!-- make these steps links to the appropriate section in a calculations appendix -->
-	<ol>
+	<ol id="predefined-to-lab">
 		<li>Convert from gamma-encoded RGB to linear-light RGB (undo gamma encoding)
 		<li>Convert from linear RGB to CIE XYZ
-		<li>Convert from a D65 whitepoint (used by sRGB, ''display-p3'', ''a98-rgb'' and ''rec2020'') to the D50 whitepoint used in Lab,
-			with the Bradford transform. ''prophoto-rgb''' already has a D50 whitepoint.
+		<li>If needed, convert from a [=D65=] whitepoint
+			(used by ''sRGB'', ''display-p3'', ''a98-rgb'' and ''rec2020'')
+			to the [=D50=] whitepoint used in Lab,
+			with the Bradford transform. ''prophoto-rgb'' already has a [=D50=] whitepoint.
 		<li>Convert D50-adapted XYZ to Lab
 	</ol>
 
+	Conversion to OKLab is similar,
+	but the chromatic adaptation step
+	is only needed for ''prophoto-rgb''.
 
-<h4 id="lab-to-predefined">
-Converting Lab to predefined color spaces</h4>
+	<ol id="predefined-to-oklab">
+		<li>Convert from gamma-encoded RGB to linear-light RGB (undo gamma encoding)
+		<li>Convert from linear RGB to CIE XYZ
+		<li>If needed, convert from a [=D50=] whitepoint (used by ''prophoto-rgb'')
+			to the [=D65=] whitepoint used in OKLab,
+			with the Bradford transform.
+		<li>Convert D65-adapted XYZ to OKLab
+	</ol>
 
-	Conversion from Lab to display-p3 or rec2020 also requires multiple steps,
+	There is sample JavaScript code for these conversions
+	in [[#color-conversion-code]].
+
+
+<h4 id="oklab-lab-to-predefined">
+Converting Lab or OKLab to predefined RGB color spaces</h4>
+
+	Conversion from Lab to predefined spaces like ''display-p3'' or ''rec2020''
+	also requires multiple steps,
 	and again in practice all but the last step are linear calculations and can be combined.
 
-	<ol>
+	<ol id="lab-to-predefined">
 		<li>Convert Lab to (D50-adapted) XYZ
-		<li>Convert from a D50 whitepoint (used by Lab) to the D65 whitepoint used in sRGB and most other RGB spaces,
+		<li>If needed, convert from a [=D50=] whitepoint (used by Lab)
+			to the [=D65=] whitepoint used in sRGB and most other RGB spaces,
 			with the Bradford transform. ''prophoto-rgb''' does not require this step.
 		<li>Convert from (D65-adapted) CIE XYZ to linear RGB
 		<li>Convert from linear-light RGB to RGB (do gamma encoding)
 	</ol>
+
+	Conversion from OKLab is similar,
+	but the chromatic adaptation step
+	is only needed for ''prophoto-rgb''.
+
+	<ol id="oklab-to-predefined">
+		<li>Convert OKLab to (D65-adapted) XYZ
+		<li>If needed, convert from a [=D65=] whitepoint (used by OKLab)
+			to the [=D50=] whitepoint used in ''prophoto-rgb'',
+			with the Bradford transform.
+		<li>Convert from (D65-adapted) CIE XYZ to linear RGB
+		<li>Convert from linear-light RGB to RGB (do gamma encoding)
+	</ol>
+
+
+	There is sample JavaScript code for these conversions
+	in [[#color-conversion-code]].
 
 	Implementations may choose to implement these steps in some other way
 	(for example, using an ICC profile with relative colorimetric rendering intent)
@@ -3817,8 +4179,10 @@ Specifying a color profile: the ''@color-profile'' at-rule</h3>
 
 	The <<dashed-ident>> gives the <a>color profile's</a> name,
 	by which it will be used in a CSS stylesheet.
-	Alternatively, the ''device-cmyk'' keyword means that this color profile
-	will be used to resolve colors specified in ''device-cmyk''.
+	Alternatively, the ''device-cmyk'' keyword
+	means that this color profile will,
+	if valid,
+	be used to resolve colors specified in ''device-cmyk''.
 	<!-- All of the predefined color space keywords
 	(''srgb'', ''display-p3'', ''a98-rgb'', ''prophoto-rgb'', ''rec2020'')
 	are excluded from this <<custom-ident>>,
@@ -4287,7 +4651,7 @@ Uncalibrated CMYK Colors: the ''device-cmyk()'' function</h2>
 	The ''device-cmyk()'' function allows authors to specify a color in this way:
 
 	<pre class='prod'>
-		<dfn>device-cmyk()</dfn> = device-cmyk( <<cmyk-component>>{4} [ / <<alpha-value>> ]? , <<color>>? )
+		<dfn>device-cmyk()</dfn> = device-cmyk( <<cmyk-component>>{4} [ / <<alpha-value>> ]? )
 		<dfn>&lt;cmyk-component></dfn> = <<number>> | <<percentage>>
 	</pre>
 
@@ -4301,10 +4665,6 @@ Uncalibrated CMYK Colors: the ''device-cmyk()'' function</h2>
 	The fifth argument specifies the alpha channel of the color.
 	It's interpreted identically to the fourth argument of the ''rgb()'' function.
 	If omitted, it defaults to ''100%''.
-
-	The sixth argument specifies the fallback color,
-	used when the user agent doesn't know how to accurately transform the CMYK color to RGB.
-	If omitted, it defaults to the CMYK color <a>naively converted to RGBA</a>.
 
 	Typically, print-based applications will actually store the used colors as CMYK,
 	and send them to the printer in that form.
@@ -4323,9 +4683,6 @@ Uncalibrated CMYK Colors: the ''device-cmyk()'' function</h2>
 			and the user agent can process ICC profiles,
 			the computed value of the ''device-cmyk()'' function
 			must be the Lab value of the CMYK color.</li>
-		<li>Otherwise, if a valid fallback color has been specified,
-			the computed value of the ''device-cmyk()'' function
-			must be that fallback color.</li>
 		<li>Otherwise,
 			the computed value of the ''device-cmyk()'' function must be
 			the sRGB value of the CMYK color,
@@ -4334,7 +4691,7 @@ Uncalibrated CMYK Colors: the ''device-cmyk()'' function</h2>
 	</ol>
 
 	<div class='example' id="ex-device-cmyk-naive">
-		For example, with no ''@color-profile'' and no fallback specified,
+		For example, with no ''@color-profile'',
 		the following colors are equivalent, using the naive conversion.
 
 		<pre class="lang-css">
@@ -4429,7 +4786,6 @@ Naively Converting Between Uncalibrated CMYK and sRGB-Based Colors</h3>
 		<li><code>magenta = (1 - green - black) / (1 - black), or 0 if black is 1</code>
 		<li><code>yellow  = (1 - blue - black)  / (1 - black), or 0 if black is 1</code>
 		<li>alpha is the same as the input color
-		<li>fallback color must be set to the input color
 	</ul>
 
 <!--
@@ -4467,6 +4823,7 @@ Transparency: the 'opacity' property</h2>
 		parsing/opacity-computed.html
 		parsing/opacity-valid.html
 		parsing/opacity-invalid.html
+		body-opacity-0-to-1-stacking-context.html
 	</wpt>
 
 	<dl>
@@ -4619,17 +4976,17 @@ Color space for interpolation</h3>
 		* 'filter'
 		* 'animation'
 		* 'transition'
-		* [[color-mix()]]
+		* ''color-mix()''
 	</div>
 
-	These features are collectively termed the<dfn>host syntax</dfn>.
+	These features are collectively termed the <dfn export>host syntax</dfn>.
 	The host syntax should define
 	what the default interpolation space should be for each case,
 	and optionally provide syntax for authors to override this default.
 
 	If the host syntax does not define what color space
 	interpolation should take place in,
-	it defaults to Lab.
+	it defaults to OKLab.
 
 	However, user agents will handle interpolation
 	between legacy sRGB color formats
@@ -4745,12 +5102,9 @@ Hue interpolation</h3>
 
 	Unless otherwise specified, if no specific hue interpolation algorithm is selected by the host syntax, the default is ''shorter''.
 
-	If one of the angles has the value NaN,
-	then for interpolation, NaN is replaced
-	by the value of the other hue angle.
-	If both angles have the value NaN,
-	then for interpolation, NaN is replaced
-	by the value 0 for both angles.
+	Note: As a reminder,
+	if the interpolating colors were not already in the specified interpolation syntax,
+	then converting them will turn any [=powerless components=] into [=missing components=].
 
 	<h4 id="hue-shorter"><dfn export>shorter</dfn></h4>
 
@@ -4862,10 +5216,11 @@ highlight: js
 ████████  ████████ ████████    ██    ██     ██ ████████
 -->
 
-<h2 id="color-difference-code">Sample code for ΔE2000 color difference</h2>
+<h2 id="color-difference-code">Sample code for ΔE2000 and ΔEOK color differences</h2>
 
 <em>This section is not normative.</em>
 
+<h3 id="color-difference-2000">ΔE2000</h3>
 <p>
 	The simplest color difference metric, ΔE76,
 	is simply the Euclidean distance in Lab color space.
@@ -4895,6 +5250,21 @@ path: deltaE2000.js
 highlight: js
 </pre>
 
+<h3 id="color-difference-OK">ΔEOK</h3>
+<p>
+	Because OKLab does not suffer from
+	the hue linearity, hue uniformity,
+	and chroma non-linearities of CIE Lab,
+	the color difference metric does not need to correct for them
+	and so
+	is simply the Euclidean distance in OKLab color space.
+</p>
+
+<pre class="include-code lang-javascript">
+	path: deltaEOK.js
+	highlight: js
+	</pre>
+
 <!--
 ████████  ████████ ████████  ████████  ████████  ██████     ███    ████████ ████████ ████████
 ██     ██ ██       ██     ██ ██     ██ ██       ██    ██   ██ ██      ██    ██       ██     ██
@@ -4923,7 +5293,7 @@ Appendix A: Deprecated CSS System Colors</h2>
 	<strong>Authors must not use these keywords.</strong>
 
 	The deprecated system colors are represented
-	as the <dfn export><<deprecated-colors>></dfn> sub-type,
+	as the <dfn export><<deprecated-color>></dfn> sub-type,
 	and are defined as:
 
 	<dl noexport>
@@ -5008,11 +5378,66 @@ Appendix A: Deprecated CSS System Colors</h2>
 		<dd>Text in windows. Same as ''CanvasText''.
 	</dl>
 
+<h2 id='quirky-color' class="no-num">
+Appendix B: Deprecated Quirky Hex Colors</h2>
+
+	When CSS is being parsed in [=quirks mode=],
+	<dfn type><<quirky-color>></dfn> is a type of <<color>>
+	that is only valid in certain properties:
+
+	* 'background-color'
+	* 'border-color'
+	* 'border-top-color'
+	* 'border-right-color'
+	* 'border-bottom-color'
+	* 'border-left-color'
+	* 'color'
+
+	It is <em>not</em> valid in properties that include or reference these properties,
+	such as the 'background' shorthand,
+	or inside [=functional notations=] such as ''color-mix()''
+
+	Additionally, while <<quirky-color>> must be valid as a <<color>>
+	when parsing the affected properties in the ''@supports'' rule,
+	it is <em>not</em> valid for those properties
+	when used in the {{CSS.supports()}} method.
+
+	A <<quirky-color>> can be represented
+	as a <<number-token>>, <<dimension-token>>, or <<ident-token>>,
+	according to the following rules:
+
+	* If it's an <<ident-token>>,
+		the token's representation must contain exactly 3 or 6 characters,
+		all hexadecimal digits.
+		It represents a <<hex-color>> with the same value.
+
+	* If it's a <<number-token>>,
+		it must have its integer flag set.
+
+		Serialize the integer's value.
+		If the serialization has less than 6 characters,
+		prepend "0" characters to it until it is 6 characters long.
+		It represents a <<hex-color>> with the same value.
+
+	* If it's a <<dimension-token>>,
+		it must have its integer flag set.
+
+		Serialize the integer's value,
+		and append the representation of the token's unit.
+		If the result has less than 6 characters,
+		prepend "0" characters to it until it is 6 characters long.
+		It represents a <<hex-color>> with the same value.
+
+	(In other words, Quirks Mode allows hex colors to be written without the leading "#",
+	but with weird parsing rules.)
+
+
+
 
 <h2 id="acknowledgments" class="no-num no-ref">
 Acknowledgments</h2>
 
-Thanks for the feedback from Emilio Cobos Álvarez, Marc Attinasi, Chris Bai, Amelia Bellamy-Royds, Lars Borg, Mike Bremford, Bert Bos, Andreu Botella, Dan Burzo, Joe Clark, Max Derhak, fantasai, Simon Fraser, Patrick Garies, Tony Graham, Ian Hickson, Phil Green, Dean Jackson, Andreas Kraushaar, Pierre-Anthony Lemieux, Susan Lesch, Alex LeDonne, Cameron McCormack, Krzysztof Maczy&#x0144;ski, Chris Moschini, Chris Murphy, Jonathan Neal, Chris Needham, Christoph P&auml;per, Steven Pemberton, David Perrell, Brad Pettit, Jacob Refstrup, Craig Revie, Melanie Richards, Florian Rivoal, Joseph Salowey, Simon Sapin, Dave Singer, Igor Snitkin, Jonathan Stanley, Andrew Thompson, Lea Verou, Mark Watson, Russ Weakley, Natalie Weizenbaum, Etan Wexler, David Woolley, Boris Zbarsky, Steve Zilles, the XSL FO subgroup of the XSL working group, the <a href="https://www.w3.org/community/colorweb/">Color on the Web community group</a> and all the rest of the <a href="http://lists.w3.org/Archives/Public/www-style/">www-style</a> community.
+Thanks for the feedback from Emilio Cobos Álvarez, Marc Attinasi, Chris Bai, Amelia Bellamy-Royds, Lars Borg, Mike Bremford, Bert Bos, Andreu Botella, Dan Burzo, Joe Clark, Max Derhak, fantasai, Simon Fraser, Patrick Garies, Tony Graham, Ian Hickson, Phil Green, Dean Jackson, Andreas Kraushaar, Pierre-Anthony Lemieux, Susan Lesch, Alex LeDonne, Cameron McCormack, Krzysztof Maczy&#x0144;ski, Chris Moschini, Chris Murphy, Isaac Muse, Jonathan Neal, Chris Needham, Christoph P&auml;per, Steven Pemberton, David Perrell, Brad Pettit, Jacob Refstrup, Craig Revie, Melanie Richards, Florian Rivoal, Jacob Rus, Joseph Salowey, Simon Sapin, Dave Singer, Igor Snitkin, Jonathan Stanley, Andrew Thompson, Lea Verou, Mark Watson, Russ Weakley, Sam Weinig, Natalie Weizenbaum, Etan Wexler, David Woolley, Boris Zbarsky, Steve Zilles, the XSL FO subgroup of the XSL working group, the <a href="https://www.w3.org/community/colorweb/">Color on the Web community group</a> and all the rest of the <a href="http://lists.w3.org/Archives/Public/www-style/">www-style</a> community.
 
 <wpt hidden title="CSS Color 3 tests, not relevant for this level">
 background-color-hsl-001.html
@@ -5123,13 +5548,30 @@ Changes</h2>
 </h3>
 
 <ul>
+	<!-- to Oct 16 2021-->
+	<li>Defined quirks-mode quirky hex colors</li>
+	<li>Removed fallback colors from device-cmyk</li>
+	<li>Host syntax that does not declare a default now uses OKLab by default</li>
+	<li>Added sample code for deltaE OK</li>
+	<li>Added sample conversion code for OKlab and OKLCH</li>
+	<li>Added oklab() and oklch() functions</li>
+	<i>Added description of OKLab and OKLCH</i>
+	<li>Added description of CIE LCH deficiencies</li>
+	<li>Allowed all components of a color to be "missing" via the ''none'' keyword,
+		defined when components are "powerless" and automatically become missing in some cases,
+		and fixed all references to "NaN" channels to use the "missing" concept.</li>
+	<li>Defined explicit x,y whitepoint values, use consistently throughout</li>
 	<li>Defined the term host syntax</li>
+	<li>Defined context for resolving override-color colors</li>
 	<li>Added a new pair of system colors</li>
+	<li>Corrected HSL and HWB sample code</li>
 	<li>Replaced table of HSL values with error-free version</li>
 	<!-- to 9 July 2021 -->
 	<li>Added Lea Verou as co-editor by WG resolution</li>
 	<li>Clarified that hue angle is unbounded</li>
 	<li>MarkText example corrected</li>
+	<li>Added diagrams, corrected examples</li>
+	<li>Some editorial clarifications</li>
 	<li>Minor typos corrected</li>
 </ul>
 
@@ -5268,7 +5710,7 @@ Changes</h2>
 	<li>User-defined color spaces now dashed-ident, making predefined color spaces extensible without clashes</li>
 	<li>Added lab option to the color() function</li>
 	<li>Added normative reference for CIE Lab</li>
-	<li>Clarified that prophoto-rgb uses D50 whitepoint so does not require adaptation</li>
+	<li>Clarified that prophoto-rgb uses [=D50=] whitepoint so does not require adaptation</li>
 	<li>Clarified direction of increasing angle in LCH</li>
 	<li>Clarified that color names are ASCII case insensitive</li>
 	<li>Initial value of the "color" property is now CanvasText</li>
@@ -5378,16 +5820,14 @@ Changes from Colors 3</h3>
 		<li>4 and 8-digit hex colors have been added, to specify transparency.
 	</ol>
 
-Security and Privacy Considerations {#priv-sec}
-===============================================
 
-This specification defines "system" colors,
-which theoretically can expose details of the user's OS settings,
-which is a fingerprinting risk.
+
+Security Considerations {#security}
+===================================
 
 The system colors,
 if they actually correspond to the user's system colors,
-also pose a security risk,
+pose a security risk,
 as they make it easier for a malware site
 to create user interfaces that appear to be from the system.
 However, as several system colors are now defined to be "generic",
@@ -5397,6 +5837,14 @@ This specification adds to CSS the on-demand
 downloading of ICC profiles.
 These do not contain executable code,
 and thus do not constitute an increased security risk.
+
+
+Privacy Considerations {#privacy}
+===================================
+
+This specification defines "system" colors,
+which theoretically can expose details of the user's OS settings,
+which is a fingerprinting risk.
 
 
 Accessibility Considerations {#a11y-sec}

@@ -7,7 +7,8 @@ Work Status: Refining
 Group: csswg
 ED: https://drafts.csswg.org/css-cascade/
 TR: https://www.w3.org/TR/css-cascade-5/
-Previous Version: https://www.w3.org/TR/2021/WD-css-cascade-5-20210827/
+Previous Version: https://www.w3.org/TR/2021/WD-css-cascade-5-20211015/
+Previous Version: https://www.w3.org/TR/2021/WD-css-cascade-5-20210829/
 Previous Version: https://www.w3.org/TR/2021/WD-css-cascade-5-20210608/
 Previous Version: https://www.w3.org/TR/2021/WD-css-cascade-5-20210319/
 Previous Version: https://www.w3.org/TR/2021/WD-css-cascade-5-20210119/
@@ -222,11 +223,11 @@ Conditional ''@import'' Rules</h3>
 		</pre>
 	</div>
 
-	A <dfn><<media-query>></dfn> corresponds to the <code>media_query_list</code> production
+	A <dfn noexport for="@import"><<media-query>></dfn> corresponds to the <code>media_query_list</code> production
 	and is interpreted as a <a>media query</a>,
-	and a <dfn><<supports-condition>></dfn> corresponds to a <code>supports_condition</code> production
+	and a <dfn noexport for="@import"><<supports-condition>></dfn> corresponds to a <code>supports_condition</code> production
 	and is interpreted as an ''@supports'' condition.
-	If a <dfn><<declaration>></dfn> (a <code>declaration</code> production) is given in place of a <<supports-condition>>,
+	If a <dfn noexport for="@import"><<declaration>></dfn> (a <code>declaration</code> production) is given in place of a <<supports-condition>>,
 	it must be interpreted as a <code>supports_declaration_condition</code> production
 	(i.e. the extra set of parentheses is implied)
 	and treated as a <<supports-condition>>.
@@ -256,7 +257,7 @@ Processing Stylesheet Imports</h3>
 	it is perfectly appropriate for a UA to fetch a style sheet only once,
 	even though it's linked or imported multiple times.
 
-	The <a>origin</a> of an imported style sheet is the <a>origin</a> of the style sheet that imported it.
+	The [=cascade origin=] of an imported style sheet is the [=cascade origin=] of the style sheet that imported it.
 
 	The <a>environment encoding</a> of an imported style sheet is the encoding of the style sheet that imported it. [[css-syntax-3]]
 
@@ -1002,7 +1003,7 @@ Cascade Sorting Order</h3>
 			where style attributes simply have higher specificity than any other author rules. [[CSS2]]
 -->
 
-		<dt id='style-attr'>The Style Attribute
+		<dt id='style-attr'>Element Attached Styles
 		<dd>
 			Separately for [=normal=] and [=important=] declarations,
 			declarations that are attached directly to an element
@@ -1011,12 +1012,15 @@ Cascade Sorting Order</h3>
 			take precedence over declarations the same [=importance=]
 			that are mapped via style rule.
 
+			See [[css-style-attr]].
+
 		<dt id='cascade-layering'>Layers
 		<dd>
 			Declarations within each [=origin=] and [=context=]
 			can be explicitly assigned to a [=cascade layer=].
 			For the purpose of this step,
-			any declaration not assigned to an explicit layer is added to an implicit final layer.
+			any declaration not assigned to an explicit layer
+			is added to an implicit final layer.
 
 			Cascade layers (like declarations) are ordered by order of appearance.
 			When comparing declarations that belong to different layers,
@@ -1195,27 +1199,27 @@ Cascade Layers</h3>
 	or relying on source-order to resolve conflicts across layers.
 
 	<div class="example">
-		For example, the following generates an explicit ''utilities'' layer,
-		with higher cascade weight than any un-layered styles:
+		For example, the following generates an explicit ''reset'' layer,
+		with lower cascade weight than any unlayered styles:
 
 		<pre class='lang-css'>
-			@layer utilities {
-			  .padding-small {
-			    /* specificity of 0,1,0 - explicit "utilities" layer */
-			    padding: 0.25em;
-			  }
-			}
+		audio {
+		  /* specificity of 0,0,1 - implicit (final) layer */
+		  display: flex;
+		}
 
-			.card > .content {
-			  /* specificity of 0,2,0 - implicit (first) layer */
-			  padding: 1em;
-			}
+		@layer reset {
+		  audio[controls] {
+		    /* specificity of 0,1,1 - explicit "reset" layer */
+		    display: block;
+		  }
+		}
 		</pre>
 
-		The explicitly layered declarations on <code>.padding-small</code> take precedence
-		over the un-layered declarations on the <code>.card > .content</code> element --
-		even though the un-layered styles have a higher specificity,
-		and come later in the source order.
+		The unlayered declarations on the <{audio}> element take precedence
+		over the explicitly layered declarations on <code>audio[controls]</code> --
+		even though the unlayered styles have a lower specificity,
+		and come first in the source order.
 	</div>
 
 	Name-defining [=at-rules=]
@@ -1466,52 +1470,52 @@ Layer Ordering</h4>
 	Cascade layers are sorted
 	by the order in which they first are declared,
 	with nested layers grouped within their parent layers
-	after any unlayered rules.
+	before any unlayered rules.
 
 	<div class="example">
 		Given the following layer rules:
 
 		<pre class='lang-css'>
-			@layer framework.default {
-			  strong { font-weight: bold; }
-			}
+		/* unlayered styles come last in the layer order */
+		h1 { color: darkslateblue; }
 
-			@layer utilities {
-			  [hidden] { display: none; }
-			}
+		@layer reset.type {
+		  strong { font-weight: bold; }
+		}
 
-			@layer framework {
-			  .title { font-weight: 100; }
+		@layer framework {
+		  .title { font-weight: 100; }
 
-			  @layer theme {
-			    h1, h2 { color: maroon; }
-			  }
-			}
+		  @layer theme {
+		    h1, h2 { color: maroon; }
+		  }
+		}
 
-			/* unlayered styles come first in the layer order */
-			h1 { color: darkslateblue; }
+		@layer reset {
+		  [hidden] { display: none; }
+		}
 		</pre>
 
 		The outer layers are sorted first,
 		with any unlayered style rules
 		added to an implicit outer layer which
-		has lower priority (comes before) the explicit layers:
+		has higher priority than (comes after) the explicit layers:
 
-		1. (implicit outer layer)
+		1. ''reset''
 		2. ''framework''
-		3. ''utilities''
+		3. (implicit outer layer)
 
 		Within each layer,
 		nested layers are sorted in appearance order,
 		and style rules without further nesting
 		are similarly added to an implicit sub-layer
-		before the explicitly nested layers:
+		after the explicitly nested layers:
 
-		1. (implicit outer layer)
-		2. ''framework'' (implicit sub-layer)
-		2. ''framework.default''
+		1. ''reset.type''
+		2. ''reset'' (implicit sub-layer)
 		3. ''framework.theme''
-		4. ''utilities''
+		4. ''framework'' (implicit sub-layer)
+		5. (implicit outer layer)
 	</div>
 
 	Layers that are defined inside of a [=conditional group rule=]
@@ -1698,9 +1702,14 @@ Precedence of Non-CSS Presentational Hints</h3>
 	The UA may choose to honor presentational hints in a source document's markup,
 	for example the <code>bgcolor</code> attribute or <{s}> element in [[HTML]].
 	All document language-based styling must be translated to corresponding CSS rules
-	and either enter the cascade as [=UA-origin=] rules or
-	be treated as [=author-origin=] rules in their own [=cascade layer=]
-	placed as the lowest [=layer=] in the [=author origin=].
+	and enter the cascade as rules in either
+	the [=UA-origin=] or a special-purpose <dfn>author presentational hint origin</dfn>
+	between the regular [=user origin=] and the [=author origin=].
+	For the purpose of [=cascading=]
+	this [=author presentational hint origin=] is treated as an independent [=origin=],
+	but for the purpose of the ''revert'' keyword
+	it is considered part of the [=author origin=].
+
 	A document language may define whether such a presentational hint
 	enters the [=cascade=] as [=UA-origin=] or [=author-origin=];
 	if so, the UA must behave accordingly.
@@ -1708,7 +1717,7 @@ Precedence of Non-CSS Presentational Hints</h3>
 
 	Note: Presentational hints entering the [=cascade=] as [=UA-origin=] rules
 	can be overridden by [=author-origin=] or [=user-origin=] styles.
-	Presentational hints entering the cascade as [=author-origin=] rules
+	Presentational hints entering the cascade as [=author presentational hint origin=] rules
 	can be overridden by [=author-origin=] styles,
 	but not by non-[=important=] [=user-origin=] styles.
 	Host languages should choose the appropriate origin for presentational hints
@@ -1857,6 +1866,18 @@ Rolling Back Cascade Layers: the ''revert-layer'' keyword</h4>
 
 <h2 id="changes">
 Changes</h2>
+
+<h3 id="changes-2021-10">
+Changes since the 29 August 2021 Working Draft</h3>
+
+	Changes since the <a href="https://www.w3.org/TR/2021/WD-css-cascade-5-20210608/">8 June 2021 Working Draft</a> include:
+
+	* Revert the ordering of unlayered styles.
+		(See [[#changes-2021-06]] and
+		<a href="https://github.com/w3c/csswg-drafts/issues/6284">Issue 6284</a>)
+	* Defined presentational hints to use the [=author presentational hint origin=]
+		instead of layers, matching update to [[CSS-CASCADE-4]].
+		(<a href="https://github.com/w3c/csswg-drafts/issues/6659">Issue 6659</a>)
 
 <h3 id="changes-2021-08">
 Changes since the 8 June 2021 Working Draft</h3>
