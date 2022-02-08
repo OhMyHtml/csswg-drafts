@@ -45,24 +45,23 @@ Introduction</h2>
 	Note: 断行、对齐以及其它[=inline-level=]内联轴定位相关的内容
 	由<a href="https://www.w3.org/TR/css-text/">CSS Text Module</a>来处理。
 
-	ISSUE: Many aspects of layout here depend on font metrics.
+	ISSUE: 这里的很多概念是基于font metrics的。
+	然而 relevant metrics 存在于拉丁文、希腊文以及西里尔文的 OpenType 字体，
 	While the relevant metrics exist in OpenType for Latin/Cyrillic/Greek
 	and for <abbr title="Chinese/Japanese/Korean">CJK</abbr>,
 	they are missing for many other writing systems.
-	For example, the visual top metric for Hebrew has no metric in the OpenType tables.
-	For this module to work well for the world,
-	we need fonts to provide the relevant metrics for all writing systems,
-	and that means both that OpenType needs to allow such metrics
-	and font designers need to provide accurate numbers.
-	See <a href="https://github.com/w3c/csswg-drafts/issues/5244">issue</a> and
-	<a href="https://lists.w3.org/Archives/Public/www-archive/2020Feb/att-0005/CSS-SC29-20200113.pdf">liaison statement</a>.
+	例如，the visual top metric for Hebrew has no metric in the OpenType tables.
+	为了让这一模块在全世界范围内都可以正常工作，
+	我们需要字体为所有的书写系统提供相关的metrics，
+	也就是说 OpenType 需要允许这样的 metrics 且字体设计者需要提供 accurate numbers。
+	请参阅  <a href="https://github.com/w3c/csswg-drafts/issues/5244">issue</a> 以及
+	<a href="https://lists.w3.org/Archives/Public/www-archive/2020Feb/att-0005/CSS-SC29-20200113.pdf">liaison statement</a>。
 
 <h3 id="placement">
 Module Interactions</h3>
 
-	This module
-	replaces and extends the CSS inline layout model and features defined in
-	[[!CSS2]] section 10.8.
+	本模块
+	替换了 [[!CSS2]] 10.8章节中定义的 CSS 行内布局模型。
 
 <h3 id="values">
 Value Definitions</h3>
@@ -80,23 +79,23 @@ Value Definitions</h3>
 <h2 id="model">
 Inline Layout Model</h2>
 
+	在 <dfn>inline layout</dfn>布局中，
+	一个由 文本和 [=inline-level boxes=] 递归、混合的流所规定的
 	In <dfn>inline layout</dfn>,
 	a mixed, recursive stream of text and [=inline-level boxes=]
 	forming an <dfn>inline formatting context</dfn> within a [=block container=]
 	are laid out by [=fragmenting=] them into a stack of [=line boxes=],
 	and aligning the text and boxes to each other within each [=line box=].
 
-	Any [=block container=] that directly contains
-	[=inline-level=] content--
-	such as [=inline boxes=], [=atomic inlines=], and [=text runs=]--
-	establishes an [=inline formatting context=]
-	to lay out its contents.
+	任何直接包含有 [=inline-level=] content （如[=inline boxes=]、[=atomic inlines=] 和 [=text runs=]） 的 [=block container=]
+	建立了一个 [=inline formatting context=] 来布局它的内容。
 	The [=block container=]’s [=content edges=] form the [=containing block=]
 	for each of the [=inline-level boxes=]
 	participating in its [=inline formatting context=].
 
-	The [=block container=] also generates
-	a <dfn export>root inline box</dfn>,
+	[=block container=] 同时生成了一个
+	<dfn export>root inline box</dfn> —— 一个 <a lt="anonymous box">anonymous</a> [=inline box=]，
+	包括了它所有的 [=inline-level=] 内容。
 	which is an <a lt="anonymous box">anonymous</a> [=inline box=] that holds
 	all of its [=inline-level=] contents.
 	(Thus, all text in an [=inline formatting context=] is directly contained
@@ -105,21 +104,20 @@ Inline Layout Model</h2>
 	The [=root inline box=] inherits from its parent [=block container=],
 	but is otherwise unstyleable.
 
-	In an [=inline formatting context=],
-	content is laid out along the [=inline axis=],
-	ordered according to the
+	在[=inline formatting context=]中，
+	内容沿着 [=inline axis=] 进行布局，顺序根据
 	<a href="https://www.w3.org/TR/css-writing-modes-3/#text-direction">Unicode bidirectional algorithm and its controls</a> [[CSS-WRITING-MODES-3]]
 	and distributed according to the typesetting controls in [[CSS-TEXT-3]].
-	[=Inline-axis=] [=margins=], [=borders=], and [=padding=]
-	are respected between [=inline-level boxes=]
-	(and their margins do not <a href="https://www.w3.org/TR/CSS2/box.html#collapsing-margins">collapse</a>).
+	[=Inline-axis=] [=margins=]、 [=borders=] 以及 [=padding=]
+	are respected between [=inline-level boxes=]，
+	（且它们的边距不<a href="https://www.w3.org/TR/CSS2/box.html#collapsing-margins">collapse</a>）。
 	The resulting rectangular area that contains the boxes
 	that form a single line of [=inline-level content=]
-	is called a <dfn export>line box</dfn>.
+	被叫做 <dfn export>line box</dfn>。
 
-	Note: <a>Line boxes</a> and <a>inline boxes</a> and <a>inline-level boxes</a>
-	are each different things!
-	See [[CSS-DISPLAY-3]] for an in-depth discussion of box types and related terminology.
+	Note: <a>Line boxes</a> 、 <a>inline boxes</a> 、 <a>inline-level boxes</a>
+	是各不相同的事物。
+	请参阅 [[CSS-DISPLAY-3]] 来深入讨论盒子的类型及相关terminology。
 
 <h3 id="line-boxes">
 Layout of Line Boxes</h3>
@@ -127,27 +125,26 @@ Layout of Line Boxes</h3>
 	[=Line boxes=] are created as needed
 	to hold [=inline-level=] content
 	within an [=inline formatting context=].
-	When an [=inline box=] exceeds the [=logical width=] of a [=line box=],
-	or contains a <a spec="css-text-3">forced line break</a>,
-	it is split (see [[css-text-3#line-breaking]])
-	into several [=fragments=] [[css-break-3]],
-	which are partitioned across multiple [=line boxes=].
-	Like [=column boxes=] in [=multi-column layout=] [[CSS-MULTICOL-1]],
-	[=line boxes=] are [=fragmentation containers=]
-	generated by their [=formatting context=],
-	and are not part of the CSS [=box tree=].
+	当一个 [=inline box=] 超过了 [=line box=] 的 [=logical width=]，
+	或包含 <a spec="css-text-3">forced line break</a>，
+	它将被拆分（请参阅 [[css-text-3#line-breaking]]）
+	到多个 [=fragments=] [[css-break-3]]，
+	which are partitioned across multiple [=line boxes=]。
+	就像 [=multi-column layout=] [[CSS-MULTICOL-1]] 中的 [=column boxes=]，
+	[=line boxes=] 是由它们 [=formatting context=] 所生成的 [=fragmentation containers=]，
+	不是 CSS [=box tree=] 的一部分。
 
-	Note: [=Inline boxes=] can also be
+	Note: [=Inline boxes=] 同时也可以是
 	<a href="https://www.w3.org/TR/css-writing-modes-3/#bidi-box-model">split into several fragments
 	within the same line box due to bidirectional text processing</a>.
-	See [[CSS-WRITING-MODES-3]].
+	请参阅 [[CSS-WRITING-MODES-3]].
 
 	[=Line boxes=] are stacked
 	as the direct contents of the [=block container box=]
 	in its [=block flow direction=]
 	and aligned within this container as specified by 'align-content' [[CSS-ALIGN-3]].
-	Thus, an [=inline formatting context=] consists of
-	a stack of [=line boxes=].
+	因此, 一个 [=inline formatting context=] 包含了
+	一叠 [=line boxes=]。
 	[=Line boxes=] are stacked with no separation
 	(except as specified elsewhere,
 	e.g. for [=float=] <a href="https://www.w3.org/TR/CSS2/visuren.html#clearance">clearance</a>)
@@ -261,7 +258,7 @@ Painting Order</h3>
 Baselines and Alignment Metrics</h2>
 
 <h3 id="baseline-intro">
-Introduction to Baselines</h3>
+Baselines 介绍</h3>
 
 	A <dfn export>baseline</dfn> is a line along the <a>inline axis</a> of a line box
 	along which individual glyphs of text are aligned.
@@ -280,26 +277,22 @@ Introduction to Baselines</h3>
 		</figcaption>
 	</figure>
 
-	Different writing systems prefer different [=baselines=].
+	不同的书写系统使用不同的 [=baselines=]。
 
 	<figure>
-		<img alt="Latin prefers the alphabetic baseline,
-		          on top of which most letters rest,
-		          though some letters have descenders that dangle below it.
-		          Indic scripts are sometimes typeset with a hanging baseline,
-		          since their glyph shapes appear to be hanging from a horizontal line.
-		          Han-based systems, whose glyphs are designed to fill a square,
-		          tend to align on their bottoms or through their centers."
-		     src="images/script-preferred-baselines.gif"></p>
+		<img alt="
+			拉丁文使用字母基线，大多数字母在基线上方，尽管有些字母的下降部分位于其下方。
+			印地文有时会使用悬挂基线来进行排版，因为他们的字形形状似乎悬挂在水平线上。
+			基于汉字的书写系统，其字形的设计是充满一个正方形，倾向于在它们底部或通过中心来排布。"
+		    src="images/script-preferred-baselines.gif"></p>
 		<figcaption>
-			Preferred baselines in various writing systems
+			不同书写系统中所使用的基线
 		</figcaption>
 	</figure>
 
-	A well-constructed font contains a <dfn>baseline table</dfn>,
-	which indicates the position of one or more [=baselines=]
-	within the font's design coordinate space.
-	(The design coordinate space is scaled with the font size.)
+	一个完善的字体包含有一个 <dfn>baseline table</dfn>，
+	用以指定一个或多个 [=baselines=] 在字体设计坐标空间内的位置。
+	（设计坐标空间可根据字体大小来缩放）。
 
 	<figure>
 		<img alt=""
@@ -682,33 +675,32 @@ Transverse Box Alignment: the 'vertical-align' property</h3>
 	Percentages: N/A
 	</pre>
 
-	<p>This <a>shorthand</a> property specifies
-	how an inline-level box is aligned within the line
-	by specifying its [=alignment baseline=] type ('alignment-baseline'),
-	[=baseline alignment preference=] ('baseline-source'),
-	and [=post-alignment shift=] ('baseline-shift')
-	in a single declaration.
+	<p>该<a>shorthand</a>属性
+	通过在一个属性里指定[=alignment baseline=] 类型 ('alignment-baseline')、
+	[=baseline alignment preference=] ('baseline-source')、
+	和 [=post-alignment shift=] ('baseline-shift')
+	来指定了一个行内盒子在行内是如何排布的。
 
-	If ''baseline-source/first'' or ''baseline-source/last'' is specified,
-	it sets 'baseline-source'
+	如果 ''baseline-source/first'' 或 ''baseline-source/last'' 被指定了，那么就设置了'baseline-source'。
 	(which is otherwise reset to ''baseline-source/auto'').
+
 	Other values are as for the corresponding longhand properties, see below.
 
 	<p class="advisement">
-		Authors should use this shorthand ('vertical-align') instead of its longhands,
-		unless specifically needing to cascade its longhands independently
-		or (on SVG elements) to support legacy SVG implementations.
-
-	Note: 'vertical-align' can also affect the alignment of table cells
+		开发者应当使用它的简写 ('vertical-align') 而非全写，
+		除非特别需要单独指定它的全写，
+		或（在SVG元素上）需要支持早期SVG实现。
+		
+	Note: 'vertical-align' 也可以影响单元格的排布方式 —— 
 	when 'align-content' is ''align-content/normal''.
-	Specifically, ''vertical-align/top'' (''baseline-shift: top'') maps it to ''align-content/start'',
-	''vertical-align/bottom'' (''baseline-shift: bottom'')  to ''align-content/end'',
-	and otherwise ''vertical-align/middle'' (''alignment-baseline: middle'') to ''align-content/center''.
-	See [[css-align-3#distribution-block]].
+	特别地，''vertical-align/top'' (''baseline-shift: top'') 会映射它到 ''align-content/start''，
+	''vertical-align/bottom'' (''baseline-shift: bottom'')  到 ''align-content/end''，
+	and otherwise ''vertical-align/middle'' (''alignment-baseline: middle'') 到 ''align-content/center''。
+	请参阅 [[css-align-3#distribution-block]].
 
 <h4 id="baseline-source">
 Alignment Baseline Source: the 'baseline-source' longhand</h4>
-
+	
 	<pre class="propdef">
 	Name: baseline-source
 	Value: auto | first | last
@@ -720,12 +712,11 @@ Alignment Baseline Source: the 'baseline-source' longhand</h4>
 	Animation type: discrete
 	</pre>
 
-	When an inline-level box
-	has more than one possible source for baseline information
-	(such as for a multi-line inline block or inline flex container)
-	this property specifies whether the <a>first baseline set</a> or <a>last baseline set</a>
-	is preferred for alignment,
-	indicating the box’s <dfn export>baseline alignment preference</dfn>.
+	当一个行内盒子具有多于一个可用于获取基线信息的源时
+	（如多行行内block或行内flex容器）
+	该属性指定了是使用<a>first baseline set</a> 还是使用 <a>last baseline set</a>
+	来进行排布，
+	指明了该盒子的 <dfn export>baseline alignment preference</dfn>。
 	Values have the following meanings:
 
 	<dl dfn-for="baseline-source,vertical-align" dfn-type=value>
@@ -754,12 +745,10 @@ Alignment Baseline Type: the 'alignment-baseline' longhand</h4>
 	Animation type: discrete
 	</pre>
 
-	This property specifies the box’s <dfn export>alignment baseline</dfn>:
-	the [=baseline=] used to align the box
-	prior to applying its [=post-alignment shift=]
-	(if applicable).
+	该属性指定了盒子的 <dfn export>alignment baseline</dfn>：
+	[=baseline=] 用于排布盒子的优先级来应用它的 [=post-alignment shift=]（如果可以的话）
 
-	Values are defined as follows:
+	下列是可能的值：
 
 	<dl dfn-for="alignment-baseline,vertical-align" dfn-type=value>
 		<dt><dfn>baseline</dfn>
@@ -780,7 +769,7 @@ Alignment Baseline Type: the 'alignment-baseline' longhand</h4>
 
 		<dt><dfn>middle</dfn>
 		<dd>
-			In general, use the [=x-middle baselines=];
+			通常使用 [=x-middle baselines=]，
 			except under ''text-orientation: upright''
 			(where the [=alphabetic=] and [=x-height=] baselines are essentially meaningless)
 			use the [=central baseline=] instead.
@@ -798,7 +787,7 @@ Alignment Baseline Type: the 'alignment-baseline' longhand</h4>
 			Use the [=text-over baseline=].
 	</dl>
 
-	When performing [=baseline alignment=],
+	当设置 [=baseline alignment=] 时，
 	these values specify which [=baseline=] of the box is aligned
 	to the corresponding [=baseline=] of its [=alignment context=].
 	(In an [=inline formatting context=],
@@ -934,14 +923,13 @@ Line Spacing: the 'line-height' property</h3>
 	Computed value: the specified keyword, a number, or a computed <<length>> value
 	</pre>
 
-	This property specifies the <dfn>preferred line height</dfn>:
-	the [=logical height=] of the [=inline box=]
-	as used in the [[#line-layout|calculation of the line box height]].
+	这一属性指定了 <dfn>preferred line height</dfn>：
+	在 [[#line-layout|calculation of the line box height]] 时使用到的
+	[=inline box=] 的 [=logical height=]。
 
-	Note: Because it inherits to the [=root inline box=]
-	when specified on a [=block container=],
-	'line-height' effectively establishes
-	the minimum height of the block’s [=line boxes=].
+	Note: 由于它继承自 [=root inline box=]，
+	当在 [=block container=] 指定的时候，
+	'line-height' 十分有效地建立了块中 [=line boxes=] 的最小高度。
 
 	Values for this property have the following meanings:
 
