@@ -43,10 +43,9 @@ Case Transforms: the 'text-transform' property</h3>
 <h3 id=word-boundaries>
 Word Boundaries</h3>
 
-	In a number of languages and writing system,
-	such as Japanese or Thai,
-	words are not deliminated by spaces (or any other character)
-	as is the case in English
+	在很多语言与书写系统中，
+	例如日语和泰语，
+	词语之前不想英语那样使用空格（或任何其它字符）进行分隔。
 	(See <a href="https://www.w3.org/International/articles/typography/linebreak">Approaches to line breaking</a>
 	for a discussion the approach various languages take to word separation and line breaking).
 
