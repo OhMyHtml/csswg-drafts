@@ -298,21 +298,17 @@ Positional Alignment: the ''center'', ''start'', ''end'', ''self-start'', ''self
 		<dd>Aligns the <a>alignment subject</a> to be flush with the <a>alignment container</a>’s end edge in the appropriate axis.
 
 		<dt><dfn for="<self-position>, justify-self, align-self">self-start</dfn> <small>([[#self-alignment|self]])</small>
-		<dd>使<a>alignment subject</a>对齐到<a>alignment container</a>上与<a>alignment subject</a>在对应轴上起始侧的边缘
-			corresponding to the <a>alignment subject</a>’s start side in the appropriate axis.
-		<dd>Aligns the <a>alignment subject</a> to be flush with the edge of the <a>alignment container</a>
-			corresponding to the <a>alignment subject</a>’s start side in the appropriate axis.
+		<dd>使<a>alignment subject</a>与<a>alignment container</a>在<a>alignment subject</a>相应轴上的起始侧边缘对齐。 
 
 		<dt><dfn for="<self-position>, justify-self, align-self">self-end</dfn> <small>([[#self-alignment|self]])</small>
-		<dd>Aligns the <a>alignment subject</a> to be flush with the edge of the <a>alignment container</a>
-			corresponding to the <a>alignment subject</a>’s end side in the appropriate axis.
+		<dd>使<a>alignment subject</a>与<a>alignment container</a>在<a>alignment subject</a>相应轴上的结束侧边缘对齐。 
 
 		<dt><dfn for="<self-position>, <content-position>, justify-self, align-self, justify-content, align-content">flex-start</dfn> <small>([[#self-alignment|self]], [[#content-distribution|content]])</small>
 		<dd><strong>仅在flex布局中使用。</strong> [[!CSS-FLEXBOX-1]]
 			Aligns the <a>alignment subject</a> to be flush with the edge of the <a>alignment container</a>
 			corresponding to the <a>flex container</a>’s main-start or cross-start side, as appropriate.
 
-			When used outside of a <a>flex formatting context</a>, this value behaves as ''start''.
+			在 <a>flex formatting context</a> 外使用该值时，表现为''start''
 			That is, on boxes that are not <a>flex items</a>
 			(or pretending to be <a>flex items</a>,
 			such as when determining the static position of an absolutely-positioned box
@@ -353,14 +349,13 @@ Positional Alignment: the ''center'', ''start'', ''end'', ''self-start'', ''self
 			or <a>physical right</a> edge,
 			whichever is in the appropriate axis.
 
-			If the property's axis is not parallel with either left↔right axis,
-			this value behaves as ''start''.
+			如果该属性对应的轴不是 left↔right 方向，则表现为''start''。
 			<span class=note>Currently, the only case where the property's axis
 			is not parallel with either left↔right axis
 			is in a column flexbox.</span>
 	</dl>
 
-	Two grammar terms are used to denote certain subsets of these values:
+	两个语法术语用于表示这些值的某些子集：	
 
 	<dl>
 		<dt><<self-position>>
@@ -389,9 +384,8 @@ Positional Alignment: the ''center'', ''start'', ''end'', ''self-start'', ''self
 	They are instead explicitly included in the 'justify-*' properties’ grammars.
 
 	<aside class=example>
-		The ''<self-position>/start'' and ''<self-position>/end'' keywords
-		are <a>flow-relative</a>:
-		they use the <a>writing mode</a> to determine which side to align to.
+		''<self-position>/start'' 和 ''<self-position>/end'' 关键字是<a>flow-relative</a>：
+		它们使用 <a>writing mode</a> 来决定对其道哪一边。
 
 		<figure>
 			<img src="images/start-inline-tb.svg"
@@ -412,8 +406,8 @@ Positional Alignment: the ''center'', ''start'', ''end'', ''self-start'', ''self
 			</figcaption>
 		</figure>
 
-		The ''<self-position>/left'' and ''<self-position>/right'' keywords
-		are absolute (not <a>flow-relative</a>).
+		''<self-position>/left'' 和 ''<self-position>/right'' 关键字
+		是绝对的（不是<a>flow-relative</a>）。
 
 		<figure>
 			<img src="images/left-inline-tb.svg"
