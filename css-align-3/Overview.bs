@@ -82,7 +82,7 @@ Introduction</h2>
 	并通过平衡 ''margin/auto'' 边距来对齐块级元素。
 	然而，除非是在单元格里，
 	否则没法做到垂直对齐。
-	因此CSS加入了更多能力，让盒子在不同维度的排布变得更加critical。
+	因此CSS加入了更多能力，让盒子在不同维度的排列变得更加critical。
 	本模块尝试来建立一个更有凝聚力、更通用的盒子对齐模型，来在CSS属性之间进行共享。
 
 	Note: 文本与行内元素内容的对齐定义在[[CSS-TEXT-3]] 与 [[CSS-INLINE-3]] 中。
@@ -250,15 +250,12 @@ Alignment Terminology</h2>
 
 		<dt><dfn export>fallback alignment</dfn>
 		<dd>
-			一些排布（？）仅能够在特定情况下被排满，或限制于它们能够消费多少空间。
-			Some alignments can only be fulfilled in certain situations
-			or are limited in how much space they can consume;
-			例如，''space-between''仅仅能够在有超过一个<a>alignment subject</a>时发挥作用；TODO:
-			for example, ''space-between'' can only operate when there is more than one <a>alignment subject</a>, -----
+			一些排列方式仅能够在特定情况下被排满，或限制于它们能够消费多少空间。
+			例如，''space-between''仅仅能够在有超过一个<a>alignment subject</a>时发挥作用；
 			and baseline alignment, once fulfilled, might not be enough to absorb all the excess space.
-			In these cases a fallback alignment takes effect
-			(as defined below)
-			to fully consume the excess space.
+			在这些场景下，一个回落的排列方式将会生效
+			（如下定义）
+			以完整地消费超出的空间。
 	</dl>
 
 <h2 id='alignment-values'>
@@ -285,7 +282,7 @@ Positional Alignment: the ''center'', ''start'', ''end'', ''self-start'', ''self
 	The <dfn>positional alignment</dfn> 关键字指定了<a>alignment subject</a>的位置
 	with respect to its <a>alignment container</a>.
 
-	Values have the following meanings:
+	这些值具有下列含义
 
 	<dl dfn-type="value">
 		<dt><dfn for="<self-position>, <content-position>, justify-self, align-self, justify-content, align-content">center</dfn> <small>([[#self-alignment|self]], [[#content-distribution|content]])</small>
@@ -305,17 +302,16 @@ Positional Alignment: the ''center'', ''start'', ''end'', ''self-start'', ''self
 
 		<dt><dfn for="<self-position>, <content-position>, justify-self, align-self, justify-content, align-content">flex-start</dfn> <small>([[#self-alignment|self]], [[#content-distribution|content]])</small>
 		<dd><strong>仅在flex布局中使用。</strong> [[!CSS-FLEXBOX-1]]
-			Aligns the <a>alignment subject</a> to be flush with the edge of the <a>alignment container</a>
-			corresponding to the <a>flex container</a>’s main-start or cross-start side, as appropriate.
+			使<a>alignment subject</a>与<a>alignment container</a>的边缘在 <a>flex container</a>相对应的主起点或交叉起点对齐。
 
 			在 <a>flex formatting context</a> 外使用该值时，表现为''start''
-			That is, on boxes that are not <a>flex items</a>
+			即，在不是 <a>flex items</a>的盒子上
 			(or pretending to be <a>flex items</a>,
 			such as when determining the static position of an absolutely-positioned box
 			that is a child of a <a>flex container</a>),
-			this value behaves as ''start'' when used in the <a>self-alignment properties</a>,
-			and on boxes that are not <a>flex containers</a>,
-			this value behaves as ''start'' when used in the <a>content-distribution properties</a>.
+			使用<a>self-alignment properties</a>的时候，该值表现为 ''start'' ；
+			在不是 <a>flex containers</a>的盒子上
+			使用<a>content-distribution properties</a>的时候，该值表现为 ''start'' 。
 
 		<dt><dfn for="<self-position>, <content-position>, justify-self, align-self, justify-content, align-content">flex-end</dfn> <small>([[#self-alignment|self]], [[#content-distribution|content]])</small>
 		<dd><strong>仅在flex布局中使用。</strong>
@@ -360,18 +356,18 @@ Positional Alignment: the ''center'', ''start'', ''end'', ''self-start'', ''self
 	<dl>
 		<dt><<self-position>>
 		<dd>
-			This set is used by 'justify-self' and 'align-self'
-			to align the box within its <a>alignment container</a>,
-			and also by 'justify-items' and 'align-items'
-			(to specify default values for 'justify-self' and 'align-self').
+			这一集合由 'justify-self' 和 'align-self' 所使用，用以在盒子的
+			<a>alignment container</a>中排列盒子。
+			同时也由 'justify-items' 和 'align-items' 所使用
+			（用以指定 'justify-self' 和 'align-self' 的默认值）。
 			<pre class='prod'>
 				<dfn>&lt;self-position></dfn> = center | start | end | self-start | self-end |
 								flex-start | flex-end
 			</pre>
 		<dt><<content-position>>
 		<dd>
-			This set is used by 'justify-content' and 'align-content'
-			to align the box's contents within itself.
+			这一集合由 'justify-content' 和 'align-content' 所使用，
+			用以排列盒子中的内容。
 
 			<pre class='prod'>
 				<dfn>&lt;content-position></dfn> = center | start | end | flex-start | flex-end
@@ -449,10 +445,10 @@ Positional Alignment: the ''center'', ''start'', ''end'', ''self-start'', ''self
 		</figure>
 
 		The ''<self-position>/start'' and ''<self-position>/end'' keywords
-		use the <a>writing mode</a> of the <a>alignment container</a>,
-		to help keep things consistent.
-		But if alignment using the <a>alignment subject</a>’s <a>writing mode</a> is needed,
-		the ''<self-position>/self-start'' and ''<self-position>/self-end'' keywords can be used.
+		使用 <a>alignment container</a> 的 <a>writing mode</a>，
+		来确保表现能够恒定。
+		但如果要使用 <a>alignment subject</a> 的 <a>writing mode</a> ，
+		那就可以使用 ''<self-position>/self-start'' 和 ''<self-position>/self-end'' 关键字了。
 
 		<figure>
 			<img src="images/self-v-context-start-tb.svg"
@@ -475,12 +471,12 @@ Positional Alignment: the ''center'', ''start'', ''end'', ''self-start'', ''self
 	</aside>
 
 	<aside class=example>
-		The behavior of the alignment keywords is analogous in <a>vertical writing modes</a>:
-		''<self-position>/start'' and ''<self-position>/end''
-		are relative to the start/end of the text in the relevant axis.
-		The ''<self-position>/left'' and ''<self-position>/right'' keywords
-		are interpreted as <a>line-left</a> and <a>line-right</a>,
-		relative to the “left” and “right” sides of LTR/RTL text.
+		排列关键字的行为可用 <a>vertical writing modes</a>进行模拟：
+		''<self-position>/start'' 和 ''<self-position>/end''
+		与文本在对应轴轴上的开始/结束位置相关
+		''<self-position>/left'' 和 ''<self-position>/right'' 关键字被解释为
+		<a>line-left</a> 和 <a>line-right</a>
+		对应LTR/RTL 文本的“左边”或“右边”。
 
 		<figure>
 			<img src="images/start-inline-rl.svg"
@@ -555,18 +551,18 @@ Positional Alignment: the ''center'', ''start'', ''end'', ''self-start'', ''self
 	</aside>
 
 	<div class=note id=flexbox-exception>
-		For most layout models (block, table, grid, etc),
-		the 'justify-*' properties always align things in the <a>inline axis</a>,
-		while the 'align-*' properties always align things in the <a>block axis</a>.
+		对于大多数布局模型（块、表格、网格等等），
+		'justify-*' 属性总是在<a>inline axis</a>上安放元素，
+		而 'align-*' 属性总是在 <a>block axis</a>上安放元素。
 
-		Flexbox, on the other hand, has 'justify-*' align things in the <a>main axis</a>
-		and 'align-*' align things in the <a>cross axis</a>.
-		This depends on the value of 'flex-direction':
-		when 'flex-direction' is ''flex-direction/row'' or ''flex-direction/row-reverse'',
-		it matches the other layout modes
-		(<a>inline axis</a> with 'justify-*', <a>block axis</a> with 'align-*');
-		when 'flex-direction' is ''flex-direction/column'' or ''flex-direction/column-reverse'',
-		it has the opposite correspondence.
+		对于弹性盒子来说，'justify-*' 在 <a>main axis</a>上安放元素，
+		'align-*' 则在 <a>cross axis</a>上安放元素。
+		这取决于 'flex-direction' 的值：
+		当 'flex-direction' 值为 ''flex-direction/row'' 或 ''flex-direction/row-reverse'' 时，
+		和其他布局模式是匹配的
+		(<a>inline axis</a> 使用 'justify-*', <a>block axis</a> 使用 'align-*')；
+		当 'flex-direction' 是 ''flex-direction/column'' 或 ''flex-direction/column-reverse'' 时，
+		将使用相反的对应。
 	</div>
 
 	<p class='issue'>
@@ -575,7 +571,7 @@ Positional Alignment: the ''center'', ''start'', ''end'', ''self-start'', ''self
 <h3 id='baseline-values'>
 Baseline Alignment: the ''baseline'' keyword and ''first''/''last'' modifiers</h3>
 
-	See [[css-writing-modes-3#intro-baselines]].
+	请参见 [[css-writing-modes-3#intro-baselines]].
 
 	<dfn export>Baseline alignment</dfn> is a form of positional alignment
 	that aligns multiple <a>alignment subjects</a>
@@ -877,12 +873,12 @@ Overflow Alignment: the ''safe'' and ''unsafe'' keywords and scroll safety limit
 <h2 id='content-distribution'>
 Content Distribution: Aligning a Box’s Contents Within Itself</h2>
 
-	<dfn export id="content-distribute">Content-distribution</dfn> controls alignment of the box's content within its content box.
-	It is specified by the <dfn export>content-distribution properties</dfn> 'align-content' and 'justify-content'
-	(and their 'place-content' shorthand).
+	<dfn export id="content-distribute">Content-distribution</dfn> 控制着盒子在它的内容盒子中如何排列。
+	它由 <dfn export>content-distribution properties</dfn> 'align-content' 和 'justify-content' 所指定
+	（简写为 'place-content'）。
 
 	<div class="figure">
-		<img alt="Diagram showing that the alignment of the content within the element is affected." src="images/content-example.svg" width=212 height=212>
+		<img alt="图中展示了元素中内容的排列是如何被影响的" src="images/content-example.svg" width=212 height=212>
 	</div>
 
 <h3 id='align-justify-content'>
@@ -910,14 +906,16 @@ The 'justify-content' and 'align-content' Properties</h3>
 	Animation type: discrete
 	</pre>
 
-	Aligns the contents of the box as a whole (as the <a>alignment subject</a>)
-	within the box itself (as the <a>alignment container</a>):
-	along the inline/row/main axis of the box (for 'justify-content')
-	or the block/column/cross axis of the box (for 'align-content').
-	Values other than <dfn value for="justify-content, align-content">normal</dfn> are defined in [[#alignment-values]], above.
+	将盒子中的内容作为一个整体（<a>alignment subject</a>）
+	在盒子内部（<a>alignment container</a>）进行安放：
+	沿着
+	盒子的行内/行/主轴（'justify-content'）
+	或
+	盒子的块级/列/交叉轴（'align-content'）
 
-	For all layout modes,
-	the <a>alignment subject</a> and <a>alignment container</a>
+	<dfn value for="justify-content, align-content">normal</dfn>之外的其他值定义在上文中提及的 [[#alignment-values]]。
+
+	对于所有布局模式，
 	both assume the <a>writing mode</a> of the box the '*-content' property is set on.
 
 ### Block Containers (Including Table Cells)### {#distribution-block}
@@ -930,30 +928,29 @@ The 'justify-content' and 'align-content' Properties</h3>
 		<tr>
 			<th><a lt="alignment subject">Alignment Subject(s)</a>
 			<td>
-				The entire contents of the block, as a unit.
+				块中整体的内容
 		<tr>
 			<th>'align-content' Axis
 			<td>
-				The <a>block axis</a>.
-				If a <<content-distribution>> is specified
-				its <a>fallback alignment</a> is used instead.
+				<a>block axis</a>。
+				如果指定了 <<content-distribution>>，就使用它的<a>fallback alignment</a>。
 		<tr>
 			<th>'justify-content' Axis
 			<td>
-				Does not apply to and has no effect on <a>block containers</a>.
+				不应应用到 <a>block containers</a> 上，且在 <a>block containers</a> 上不生效。
 		<tr>
 			<th>''align-content/normal'' Behavior
 			<td>
-				All values other than ''align-content/normal'' force the block container to [=establish an independent formatting context=].
+				''align-content/normal''外的其他值将会强制块容器[=establish an independent formatting context=]。
 
-				For table cells, the behavior of ''align-content: normal'' depends on the computed value of 'vertical-align':
-				''vertical-align/top'' makes it behave as ''start'' and
-				''vertical-align/bottom'' makes it behave as ''end'';
-				otherwise ''vertical-align/middle'' makes it behave as ''center'',
-				and all other values make it behave as ''baseline''.
+				对于单元格，''align-content: normal''的表现取决于 'vertical-align' 的值：
+				''vertical-align/top'' 表现为''start''，
+				''vertical-align/bottom'' 表现为''end''；
+				''vertical-align/middle'' 表现为 ''center''，
+				其它所有值表现为 ''baseline''。
 				[[!CSS2]]
 
-				''align-content/normal'' otherwise behaves as ''start''.
+				''align-content/normal'' 表现为 ''start''。
 	</table>
 
 ### Multicol Containers ### {#distribution-multicol}
@@ -1006,22 +1003,21 @@ The 'justify-content' and 'align-content' Properties</h3>
 		<tr>
 			<th><a lt="alignment subject">Alignment Subject(s)</a>
 			<td>
-				For 'justify-content',
-				the <a>flex items</a> in each <a>flex line</a>.
+				对于 'justify-content'，
+				是每个 <a>flex line</a> 中的 <a>flex items</a>。
 
-				For 'align-content',
-				the <a>flex lines</a>.
-				Note, this only has an effect on <a>multi-line flex containers</a>.
+				对于 'align-content'，
+				是 <a>flex lines</a>。
+				注意，该属性仅在 <a>multi-line flex containers</a> 中生效。
 		<tr>
 			<th>'align-content' Axis
 			<td>
-				The <a>cross axis</a>.
+				<a>cross axis</a>。
 		<tr>
 			<th>'justify-content' Axis
 			<td>
-				The 'justify-content' property applies along the <a>main axis</a>,
-				but since stretching in the <a>main axis</a> is controlled by 'flex',
-				''<content-distribution>/stretch'' behaves as ''flex-start''.
+				'justify-content' 应用到 <a>main axis</a>，
+				但由于 <a>main axis</a> 的伸展是由 'flex' 进行控制的，因此 ''<content-distribution>/stretch'' 表现为 ''flex-start''。
 		<tr>
 			<th>''justify-content/normal'' Behavior
 			<td>
@@ -1300,18 +1296,17 @@ Inline-Axis (or Main-Axis) Alignment: the 'justify-self' property</h3>
 	Animation type: discrete
 	</pre>
 
-	Justifies the box (as the [=alignment subject=])
-	within its containing block (as the [=alignment container=])
-	along the inline/row/main axis of the [=alignment container=]:
-	the box's outer edges are aligned within its <a>alignment container</a>
-	<a href="#alignment-values">as described by its alignment value</a>.
-	Values have the following meanings:
+	沿着盒子（[=alignment container=]）的行内/行/主轴，
+	在盒子的包含块中（即 [=alignment container=]）排列盒子（即 [=alignment subject=]）：
+	盒子的外部边缘在<a>alignment container</a>内对齐，
+	<a href="#alignment-values">对齐值如alignment value所述</a>。
+	这些值具有下列含义：
 
 	<dl dfn-type=value dfn-for=justify-self>
 		: <dfn>auto</dfn>
 		::
-			Behaves as ''justify-self/normal'' if the box has no parent,
-			or when determining the actual position of an absolutely positioned box.
+			如果盒子没有父元素，或者已确定绝对定位框的实际位置时，
+			表现为 ''justify-self/normal''。
 			It behaves as the computed 'justify-items' value of the parent box
 			(minus any ''legacy'' keywords)
 			otherwise
@@ -1320,46 +1315,40 @@ Inline-Axis (or Main-Axis) Alignment: the 'justify-self' property</h3>
 
 		: <dfn>normal</dfn>
 		::
-			Represents the “default” alignment for the layout mode.
-			Its behavior depends on the layout mode, as described below.
+			表示布局模式的默认排列方式，
+			其表现依赖于如下所示的布局模式。
 
 		: <dfn>stretch</dfn>
 		::
-			When the box’s [=computed value|computed=] 'width'/'height'
-			(as appropriate to the axis)
-			is ''width/auto''
-			and neither of its margins (in the appropriate axis) are ''margin/auto'',
-			sets the box’s used size to the length necessary to make its outer size
-			as close to filling the <a>alignment container</a> as possible
-			while still respecting the constraints imposed by 'min-height'/'min-width'/'max-height'/'max-width'.
+			当盒子（在对应轴上）的 [=computed value|computed=] 是 'width'/'height'，
+			且它没有哪一个 margin（在对应轴上）是 ''margin/auto''，
+			设置盒子的尺寸到某个必需的长度，来使得其外部尺寸尽可能接近地填充 <a>alignment container</a> 。
+			然而尺寸仍然为 'min-height'/'min-width'/'max-height'/'max-width' 所强行限制。
 
-			Unless otherwise specified, this value falls back to ''flex-start'' generally,
-			and to ''self-start'' or ''self-end''
-			if the box has also specified
-			<a>first baseline</a> or <a>last baseline</a> <a>baseline content-alignment</a> (respectively)
-			in the same axis.
+			除非另有规定，
+			值通常会回落到''flex-start'' 。
+			如果盒子在相同轴分别指定了
+			<a>first baseline</a> <a>baseline content-alignment</a> 或 <a>last baseline</a> <a>baseline content-alignment</a>，
+			值将回落到 ''self-start'' 或 ''self-end''。
 
-			Note: The ''justify-self/stretch'' keyword can cause elements to shrink,
-			to fit their container.
+			Note: ''justify-self/stretch'' 关键字会导致元素收缩，
+			以适应它的容器。
 
 		: <<baseline-position>>
 		::
-			Indicates <a>baseline self-alignment</a>,
-			as defined in [[#baseline-values]],
-			[[#baseline-align-self]],
-			and [[#baseline-rules]].
+			指代 [[#baseline-values]]、[#baseline-align-self]] 和 [[#baseline-rules]]中定义的 <a>baseline self-alignment</a>。
 
 		: <<overflow-position>>? <<self-position>>
 		::
-			Defined in [[#alignment-values]], above.
+			定义在上文所述的 [[#alignment-values]] 中。
 	</dl>
 
-	Values other than ''justify-self/stretch'' cause a 'width'/'height' of ''width/auto''
-	to be treated as ''width/fit-content''.
+	''justify-self/stretch'' 之外的其他值会导致设置为 ''width/auto'' 的 'width'/'height' 属性被作为
+	''width/fit-content''来对待。
 
-	Note: ''margin/auto'' margins,
-	because they effectively adjust the size of the margin area,
-	take precedence over 'justify-self'.
+	// FIXME:
+	Note: ''margin/auto'' 边距，
+	因为它有效地调整了margin区域的尺寸，因此优先于 'justify-self'。
 
 ### Block-Level Boxes ### {#justify-block}
 
@@ -1408,47 +1397,50 @@ Inline-Axis (or Main-Axis) Alignment: the 'justify-self' property</h3>
 
 ### Absolutely-Positioned Boxes ### {#justify-abspos}
 
-	This section describes the effect of 'justify-self'
-	on how the margin box of an absolutely-positioned box
-	is positioned with respect to its (absolute-positioning) containing block.
+	FIXME:需要测试
+	本章节描述了 'justify-self' 在应用到一个被绝对定位盒子时的效果。
+
+	本节描述了 'justify-self' 对 absolutely-positioned box
+	的 margin box 相对其（绝对定位）包含块的定位的影响。
 
 	<table class="data align-details">
 		<tr>
 			<th>'justify-self' Axis
 			<td>
-				The block’s containing block’s <a>inline axis</a>.
+				块级包含块的 <a>inline axis</a>。
 		<tr>
 			<th><a>Alignment Container</a>
 			<td>
+				盒子的包含块的 inset（'top'/'right'/'bottom'/'left'）属性被改变了 TODO:
 				The box's <a>containing block</a>,
 				as modified by the inset properties ('top'/'right'/'bottom'/'left'),
 				assuming the <a>writing mode</a> of the <a>containing block</a>.
-				If both inset properties in the relevant axis are ''left/auto'',
-				then use the box’s <a>static position rectangle</a>
-				(i.e. set both insets to the box’s <a>static position</a>).
+
+				如果 inset 相对的轴是''left/auto''，则使用盒子的 <a>static position rectangle</a>。
+				（即两个inset为盒子的<a>static position</a>）。
 		<tr>
 			<th><a>Alignment Subject</a>
 			<td>
-				The box's margin box,
+				盒子的 margin box，
 				assuming the <a>writing mode</a> of the box.
 		<tr>
 			<th>''justify-self/normal'' Behavior
 			<td>
-				* For replaced absolutely-positioned boxes, the ''justify-self/normal'' keyword behaves as ''start''.
-				* For all other absolutely-positioned boxes, ''justify-self/normal'' behaves as stretch.
-					Additionally, if neither inset in this axis is ''top/auto'',
-					but 'width' ('height', for <a>vertical writing modes</a>) is ''width/auto'',
-					''margin/auto'' margins are treated as zero.
+				* 对于替换的绝对定位盒子，''justify-self/normal''关键字表现为 ''start''。
+				* 对于其他的绝对定位盒子，''justify-self/normal''关键字表现为 stretch。
+					此外，如果没有任一inset在轴上设置为 ''top/auto''，但 'width'（<a>vertical writing modes</a>则为 'height'）是 ''width/auto''，
+					''margin/auto'' 边距将会看作0。
 
-					(In non-''justify-self/normal'' cases, ''margin/auto'' margins are prioritized over the <a>self-alignment properties</a>, as usual.)
+					（在非''justify-self/normal''例子中，''margin/auto'' margin 一般更优先于 <a>self-alignment properties</a>）。
 
-				Note: This somewhat bizarre behavior is required for compatibility with the behavior specified in CSS 2.1.
+				Note: 为了与 CSS 2.1 中指定的行为相兼容，需要这种有点奇怪的行为。
 		<tr>
 			<th>Other Details
 			<td>
-				In terms of CSS2.1 formatting [[!CSS2]],
-				the rules for “over-constrained” computations in <a href="https://www.w3.org/TR/CSS2/visudet.html#abs-non-replaced-width">section 10.3.7</a>
-				are ignored in favor of alignment as specified here,
+				按照CSS2.1的格式 [[!CSS2]]，
+				<a href="https://www.w3.org/TR/CSS2/visudet.html#abs-non-replaced-width">section 10.3.7</a>the rules for “over-constrained” computations
+				将被忽略，以支持这里定义的对齐。
+				inset使用到的属性值不会为the over-constraint进行调整。TODO:
 				and the used value of the inset properties are not adjusted to correct for the over-constraint.
 
 				Values other than ''justify-self/stretch'' or ''justify-self/normal''
@@ -1456,30 +1448,28 @@ Inline-Axis (or Main-Axis) Alignment: the 'justify-self' property</h3>
 				to use <a>fit-content sizing</a> for calculating ''width/auto'' sizes
 				in the affected axis.
 
-				Note that ''justify-self/stretch'' <em>does</em> cause replaced absolutely-positioned boxes
-				to fill their containing block
-				just as non-replaced ones do.
+				请注意，''justify-self/stretch'' <em>会</em> 导致 replaced absolutely-positioned boxes
+				来填充包含块，
+				就像 non-replaced 一样。
 
-				Note: If only one inset property is ''top/auto'',
-				the computations in <a href="https://www.w3.org/TR/CSS2/visudet.html#abs-non-replaced-width">CSS2 section 10.3.7</a>
-				fully determine its size and position,
-				and 'justify-self' has no effect.
-				(If both are ''top/auto'',
-				then the box is statically-positioned,
-				see above,
-				and can be aligned within the <a>static position rectangle</a>.)
+				Note: 如果仅有一个 inset 属性，值为 ''top/auto''，
+				<a href="https://www.w3.org/TR/CSS2/visudet.html#abs-non-replaced-width">CSS2 section 10.3.7</a>中的计算将完全取决于它的尺寸与位置，
+				且 'justify-self' 将没有效果。
+				（如果两者均为 ''top/auto'',
+				则盒子将被静态地布局，见上
+				且可在 <a>static position rectangle</a>中被排列。）
 	</table>
 
 ### Table Cells ### {#justify-cell}
 
-	This property does not apply to table cells,
-	because their position and size is fully constrained by table layout.
+	该属性不应用于单元格，
+	因为它们的位置与尺寸是由表格布局严格限制的。
 
 ### Flex Items ### {#justify-flex}
 
-	This property does not apply to <a>flex items</a>,
-	because there is more than one item in the <a>main axis</a>.
-	See 'flex' for stretching and 'justify-content' for <a>main-axis</a> alignment. [[!CSS-FLEXBOX-1]]
+	该属性不应用于 <a>flex items</a>，
+	因为 <a>main axis</a> 上有多个item。
+	请参阅 'flex' 来了解 stretching 和用于<a>main-axis</a> 的 'justify-content'。[[!CSS-FLEXBOX-1]]
 
 ### Grid Items ### {#justify-grid}
 
@@ -1487,27 +1477,26 @@ Inline-Axis (or Main-Axis) Alignment: the 'justify-self' property</h3>
 		<tr>
 			<th>'justify-self' Axis
 			<td>
-				The grid’s [=inline axis=].
+				网格的 [=inline axis=]。
 		<tr>
 			<th><a>Alignment Container</a>
 			<td>
 				The <a>grid item’s</a> <a>grid area</a>,
-				assuming the <a>writing mode</a> of the <a>grid container</a>.
+				假定 the <a>writing mode</a> of the <a>grid container</a>.
 		<tr>
 			<th><a>Alignment Subject</a>
 			<td>
 				The <a>grid item’s</a> margin box,
-				assuming the <a>writing mode</a> of the <a>grid item</a>.
+				假定 the <a>writing mode</a> of the <a>grid item</a>.
 		<tr>
 			<th>''justify-self/normal'' Behavior
 			<td>
-				Sizes as either ''justify-self/stretch'' (typical [=non-replaced elements=])
-				or ''justify-self/start'' (typical [=replaced elements=]);
-				see [[css-grid-1#grid-item-sizing|Grid Item Sizing]] in [[!CSS-GRID-1]].
-				The resulting box is then start-aligned.
+				设置尺寸为 ''justify-self/stretch'' （通常是 [=non-replaced elements=]）
+				或 ''justify-self/start'' （通常是 [=replaced elements=]）
+				请参阅 [[!CSS-GRID-1]] 中的 [[css-grid-1#grid-item-sizing|Grid Item Sizing]]。
 	</table>
 
-	See [[!CSS-GRID-1]] for details.
+	请参阅 [[!CSS-GRID-1]] 来了解详情。
 
 <h3 id='align-self-property'>
 Block-Axis (or Cross-Axis) Alignment: the 'align-self' property</h3>
@@ -1523,12 +1512,11 @@ Block-Axis (or Cross-Axis) Alignment: the 'align-self' property</h3>
 	Animation type: discrete
 	</pre>
 
-	Aligns the box (as the [=alignment subject=])
-	within its containing block (as the [=alignment container=])
-	along the block/column/cross axis of the [=alignment container=]:
-	the box's outer edges are aligned within its <a>alignment container</a>
-	<a href="#alignment-values">as described by its alignment value</a>.
-	Values have the following meanings:
+	沿着 [=alignment container=] 的块级/列/交叉轴
+	在盒子的包含块中（即 [=alignment container=]）排列盒子（即 [=alignment subject=]）：
+	盒子的外部边缘在<a>alignment container</a>内对齐，
+	<a href="#alignment-values">对齐值如alignment value所述</a>。
+	这些值具有下列含义：
 
 	<dl dfn-type=value dfn-for=align-self>
 		: <dfn>auto</dfn>
@@ -1640,8 +1628,8 @@ Block-Axis (or Cross-Axis) Alignment: the 'align-self' property</h3>
 
 ### Table Cells ### {#align-cell}
 
-	This property does not apply to table cells,
-	because their position and size is fully constrained by table layout.
+	该属性不应用于单元格，
+	因为它们的位置与尺寸是由表格布局严格限制的。
 
 ### Flex Items ### {#align-flex}
 
@@ -1872,10 +1860,10 @@ Inline-Axis (or Main-Axis) Alignment: the 'justify-items' property</h3>
 	Animation type: discrete
 	</pre>
 
-	This property specifies the default 'justify-self' for all of the child boxes
-	(including anonymous boxes)
-	participating in this box's formatting context.
-	Values have the following meanings:
+	该属性为所有参与组成盒子格式化上下文的子盒子设置了默认的 'justify-self'
+	（包括匿名盒子）
+
+	值具有以下含义：
 
 	<dl dfn-type="value" dfn-for="justify-items">
 		<dt><dfn>legacy</dfn>
@@ -1909,11 +1897,10 @@ Block-Axis (or Cross-Axis) Alignment: the 'align-items' property</h3>
 	Animation type: discrete
 	</pre>
 
-	This property specifies the default 'align-self' for all of the child boxes
-	(including anonymous boxes)
-	participating in this box's formatting context.
+	该属性为所有参与组成盒子格式化上下文的子盒子设置了默认的 'align-self' 
+	（包括匿名盒子）
 
-	Values have no special handling and are merely referenced by 'align-self'.
+	值没有做特殊处理，已在 'align-self' 中进行过引用。
 
 <h3 id='place-items-property'>
 Self-Alignment Shorthand: the 'place-items' property</h3>
@@ -1950,18 +1937,15 @@ Self-Alignment Shorthand: the 'place-items' property</h3>
 <h2 id='gaps'>
 Gaps Between Boxes</h2>
 
-While 'margin' and 'padding' can be used to specify visual spacing around individual boxes,
-it's sometimes more convenient to globally specify spacing between adjacent boxes
-within a given layout context,
-particularly when the spacing is different between boxes
-as opposed to between the first/last box and the container's edge.
+虽然 'margin' 与 'padding' 能够被用来在独立盒子之间指定空隙，
+但在指定的布局上下文中全局地为相邻盒子指定一个空隙显然会更加方便，
+特别是当盒子间距与第一个盒子间距、最后一个盒子间距或容器边缘间距不同时。
 
-The 'gap' property,
-and its 'row-gap' and 'column-gap' sub-properties,
-provide this functionality for
-<a href="http://www.w3.org/TR/css3-multicol/">multi-column</a>,
-<a href="http://www.w3.org/TR/css-flexbox/">flex</a>,
-and <a href="http://www.w3.org/TR/css-grid/">grid layout</a>.
+'gap' 属性及它的 'row-gap' 和 'column-gap' 子属性，为
+<a href="http://www.w3.org/TR/css3-multicol/">multi-column</a>、
+<a href="http://www.w3.org/TR/css-flexbox/">flex</a>
+和 <a href="http://www.w3.org/TR/css-grid/">grid layout</a>
+提供了此功能。
 
 <h3 id='column-row-gap'>
 Row and Column Gutters: the 'row-gap' and 'column-gap' properties</h3>
