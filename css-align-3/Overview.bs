@@ -1426,7 +1426,7 @@ Inline-Axis (or Main-Axis) Alignment: the 'justify-self' property</h3>
 		<tr>
 			<th>''justify-self/normal'' Behavior
 			<td>
-				* 对于替换的绝对定位盒子，''justify-self/normal''关键字表现为 ''start''。
+				* 对于替换（可替换元素）的绝对定位盒子，''justify-self/normal''关键字表现为 ''start''。
 				* 对于其他的绝对定位盒子，''justify-self/normal''关键字表现为 stretch。
 					此外，如果没有任一inset在轴上设置为 ''top/auto''，但 'width'（<a>vertical writing modes</a>则为 'height'）是 ''width/auto''，
 					''margin/auto'' 边距将会看作0。
@@ -1881,7 +1881,7 @@ Inline-Axis (or Main-Axis) Alignment: the 'justify-items' property</h3>
 			It exists to implement the legacy alignment behavior of HTML's <code>&lt;center></code> element and <code>align</code> attribute.
 	</dl>
 
-	Other values have no special handling and are merely referenced by 'justify-self'.
+	其它值没有做特殊处理，已在 'justify-self' 中进行过引用。
 
 <h3 id='align-items-property'>
 Block-Axis (or Cross-Axis) Alignment: the 'align-items' property</h3>
