@@ -447,30 +447,30 @@ Flex Layout Box Model and Terminology</h2>
 		<dt class='axis'>main axis
 		<dt class='axis'>main dimension
 		<dd>
-			The <dfn lt="main axis|main-axis">main axis</dfn> of a flex container is the primary axis along which <a>flex items</a> are laid out.
-			It extends in the <dfn>main dimension</dfn>.
+			Flex 容器的<dfn lt="main axis|main-axis">main axis</dfn>指的<a>flex items</a>布局时所沿着的主要轴向。
+			它延伸了 <dfn>cross dimension</dfn>。
 
 		<dt class='side'>main-start
 		<dt class='side'>main-end
 		<dd>
-			The <a>flex items</a> are placed within the container
-			starting on the <dfn>main-start</dfn> side
-			and going toward the <dfn>main-end</dfn> side.
+			<a>flex items</a> 放置于容器中，
+			开始于<dfn>main-start</dfn>侧，
+			终止于<dfn>main-end</dfn>侧。
 
 		<dt class='size'>main size
 		<dt class='size'>main size property
 		<dd>
-			The <dfn>main size</dfn> of a [=flex container=] or [=flex item=]
-			refers to its [=width=] or [=height=],
-			whichever is in the [=main dimension=].
-			Its <dfn>main size property</dfn>
-			is either its 'width' or 'height' property,
-			whichever is in the [=main dimension=].
-			Likewise, its <dfn lt="min main size property">min</dfn> and
+			[=flex container=] 或 [=flex item=] 的 <dfn>main size</dfn> 指的是它的
+			[=width=] 或 [=height=]，
+			以[=main dimension=]为准（来决定是[=width=] 还是 [=height=]）。
+			它的 <dfn>main size</dfn> 指的是它的
+			'width' 或 'height'，
+			以[=main dimension=]为准。
+			同样地，它的<dfn lt="min main size property">min main size properties</dfn> 与
 			<dfn lt="max main size property">max main size properties</dfn>
-			are its 'min-width'/'max-width' or 'min-height'/'max-height' properties,
-			whichever are in the <a>main dimension</a>,
-			and determine its <dfn lt="min main size">min</dfn>/<dfn>max main size</dfn>.
+			是它的 'min-width'/'max-width' 或 'min-height'/'max-height' 属性，
+			以[=main dimension=]为准，
+			而且也决定了它的 <dfn lt="min main size">min main size</dfn>/<dfn>max main size</dfn>。
 
 			In [=flex layout=], the [=main size=] is controlled by the 'flex' property
 			rather than directly by the [=main size property=].
@@ -484,8 +484,8 @@ Flex Layout Box Model and Terminology</h2>
 		<dt class='axis'>cross axis
 		<dt class='axis'>cross dimension
 		<dd>
-			The axis perpendicular to the <a>main axis</a> is called the <dfn lt="cross axis|cross-axis">cross axis</dfn>.
-			It extends in the <dfn>cross dimension</dfn>.
+			垂直于 <a>main axis</a> 的轴被称作 <dfn lt="cross axis|cross-axis">cross axis</dfn>，
+			它延伸了 <dfn>cross dimension</dfn>。
 
 		<dt class='side'>cross-start
 		<dt class='side'>cross-end
@@ -510,8 +510,8 @@ Flex Layout Box Model and Terminology</h2>
 			and determine its <dfn lt="min cross size">min</dfn>/<dfn>max cross size</dfn>.
 	</dl>
 
-	Additional sizing terminology used in this specification
-	is defined in <a href="http://www.w3.org/TR/CSS-SIZING-3/">CSS Intrinsic and Extrinsic Sizing</a>. [[!CSS-SIZING-3]]
+	本规范中使用到的其他“尺寸”术语定义在
+	<a href="http://www.w3.org/TR/CSS-SIZING-3/">CSS Intrinsic and Extrinsic Sizing</a>。 [[!CSS-SIZING-3]]
 
 <!--
 ████████  ████  ██████  ████████  ██          ███    ██    ██
@@ -534,8 +534,8 @@ Flex Containers: the ''flex'' and ''inline-flex'' 'display' values</h2>
 	<dl dfn-type=value dfn-for=display>
 		<dt><dfn>flex</dfn>
 		<dd>
-			This value causes an element to generate a <a>flex container</a> box
-			that is <a>block-level</a> when placed in <a>flow layout</a>.
+			当放置在 <a>flow layout</a> 中时，
+			该值使得元素建立了一个<a>block-level</a> <a>flex container</a> 盒子。
 
 			<wpt>
 				display-flex-001.htm
@@ -544,19 +544,19 @@ Flex Containers: the ''flex'' and ''inline-flex'' 'display' values</h2>
 
 		<dt><dfn>inline-flex</dfn>
 		<dd>
-			This value causes an element to generate a <a>flex container</a> box
-			that is <a>inline-level</a> when placed in <a>flow layout</a>.
+			当放置在 <a>flow layout</a> 中时，
+			该值使得元素建立了一个<a>inline-level</a> <a>flex container</a> 盒子。
 
 			<wpt>
 				display_inline-flex_exist.html
 			</wpt>
 	</dl>
 
-	A <a>flex container</a> establishes a new <dfn export>flex formatting context</dfn> for its contents.
-	This is the same as establishing a block formatting context,
-	except that flex layout is used instead of block layout.
-	For example, floats do not intrude into the flex container,
-	and the flex container's margins do not collapse with the margins of its contents.
+	<a>flex container</a> 为它的内容建立了一个新的 <dfn export>flex formatting context</dfn>。
+	这和建立一个block formatting context是相同的，
+	只不过使用的是flex布局而不是block布局。
+	例如，浮动不会入侵 flex container，
+	且容器的 margin 不和内容的 margin 重叠。
 	<a>Flex containers</a> form a containing block for their contents
 	<a href="https://www.w3.org/TR/CSS2/visudet.html#containing-block-details">exactly like block containers do</a>. [[!CSS2]]
 	The 'overflow' property applies to <a>flex containers</a>.
@@ -565,12 +565,10 @@ Flex Containers: the ''flex'' and ''inline-flex'' 'display' values</h2>
 	and so some properties that were designed with the assumption of block layout don't apply in the context of flex layout.
 	In particular:
 
-		* 'float' and 'clear' do not create floating or clearance of <a>flex item</a>,
-			and do not take it out-of-flow.
-		* 'vertical-align' has no effect on a flex item.
-		* the ''::first-line'' and ''::first-letter'' pseudo-elements do not apply to <a>flex containers</a>,
-			and <a>flex containers</a> do not contribute a <a>first formatted line</a> or <a>first letter</a>
-			to their ancestors.
+		* 'float' 和 'clear' 不会创建、清除 <a>flex item</a> 的浮动，也不会把它带出文档流。
+		* 'vertical-align' 对flex item不产生效果。
+		* ''::first-line'' 和 ''::first-letter'' 伪元素不适用于<a>flex containers</a>，
+			且<a>flex containers</a>不为它的祖先贡献 <a>first formatted line</a> 或 <a>first letter</a>。
 
 			<!--
 			Issue: When the Pseudo-Elements spec exists,
@@ -601,14 +599,13 @@ Flex Items</h2>
 	Loosely speaking, the <a>flex items</a> of a <a>flex container</a>
 	are boxes representing its in-flow contents.
 
-	Each in-flow child of a <a>flex container</a>
-	becomes a <a>flex item</a>,
-	and each contiguous sequence of child <a>text runs</a>
-	is wrapped in an <a>anonymous</a> <a>block container</a> <a>flex item</a>.
-	However, if the entire sequence of child <a>text runs</a> contains only
-	[=document white space characters=]
-	(i.e. characters that can be affected by the 'white-space' property)
-	it is instead not rendered (just as if its <a>text nodes</a> were ''display:none'').
+	<a>flex container</a>每一个在流中的孩子
+	会成为一个<a>flex item</a>，
+	而且每个连续的子<a>text runs</a>都被
+	包裹在一个 <a>anonymous</a> <a>block container</a> <a>flex item</a> 中。
+	然而，如果一整个子<a>text runs</a>仅包含 [=document white space characters=]
+	（即会被 'white-space' 所影响的字符），
+	那么它将不会被渲染（就像其 <a>text nodes</a> 为 ''display:none''）。
 
 	<wpt>
 		anonymous-flex-item-001.html
@@ -620,7 +617,7 @@ Flex Items</h2>
 	</wpt>
 
 	<div class="example">
-		<p>Examples of flex items:
+		<p>flex items示例：
 		<pre class="lang-markup">
 		&lt;div style="display:flex">
 
@@ -2347,10 +2344,10 @@ Flex Container Baselines</h3>
 -->
 
 <h2 id='layout-algorithm'>
-Flex Layout Algorithm</h2>
+Flex 布局算法</h2>
 
-	This section contains normative algorithms
-	detailing the exact layout behavior of a flex container and its contents.
+	本章节包含了规范算法，
+	详细描述了flex container 及其 contents的确切布局行为。
 	The algorithms here are written to optimize readability and theoretical simplicity,
 	and may not necessarily be the most efficient.
 	Implementations may use whatever actual algorithms they wish,
