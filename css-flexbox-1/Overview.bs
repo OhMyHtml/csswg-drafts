@@ -2376,15 +2376,15 @@ Line Length Determination</h3>
 
 	<ol class=continue>
 		<li id='algo-available'>
-			<strong>Determine the available main and cross space for the flex items.</strong>
-			For each dimension,
-			if that dimension of the <a>flex container</a>’s content box is a <a>definite size</a>, use that;
-			if that dimension of the <a>flex container</a> is being sized under a <a lt="min-content constraint">min</a> or <a>max-content constraint</a>,
-			the available space in that dimension is that constraint;
-			otherwise, subtract the <a>flex container</a>’s margin, border, and padding
-			from the space available to the flex container in that dimension
-			and use that value.
-			<span class='note'>This might result in an infinite value.</span>
+			<strong>决定flex item可用的主空间和交叉空间。</strong>
+			对于每个维度，
+			如果 <a>flex container</a> content box 的维度是 <a>definite size</a>，就使用它；
+			如果 <a>flex container</a> 的维度通过 <a lt="min-content constraint">min</a> 或 <a>max-content constraint</a> 来进行约束，
+			则该维度中的可用空间就是该约束。
+			否则，从该维度flex container的可用空间减去<a>flex container</a>的边距、边框、填充，
+			并使用该值。
+
+			<span class='note'>这可能会导致一个无限的值。</span>
 			<!-- Maybe???
 			For this purpose,
 			the block axis of a block container(?)
@@ -2401,39 +2401,41 @@ Line Length Determination</h3>
 			</div>
 
 		<li id='algo-main-item'>
-			<strong>Determine the <dfn>flex base size</dfn> and <dfn>hypothetical main size</dfn> of each item:</strong>
+			<strong>决定每个item的 <dfn>flex base size</dfn> 和 <dfn>hypothetical main size</dfn>：</strong>
 
 			<ol type=A>
 				<li>
-					If the item has a <a>definite</a> used <a>flex basis</a>,
-					that's the <a>flex base size</a>.
+					如果该项目具有 <a>definite</a> 使用的 <a>flex basis</a>，
+					那它就是 <a>flex base size</a>。
 
 				<li>
-					If the flex item has ...
+					如果该flex项目具有……
 					<ul>
-						<li>a [=preferred aspect ratio=],
-						<li>a used <a>flex basis</a> of ''content'', and
-						<li>a <a>definite</a> <a>cross size</a>,
+						<li>[=preferred aspect ratio=]，
+						<li>为 ''content'' 设置了 <a>flex basis</a>，
+						<li><a>definite</a> <a>cross size</a>,
 					</ul>
-					then the <a>flex base size</a> is calculated from
-					its <a lt="used value">used</a> <a>cross size</a>
-					and the <a>flex item</a>’s aspect ratio.
+					那么就从它的
+					<a lt="used value">used</a> <a>cross size</a>
+					以及 <a>flex item</a> 的 aspect ratio 来计算 <a>flex base size</a> 
 
 				<li>
-					If the used <a>flex basis</a> is ''content'' or depends on its <a>available space</a>,
-					and the flex container is being sized under a min-content or max-content constraint
-					(e.g. when performing <a href="https://www.w3.org/TR/CSS2/tables.html#auto-table-layout">automatic table layout</a> [[!CSS2]]),
-					size the item under that constraint.
-					The <a>flex base size</a> is the item's resulting <a>main size</a>.
+					如果使用的 <a>flex basis</a> 是 ''content'' 或取决于它的<a>available space</a>，
+					且flex容器是在 min-content 或 max-content 限制之下确定尺寸的
+					(例如，当使用<a href="https://www.w3.org/TR/CSS2/tables.html#auto-table-layout">automatic table layout</a> [[!CSS2]] 时),
+					那么就在该限制下确定尺寸
+
+					<a>flex base size</a>就是项目的<a>main size</a>。
 
 				<li>
-					Otherwise,
-					if the used <a>flex basis</a> is ''content'' or depends on its <a>available space</a>,
-					the available main size is infinite,
-					and the flex item's inline axis is parallel to the main axis,
-					lay the item out using
-					<a href="https://www.w3.org/TR/css3-writing-modes/#orthogonal-flows">the rules for a box in an orthogonal flow</a> [[!CSS3-WRITING-MODES]].
-					The <a>flex base size</a> is the item's max-content <a>main size</a>.
+					否则，
+					如果使用的 <a>flex basis</a> 是 ''content'' 或取决于它的<a>available space</a>，
+					那么可用的 main size 就是无限的，
+					且flex项目的内联轴与主轴相平行。
+					使用
+					<a href="https://www.w3.org/TR/css3-writing-modes/#orthogonal-flows">the rules for a box in an orthogonal flow</a> [[!CSS3-WRITING-MODES]]
+					来排布它们。
+					<a>flex base size</a>就是项目的 max-content <a>main size</a>。
 
 					Note: This case occurs, for example,
 					in an English document (horizontal <a>writing mode</a>)
@@ -2441,43 +2443,39 @@ Line Length Determination</h3>
 					containing a vertical Japanese (vertical <a>writing mode</a>) <a>flex item</a>.
 
 				<li>
-					Otherwise,
-					size the item into the <a>available space</a>
-					using its used <a>flex basis</a> in place of its <a>main size</a>,
-					treating a value of ''content'' as ''width/max-content''.
-					If a <a>cross size</a> is needed to determine the <a>main size</a>
-					(e.g. when the <a>flex item</a>’s <a>main size</a> is in its block axis,
-					or when it has a [=preferred aspect ratio=])
-					and the <a>flex item</a>’s cross size is ''auto'' and not <a>definite</a>,
-					in this calculation use ''width/fit-content'' as the <a>flex item</a>’s <a>cross size</a>.
-					The <a>flex base size</a> is the item's resulting <a>main size</a>.
+					否则，
+					使用它的 <a>flex basis</a> 来替代 <a>main size</a>，
+					将该项目尺寸设置到 <a>available space</a>。
+					将 ''content'' 的值看作 ''width/max-content''。
+					如果 <a>cross size</a> 需要确定的 <a>main size</a>，
+					（例如当<a>flex item</a>的<a>main size</a>在它的块级轴内，或当它具有一个[=preferred aspect ratio=]），
+					且<a>flex item</a>的cross size为''auto''而非<a>definite</a>，
+					那么在此计算中将使用 ''width/fit-content'' 作为<a>flex item</a>的<a>cross size</a>，
+					<a>flex base size</a> 就是项目的<a>main size</a>。
 
 					<wpt>
 						css-flexbox-img-expand-evenly.html
 					</wpt>
 			</ol>
 
-			When determining the <a>flex base size</a>,
-			the item’s min and max <a>main sizes</a> are ignored
-			(no clamping occurs).
-			Furthermore, the sizing calculations that floor the content box size at zero
-			when applying 'box-sizing' are also ignored.
-			(For example, an item with a specified size of zero,
-			positive padding, and ''box-sizing: border-box''
-			will have an outer <a>flex base size</a> of zero--
-			and hence a negative inner <a>flex base size</a>.)
+			在确定<a>flex base size</a>时，项目的最大、最小
+			<a>main sizes</a> 是被忽略的（无限制）。
+			此外，在应用 'box-sizing' 时将内容框大小设为零的大小计算也将被忽略。
+			（例如，一个指定了尺寸为0、填充为正值、且''box-sizing: border-box''的项目，
+			外部<a>flex base size</a>大小为0，因此内部<a>flex base size</a>大小为负）。
 
-			The <a>hypothetical main size</a> is the item's <a>flex base size</a>
-			clamped according to its <a lt="used value">used</a> min and max <a>main sizes</a>
-			(and flooring the content box size at zero).
+			<!-- hypothetical: 假想的 -->
+			<a>hypothetical main size</a> 是项目根据它的 <a lt="used value">used</a> min 和 max <a>main sizes</a>
+			(并将内容框尺寸设为0)
+			来确定的 <a>flex base size</a>。
 
 		<li id='algo-main-container'>
-			<strong>Determine the <a>main size</a> of the flex container</strong>
-			using the rules of the formatting context in which it participates.
+			<strong>flex容器的<a>main size</a></strong>
+			是使用它所参与组成的格式化上下文规则来确定的。
 
 			<div class=note>
-				The [=automatic block size=] of a [=block-level=] [=flex container=]
-				is its [=max-content size=].
+				[=block-level=] [=flex container=]的[=automatic block size=]
+				是它的 [=max-content size=]。
 
 				The Block Layout spec should define this equivalency, but it doesn't exist yet.
 			</div>
@@ -2488,31 +2486,30 @@ Main Size Determination</h3>
 
 	<ol class=continue>
 		<li id='algo-line-break'>
-			<strong>Collect flex items into flex lines:</strong>
+			<strong>收集flex items到flex lines：</strong>
 
 			<ul>
 				<li>
-					If the flex container is <a>single-line</a>,
-					collect all the flex items into a single flex line.
+					如果flex容器是单行的，
+					则收集所有 flex items 到一个单行的flex line。
 
 				<li>
-					Otherwise,
-					starting from the first uncollected item,
-					collect consecutive items one by one
-					until the first time that the <em>next</em> collected item
-					would not fit into the flex container's [=inner size|inner=] main size
-					(or until a forced break is encountered,
-					see [[#pagination]]).
-					If the very first uncollected item wouldn't fit,
-					collect just it into the line.
+					否则，从第一个未收集的项目开始，
+					一个个地收集连续项目，直到<em>下一个</em>收集到的项目第一次
+					不再能适应到flex容器的 [=inner size|inner=] main size
+					（或遇上了一次强制换行，见 [[#pagination]]）。
+
+					若第一个未收集的项目就不能适应flex容器的 [=inner size|inner=]，
+					就收集它到一行中。
 
 					<p>
-						For this step,
-						the size of a flex item is its [=outer size|outer=] <a>hypothetical main size</a>.
-						<span class=note>(Note: This can be negative.)</span>
+						在这一步骤中，
+						flex item的尺寸是它的
+						[=outer size|outer=] <a>hypothetical main size</a>。
+						<span class=note>（Note: 该值可为负。）</span>
 
 					<p>
-						Repeat until all flex items have been collected into flex lines.
+						重复这一步骤，直到所有flex项目均被收集到flex lines中。
 
 					<p class='note'>
 						Note that the "collect as many" line will collect zero-sized flex items
@@ -2521,8 +2518,8 @@ Main Size Determination</h3>
 			</ul>
 
 		<li id='algo-flex'>
-			<strong><a href='#resolve-flexible-lengths'>Resolve the flexible lengths</a></strong> of all the flex items
-			to find their used <a>main size</a>. See [[#resolve-flexible-lengths]].
+			<strong><a href='#resolve-flexible-lengths'>解析所有flex items的 flexible lengths</a></strong>
+			来找到它们使用的<a>main size</a>。参见[[#resolve-flexible-lengths]]。
 	</ol>
 
 <h3 id='cross-sizing'>
