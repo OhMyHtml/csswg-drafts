@@ -2464,7 +2464,7 @@ Line Length Determination</h3>
 			（例如，一个指定了尺寸为0、填充为正值、且''box-sizing: border-box''的项目，
 			外部<a>flex base size</a>大小为0，因此内部<a>flex base size</a>大小为负）。
 
-			<!-- hypothetical: 假想的 -->
+			<!-- hypothetical: 假设的 -->
 			<a>hypothetical main size</a> 是项目根据它的 <a lt="used value">used</a> min 和 max <a>main sizes</a>
 			(并将内容框尺寸设为0)
 			来确定的 <a>flex base size</a>。
@@ -2512,9 +2512,8 @@ Main Size Determination</h3>
 						重复这一步骤，直到所有flex项目均被收集到flex lines中。
 
 					<p class='note'>
-						Note that the "collect as many" line will collect zero-sized flex items
-						onto the end of the previous line
-						even if the last non-zero item exactly "filled up" the line.
+						注意，“尽可能多收集行”将会把尺寸为0的flex项目收集到前一行的末端，
+						即使最后一个非零的项目确实充满了最后一行。
 			</ul>
 
 		<li id='algo-flex'>
@@ -2679,132 +2678,131 @@ Cross-Axis Alignment</h3>
 Resolving Flexible Lengths</h3>
 
 	<p>
-		To resolve the flexible lengths of the items within a flex line:
+		要在flex行中解析各item的可伸缩长度：
 
 	<ol>
 		<li>
-			<strong>Determine the used flex factor</strong>.
-			Sum the outer hypothetical main sizes of all items on the line.
-			If the sum is less than the flex container's inner <a>main size</a>,
-			use the flex grow factor for the rest of this algorithm;
-			otherwise, use the flex shrink factor.
+			<strong>确定所使用的flex因数</strong>。
+			计算行中所有项目外部假设的 main size 之和。
+			如果和值小于flex容器的内部 <a>main size</a>，
+			使用flex grow因数来分配剩余部分的尺寸；
+			否则使用flex shrink因数。
 
 		<li>
-			Each item in the flex line has a <dfn>target main size</dfn>,
-			initially set to its [=flex base size=].
-			Each item is initially <i>unfrozen</i>
-			and may become <i>frozen</i>.
+			在flex行中的每一项都具有一个 <dfn>target main size</dfn>，
+			初始将其设置为它的[=flex base size=]。
+			每项初始均<i>未冻结</i>，有可能会<i>冻结</i>。
 
-			Note: An item’s [=target main size=] doesn’t change after freezing.
+			Note: 项目的 [=target main size=] 在冻结后不再改变。
 
 		<li>
-			<strong>Size inflexible items.</strong>
-			Freeze,
-			setting its [=target main size=]
-			to its <a>hypothetical main size</a>&hellip;
+			<strong>设置不可伸缩项目的尺寸</strong>
+			冻结，
+			设置其[=target main size=]到它的
+			<a>hypothetical main size</a>&hellip;
 			<ul>
 				<li>
-					any item that has a flex factor of zero
+					任何flex因数为0的项目
 
 				<li>
-					if using the <a>flex grow factor</a>:
-					any item that has a <a>flex base size</a> greater than its <a>hypothetical main size</a>
+					如果使用 <a>flex grow factor</a>：
+					任何 <a>flex base size</a> 大于 <a>hypothetical main size</a>的项目。
 
 				<li>
-					if using the <a>flex shrink factor</a>:
-					any item that has a <a>flex base size</a> smaller than its <a>hypothetical main size</a>
+					如果使用 <a>flex shrink factor</a>：
+					任何 <a>flex base size</a> 小于 <a>hypothetical main size</a>的项目。
 			</ul>
 
 		<li>
-			<strong>Calculate <dfn>initial free space</dfn>.</strong>
-			Sum the outer sizes of all items on the line,
-			and subtract this from the flex container's inner <a>main size</a>.
-			For frozen items, use their outer <a>target main size</a>;
-			for other items, use their outer <a>flex base size</a>.
+			<strong>计算 <dfn>initial free space</dfn>。</strong>
+			计算行中所有项目的外部sizes，
+			并从flex container的内部<a>main size</a>中减去算出的结果。
+
+			对于冻结的项目，使用它们的外部 <a>target main size</a>；
+			对于其他项目，使用它们的外部 <a>flex base size</a>。
 
 		<li>
-			Loop:
+			循环：
 
 			<ol type=a>
 				<li>
-					<strong>Check for flexible items.</strong>
-					If all the flex items on the line are frozen,
-					free space has been distributed;
-					exit this loop.
+					<strong>检查可伸缩项目。</strong>
+					如果所有在行中的flex项目均已冻结，
+					剩余空间已被分配；
+					就退出这一循环。
 
 				<li>
-					<strong>Calculate the <dfn>remaining free space</dfn></strong>
-					as for <a>initial free space</a>, above.
-					If the sum of the unfrozen flex items’ flex factors is less than one,
-					multiply the <a>initial free space</a> by this sum.
-					If the magnitude of this value is less than the magnitude of the <a>remaining free space</a>,
-					use this as the <a>remaining free space</a>.
+					<strong>计算<a>initial free space</a> 的 <dfn>remaining free space</dfn></strong>。
+
+					如果未冻结项目的flex因数之和小于1，则使用 <a>initial free space</a> 与其相乘。
+					如果该值大小小于 <a>remaining free space</a> 的大小，使用该值作为 <a>remaining free space</a>。
 
 				<li>
-					If the [=remaining free space=] is non-zero,
-					<strong>distribute it proportional to the flex factors</strong>:
+					如果 [=remaining free space=] 为0，
+					<strong>
+					将其按比例地分配给flex factors：
+					</strong>
 
 					<dl>
-						<dt>If using the <a>flex grow factor</a>
+						<dt>如果使用 <a>flex grow factor</a>
 						<dd>
-							For every unfrozen item on the line,
-							find the ratio of the item's flex grow factor
-							to the sum of the flex grow factors of all unfrozen items on the line.
-							Set the item's <a>target main size</a> to its <a>flex base size</a>
-							plus a fraction of the <a>remaining free space</a> proportional to the ratio.
+							对于在行中的每一个未冻结项目，
+							求出项目的flex grow因数与行中所有未冻结项目 flex grow factors 之和的比例，
+							设置项目的 <a>target main size</a> 到
+							其 <a>flex base size</a> 加上 按比例划分的<a>remaining free space</a> 一部分。
 
-						<dt>If using the <a>flex shrink factor</a>
+
+						<dt>如果使用 <a>flex shrink factor</a>
 						<dd>
-							For every unfrozen item on the line,
-							multiply its flex shrink factor by its inner <a>flex base size</a>,
-							and note this as its <dfn>scaled flex shrink factor</dfn>.
-							Find the ratio of the item's <a>scaled flex shrink factor</a>
-							to the sum of the <a>scaled flex shrink factors</a> of all unfrozen items on the line.
-							Set the item's <a>target main size</a> to its <a>flex base size</a>
-							minus a fraction of the absolute value of the <a>remaining free space</a> proportional to the ratio.
-							<span class='note'>Note this may result in a negative inner <a>main size</a>;
-							it will be corrected in the next step.</span>
+							对于在行中的每一个未冻结项目，
+							将它的 flex shrink 因素与它内部的 <a>flex base size</a>相乘，
+							将其作为它的 <dfn>scaled flex shrink factor</dfn>。
+
+							求出项目<a>scaled flex shrink factor</a>与行中所有未冻结项目 flex grow factors 之和的比例，
+							设置项目的 <a>target main size</a> 到
+							其 <a>flex base size</a> 减去 按比例划分的 <a>remaining free space</a> 绝对值的一部分。
+							<span class='note'>注意，这可能会导致inner <a>main size</a>出现负值。
+							它将会在下一步中被修复。</span>
 					</dl>
 
 				<li>
-					<strong>Fix min/max violations.</strong>
-					Clamp each non-frozen item's <a>target main size</a> by
-					its <a lt="used value">used</a> min and max <a>main sizes</a>
-					and floor its content-box size at zero.
-					If the item's <a>target main size</a> was made smaller by this,
-					it's a max violation.
-					If the item's <a>target main size</a> was made larger by this,
-					it's a min violation.
+					<strong>修复最小/最大违规</strong>
+					通过每个未冻结项目
+					<a lt="used value">所使用</a>的最小、最大<a>main sizes</a>来限制
+					其 <a>target main size</a>，
+					并将它的 content-box size设为0。
+					如果项目的 <a>target main size</a> 因此变得更小，属于最大违规；
+					如果项目的 <a>target main size</a> 因此变得更大，属于最小违规。
 
 				<li>
-					<strong>Freeze over-flexed items.</strong>
-					The total violation is the sum of the adjustments from the previous step
-					<code>∑(clamped size - unclamped size)</code>.
-					If the total violation is:
+					<strong>冻结over-flexed项目。</strong>
+					整体违规指的是上一步调整的总和
+					<code>∑(clamped size - unclamped size)</code>。
+					如果总违规是：
 
 					<dl>
-						<dt>Zero
+						<dt>0
 						<dd>
-							Freeze all items.
+							冻结所有项目
 
-						<dt>Positive
+						<dt>正值
 						<dd>
-							Freeze all the items with min violations.
+							冻结所有包含最小违规的项目。
 
-						<dt>Negative
+						<dt>负值
 						<dd>
-							Freeze all the items with max violations.
+							冻结所有包含最大违规的项目。
 					</dl>
 
-					Note: This freezes at least one item,
-					ensuring that the loop makes progress and eventually terminates.
+					Note: 这至少会冻结一个项目
+					确保了循环能够继续并最终能够终止。
 
 				<li>
-					Return to the start of this loop.
+					返回到循环的开始。
 			</ol>
 
 		<li>
-			Set each item’s used <a>main size</a> to its <a>target main size</a>.
+			设置每个项目使用的 <a>main size</a> 到它的 <a>target main size</a>。
 	</ol>
 
 <!--
