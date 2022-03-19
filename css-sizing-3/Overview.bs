@@ -58,10 +58,10 @@ Introduction</h2>
 <h3 id="placement">
 Module interactions</h3>
 
-	<p>This module extends the 'width', 'height', 'min-width', 'min-height', 'max-width', 'max-height', and 'column-width'
-	features defined in [[!CSS2]] chapter 10 and in [[!CSS3COL]]
+	<p>本模块扩展了定义在 [[!CSS2]] 10 章节以及 [[!CSS3COL]] 中，
+	'width'、'height'、'min-width'、'min-height'、'max-width'、'max-height' 以及 'column-width'的特性。
 
-	<p>The definition of the 'box-sizing' property in this module supersedes the one in [[CSS-UI-3]].
+	<p>本模块中 'box-sizing' 属性的定义取代了 [[CSS-UI-3]] 中的定义
 
 <h3 id="values">
 Value Definitions</h3>
@@ -89,15 +89,14 @@ Value Definitions</h3>
 <h2 id="terms">
 Terminology</h2>
 
-	Some key terminology related to coordinate axises and dimensions
-	is defined in [[css-writing-modes-3#abstract-box]].
+	一些和坐标轴、维度相关的重要术语定义在 [[css-writing-modes-3#abstract-box]]中。
 
 	<dl export>
 		<dt><dfn>size</dfn>
 		<dd>
-			A one- or two-dimensional measurement:
-			a <a>block size</a> and/or <a>inline size</a>;
-			alternatively a [=width=] and/or [=height=].
+			一维或二维的衡量：
+			<a>block size</a> 和/或 <a>inline size</a>；
+			或者[=width=] 和/或 [=height=]。
 
 			<figure>
 				<img style="max-width: 49%;" width=420 height=240 src="images/sizing-ltr-tb.svg"
@@ -108,13 +107,13 @@ Terminology</h2>
 				      alt="In top-to-bottom, right-to-left vertical Japanese,
 				           the horizontal width and block size are synonymous,
 				           and vertical height and inline size are synonymous.">
-				<figcaption>Whether the <a>width</a> or <a>height</a> corresponds
-				to an <a>inline size</a> or <a>block size</a> depends on the <a>writing mode</a>.</figcaption>
+				<figcaption><a>width</a> 或 <a>height</a> 是否对应
+				<a>inline size</a> 或 <a>block size</a> 取决于 <a>writing mode</a>。</figcaption>
 			</figure>
 
 		<dt><dfn lt="inner size|inner width|inner height|inner block size|inner inline size">inner size</dfn>
 		<dd>
-			The <a href="https://www.w3.org/TR/css2/box.html#box-dimensions">content-box</a> [=size=] of a <a>box</a>.
+			盒子的<a href="https://www.w3.org/TR/css2/box.html#box-dimensions">content-box</a> [=size=]。
 
 			<figure>
 				<img src="images/inner-size.svg" width=420 height=270 alt="">
@@ -123,7 +122,7 @@ Terminology</h2>
 
 		<dt><dfn lt="outer size|outer width|outer height|outer block size|outer inline size">outer size</dfn>
 		<dd>
-			The <a href="https://www.w3.org/TR/css2/box.html#box-dimensions">margin-box</a> [=size=] of a <a>box</a>.
+			盒子的<a href="https://www.w3.org/TR/css2/box.html#box-dimensions">margin-box</a> [=size=]。
 
 			<figure>
 				<img src="images/outer-size.svg" width=420 height=270 alt="">
@@ -132,34 +131,30 @@ Terminology</h2>
 
 		<dt><dfn id="definite" lt="definite|definite size">definite size</dfn>
 		<dd>
-			A size that can be determined without performing layout;
-			that is, a <<length>>,
-			a measure of text (without consideration of line-wrapping),
-			a size of the <a>initial containing block</a>,
-			or a <<percentage>> or other formula
-			(such the <a href="https://www.w3.org/TR/CSS2/visudet.html#blockwidth">“stretch-fit” sizing of non-replaced blocks</a> [[CSS2]])
+			无需布局即可确定的尺寸；
+			即：<<length>>，
+			或是文本的度量（不考虑换行），
+			或是<a>initial containing block</a>的尺寸，
+			或是<<percentage>>，
+			或是其它规则（如<a href="https://www.w3.org/TR/CSS2/visudet.html#blockwidth">非替换块级元素的“stretch-fit”尺寸</a> [[CSS2]]）
 			that is resolved solely against <a>definite</a> sizes.
 
-			Additionally, the size of the <a>containing block</a> of an absolutely positioned element is always <a>definite</a>
-			with respect to that element.
+			另外，绝对定位元素<a>containing block</a>的尺寸相对于该元素总是确定的。
 
 		<dt><dfn id="indefinite" lt="indefinite|indefinite size">indefinite size</dfn>
 		<dd>
-			A size that is not <a>definite</a>.
-			<a>Indefinite</a> <a>available space</a> is essentially infinite.
+			不<a>definite</a>的尺寸。
+			<a>Indefinite</a> <a>available space</a> 实质上是无限的。
 
 		<dt><dfn id="available" local-lt="available" lt="available space|available inline space|available block space">available space</dfn>
 		<dd>
-			A size representing the space into which a box is laid out,
-			as determined by
-			the rules of the formatting context in which it participates.
-			The space available to a box is usually
-			either a measurement of its <a>containing block</a> (if that is <a>definite</a>)
-			or an infinite size (when it is <a>indefinite</a>).
-			<a>Available space</a> can alternatively be either a
-			<a>min-content constraint</a> or
-			a <a>max-content constraint</a>,
-			which forces boxes laid into it to be laid out under that constraint.
+			表示放置盒子的空间的尺寸，
+			由它所参与的格式化上下文规则所确定。
+			可用空间通常是指它的 <a>containing block</a> 尺寸 (if that is <a>definite</a>)
+			或是无限尺寸 (when it is <a>indefinite</a>)。
+			<a>Available space</a> 可被
+			<a>min-content constraint</a> 或 <a>max-content constraint</a>
+			所替代，其强制了在其中布局的盒子在该限制下进行放置。
 
 <!--
 			<p>
