@@ -175,69 +175,74 @@ Terminology</h2>
 			(so that the inner size is not negative).
 
 			<p class='note'>
-				Note: This is the formula used to calculate the ''width/auto'' widths
-				of non-replaced blocks in normal flow in <a href="https://www.w3.org/TR/CSS2/visudet.html#blockwidth">CSS2.1§10.3.3</a>.
+				Note: 这是在 <a href="https://www.w3.org/TR/CSS2/visudet.html#blockwidth">CSS2.1§10.3.3</a> 中，
+				用于计算文档流中非替换块级元素 ''width/auto'' 宽度的公式。
 
 		<dt><dfn lt="fallback|fallback size">fallback size</dfn>
 		<dd>
-			Some sizing algorithms do not work well with an infinite size.
-			In these cases, the <a>fallback size</a> is used instead.
-			Unless otherwise specified,
-			this is the size of the <a>initial containing block</a>.
+			一些布局算法与无限尺寸不能很好地工作。
+			在这些情况下，将使用 <a>fallback size</a>。
+			除非另有指定，
+			改尺寸为 <a>initial containing block</a>。
 	</dl>
 
 <h3 id='auto-box-sizes'>
 Auto Box Sizes</h3>
 
-	There are four types of automatically-determined sizes in CSS
-	(sizes resulting from ''width/auto'' sizing rules, depending on context):
+	CSS中有4类自动确定的尺寸
+	（尺寸从 ''width/auto'' 计算规则中确定，取决于上下文）：
 
 	<dl export>
 		<dt><dfn>stretch-fit size</dfn>
 		<dt><dfn>stretch-fit inline size</dfn>
 		<dt><dfn>stretch-fit block size</dfn>
 		<dd>
-			The <a>size</a> a box would take
-			if its <a>outer size</a> filled the <a>available space</a>
-			in the given axis;
+
+			如果一个盒子的 <a>outer size</a> 在对应轴上充满 <a>available space</a> 将使用的<a>size</a>。
+		<!--
+			换句话说， 如果<a>available space</a>的尺寸是<a>definite</a>的，<a>stretch fit</a> 到 <a>available space</a>，
+			否则 <a>available space</a> 为 <a>indefinite</a>。
+		-->
 			in other words, the <a>stretch fit</a> into the <a>available space</a>,
 			if that is <a>definite</a>.
 			Undefined if the <a>available space</a> is <a>indefinite</a>.
 
-			Note: For the <a>inline axis</a>, this is called the “available width” in <a href="https://www.w3.org/TR/CSS2/visudet.html#float-width">CSS2.1§10.3.5</a>
-			and computed by the rules in <a href="https://www.w3.org/TR/CSS2/visudet.html#blockwidth">CSS2.1§10.3.3</a>.
+			Note: 对于 <a>inline axis</a>，该值在 <a href="https://www.w3.org/TR/CSS2/visudet.html#float-width">CSS2.1§10.3.5</a> 中被叫做“available width”，
+			由 <a href="https://www.w3.org/TR/CSS2/visudet.html#blockwidth">CSS2.1§10.3.3</a>中的规则计算。
 
-			Note: Calculations involving this size need to specify a fallback behavior
-			for when the <a>available space</a> is <a>indefinite</a>
-			if that happens to be possible.
+			Note: 当 <a>available space</a> 为可能为 <a>indefinite</a>的时候，
+			涉及到该尺寸的计算时，需要为
+				<a>available space</a> 为 <a>indefinite</a>的情况
+			指定一个回落行为。
 
 		<dt><dfn lt="max-content | max-content size">max-content size</dfn>
 		<dd>
-			A box’s “ideal” <a>size</a> in a given axis when given infinite available space.
-			Usually this is the smallest <a>size</a> the box could take in that axis
-			while still fitting around its contents,
-			i.e. minimizing unfilled space while avoiding overflow.
+			在给定的无限可用空间中，盒子在给定轴向上的的“理想” <a>size</a>。
+			通常该尺寸是
+			该轴向的能够容纳该盒子、且仍然适合其内容的
+			最小 <a>size</a>，
+			即最小化未填充空间同时避免溢出。
 
 			: <dfn>max-content inline size</dfn>
-			:: The box's “ideal” <a>size</a> in the <a>inline axis</a>.
-				Usually the narrowest <a>inline size</a> it could take while fitting around its contents
-				if <em>none</em> of the soft wrap opportunities within the box were taken.
-				(See [[#intrinsic]].)
+			:: 盒子在 <a>inline axis</a>的 “理想” <a>size</a>。
+				如果在盒子内<em>没有</em>软换行的机会，通常是再适合其内容时可以使用的最窄<a>inline size</a>。
+				（参见 [[#intrinsic]]）。
 
-				Note: This is called the “preferred width” in <a href="https://www.w3.org/TR/CSS2/visudet.html#float-width">CSS2.1§10.3.5</a>
-				and the “maximum cell width” in <a href="https://www.w3.org/TR/CSS2/tables.html#auto-table-layout">CSS2.1§17.5.2.2</a>.
+				Note: max-content inline size
+				在<a href="https://www.w3.org/TR/CSS2/visudet.html#float-width">CSS2.1§10.3.5</a>中被称为“preferred width”，
+				在<a href="https://www.w3.org/TR/CSS2/tables.html#auto-table-layout">CSS2.1§17.5.2.2</a>中被称为“maximum cell width”。
 
 			: <dfn>max-content block size</dfn>
-			:: The box's “ideal” <a>size</a> in the <a>block axis</a>.
-				Usually the <a>block size</a> of the content after layout.
+			:: 盒子在 <a>block axis</a>的“理想” <a>size</a>。
+				通常是在布局后内容的 <a>block size</a>。
 
 		<dt><dfn lt="min-content | min-content size">min-content size</dfn>
 		<dd>
-			Nominally, the smallest <a>size</a> a box could take
+			名义上，盒子的最小 <a>size</a> could take
 			that doesn't lead to overflow
 			that could be avoided by choosing a larger <a>size</a>.
-			Formally, the size of the box when sized under a [=min-content constraint=],
-			see [[#intrinsic]].
+			形式上，盒子的尺寸将在[=min-content constraint=]下进行调整。
+			参见 [[#intrinsic]] 。
 
 			: <dfn>min-content inline size</dfn>
 			:: The [=min-content size=] in the [=inline axis=].
@@ -256,9 +261,12 @@ Auto Box Sizes</h3>
 		<dt><dfn>fit-content inline size</dfn>
 		<dt><dfn>fit-content block size</dfn>
 		<dd>
-			If the <a>available space</a> in a given axis is <a>definite</a>,
-			equal to <code>clamp([=min-content size=], [=stretch-fit size=], [=max-content size=])</code>
-			(i.e. <code>max(<a>min-content size</a>, min(<a>max-content size</a>, <a>stretch-fit size</a>))</code>).
+			如果在给定轴上 <a>available space</a> 为 <a>definite</a>，
+			与
+			<code>clamp([=min-content size=], [=stretch-fit size=], [=max-content size=])</code>
+			（即
+			<code>max(<a>min-content size</a>, min(<a>max-content size</a>, <a>stretch-fit size</a>))</code>
+			）相等。
 			When sizing under a [=min-content constraint=],
 			equal to the [=min-content size=].
 			Otherwise, equal to the <a>max-content size</a> in that axis.
@@ -340,17 +348,15 @@ Specifying Box Sizes</h2>
 <h3 id="sizing-properties">
 Sizing Properties</h3>
 
-	This section defines the <dfn export lt="sizing property">sizing properties</dfn>
-	'width', 'height', 'min-width', 'min-height', 'max-width', and 'max-height'.
-	Their potential values are defined in the next section,
-	[[#sizing-values]].
+	本章节定义了 <dfn export lt="sizing property">sizing properties</dfn>
+	'width'、'height'、'min-width'、'min-height'、'max-width' 和 'max-height'。
+	它们的可选值定义在下一章节，
+	[[#sizing-values]]。
 
-	Note: Additional <a>flow-relative</a> aliases to these properties are defined in [[CSS-LOGICAL-1]].
+	Note: 这些属性的额外 <a>flow-relative</a> 别名定义在 [[CSS-LOGICAL-1]]。
 
-	ISSUE: We would like to define shorthands for each pair of sizing properties
-	(e.g. 'width' and 'height')
-	but there is a naming conflict with the ''@page'' 'size' descriptor [[CSS-PAGE-3]],
-	so this has been deferred to Level 4.
+	ISSUE: 我们想为这些一对对的尺寸属性（例如 'width' 和 'height' ）定义缩写，
+	但与[[CSS-PAGE-3]]中的''@page'' 'size'描述符存在名称冲突，因此这被推迟到了 Level 4 。
 	Suggestions on how to resolve this problem are welcome,
 	see <a href="https://github.com/w3c/csswg-drafts/issues/820">discussion</a>.
 
@@ -392,8 +398,7 @@ Minimum Size Properties: the 'min-width' and 'min-height' properties</h4>
 	and <dfn export lt="min height | minimum height">minimum height</dfn> (or “min height”)
 	of the box, respectively.
 
-	Note: The initial value of ''min-width/auto'' is new;
-	in [[CSS2]] the initial value was zero.
+	Note: 在[[CSS2]]中初始值为 0；The initial value of ''min-width/auto'' is new.
 
 <h4 id="max-size-properties" dfn export lt="max size property">
 Maximum Size Properties: the 'max-width' and 'max-height' properties</h4>
@@ -421,17 +426,14 @@ Sizing Values: the <<length-percentage>>, ''width/auto'' | ''max-width/none'', '
 	<dl dfn-type=value dfn-for="width, min-width, max-width, height, min-height, max-height">
 		<dt><dfn><<length-percentage>></dfn>
 		<dd>
-			Specifies the size of the box using <<length>> and/or <<percentage>>.
-			The 'box-sizing' property indicates whether the <a>content box</a> or <a>border box</a> is measured.
+			使用 <<length>> 和/或 <<percentage>> 来指定尺寸。
+			'box-sizing' 属性指示是测量 <a>content box</a> 还是 <a>border box</a> 框。
 
-			Percentages are resolved against the width/height, as appropriate,
-			of the box's <a>containing block</a>.
-			If, in a particular axis,
-			the <a>containing block’s</a> size depends on the box’s size,
-			see the relevant layout module
-			for special rules on how to resolve percentages.
+			百分比是根据盒子包含块的 width/height 来计算的。
+			特定轴上，<a>containing block</a> 的尺寸取决于盒子的尺寸，
+			请参见相关布局模块了解解析百分比的特殊规则。
 
-			Negative values are invalid.
+			负值无效。
 
 		<dt><dfn for="width, height, min-width, min-height">auto</dfn>
 		<dd>
@@ -867,8 +869,7 @@ Extrinsic Size Determination</h2>
 Intrinsic Size Determination</h2>
 
 	<p>
-		<dfn export>Intrinsic sizing</dfn> determines sizes based on the contents of an element,
-		without regard for its context.
+		<dfn export>Intrinsic sizing</dfn>基于元素的内容来确定尺寸，不考虑上下文。
 
 <h3 id='intrinsic-sizes'>
 Intrinsic Sizes</h3>
@@ -887,50 +888,46 @@ a float given an ''width/auto'' size in that axis
 and if its containing block was <em>infinitely</em>-sized in that axis.
 (In other words, the maximum size it has when sized as “shrink-to-fit”.)
 
-The [=min-content size=] and [=max-content size=] are collectively referred to
-as the [=intrinsic sizes=].
+[=min-content size=] 与 [=max-content size=] 统称为
+[=intrinsic sizes=]。
 
-Note: When the box has a [=preferred aspect ratio=],
-size constraints in the opposite dimension will transfer through
-and can affect the ''width/auto'' size in the considered one.
-See <a href="https://www.w3.org/TR/CSS2/visudet.html">CSS2&sect;10</a>.
+Note: 当盒子具有 [=preferred aspect ratio=] 时，在对侧维度的尺寸
+将transfer through，且可能影响 所考虑尺寸的 ''width/auto'' 尺寸。
+参见 <a href="https://www.w3.org/TR/CSS2/visudet.html">CSS2&sect;10</a>。
 
-This specification does not define how to determine the sizes of floats.
-Please refer to [[CSS2]].
-However, the [=intrinsic sizes=] of [=replaced elements=] without [=natural sizes=]
-are defined below:
+本规范没有定义如何确定float的尺寸。<!-- 浮动元素 -->
+请参见 [[CSS2]]。
+
+但是，没有 [=natural sizes=] 的 [=replaced elements=] 的 [=intrinsic sizes=]
+在下方有定义：
 
 <dl>
-	<dt>If it has a [=preferred aspect ratio=]:
+	<dt>如果它具有一个 [=preferred aspect ratio=]：
 	<dd>
-		For the [=min-content size=], use zero.
+		对于[=min-content size=]，使用0。
 
-		For the [=max-content size=]:
+		对于[=max-content size=]：
 
-		* If the <a>available space</a> is <a>definite</a>
-			in the <a>inline axis</a>,
-			use the <a>stretch fit</a> into that size for the inline size
-			and calculate the block size using the aspect ratio.
+		* 如果 <a>available space</a> 在 <a>inline axis</a> 上是 <a>definite</a>，
+			则使用该大小， <a>stretch fit</a> into that size for the inline size，
+			并使用横纵比计算块大小。
 			<!-- Technically undefined in CSS2, but this was recommended. -->
 
-		* Otherwise
-			if the box has a <<length>> as its [=computed value=]
-			for 'min-width' or 'min-height',
-			use that size and calculate the other dimension using the aspect ratio;
-			if both dimensions have a <<length>> minimum,
-			choose the one that results in the larger overall size.
+		* 否则
+			如果盒子具有一个 <<length>> 来作为它 'min-width'、'min-height'
+			的 [=computed value=]，
+			使用该尺寸，并使用横纵比来计算其它维度的尺寸。
+			如果两个维度都具有 <<length>> 最小值，
+			则选择总尺寸较大那个。
 
-			Note: This case was previous calculated from a 300x150 default size,
-			rather than the box's min size.
-			This is believed to be a better behavior,
-			and likely to be Web-compatible,
-			but please send feedback to the CSSWG if there are any problems.
+			Note: 这个值早前是从默认尺寸 300x150 来计算的，而非盒子的最小尺寸。
+			这被认为是更好的一种行为，且 Web-compatible。
+			但如果这存在任何问题，请反馈给CSSWG。
 			<!-- Brand new behavior not defined in CSS2 -->
 
-		* Otherwise
-			use an [=inline size=] matching
-			the corresponding dimension of the [=initial containing block=]
-			and calculate the other dimension using the aspect ratio.
+		* 否则
+			使用与[=initial containing block=]相应维度匹配的[=inline size=]，
+			并使用横纵比，来计算其他轴向。
 			<!-- More brand-new behavior, to prevent max-content size from going infinite. -->
 
 	<dt>If it has no [=preferred aspect ratio=]:
