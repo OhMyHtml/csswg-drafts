@@ -823,17 +823,16 @@ New Column Sizing Values: the ''column-width/min-content'', ''column-width/max-c
 Extrinsic Size Determination</h2>
 
 	<p>
-		<dfn export>Extrinsic sizing</dfn> determines sizes based on the context of an element,
-		without regard for its contents.
+		<dfn export>Extrinsic sizing</dfn> 基于元素上下文确定尺寸，无论其内容如何。
 
 
 <h3 id="percentage-sizing">
 	Percentage Sizing</h3>
 
-	Percentages specify sizing of a box with respect to the box’s <a>containing block</a>.
+	百分比值相对于盒子的 <a>containing block</a> 来指定盒子的尺寸。
 
 	<div class="example">
-		For example, in the following markup:
+		例如下列标记片段中，
 
 		<xmp class='lang-html'>
 			<article style="height: 60em">
@@ -850,10 +849,9 @@ Extrinsic Size Determination</h2>
 			(which is itself [=definite=] because it's a percentage resolved against a [=definite=] length)
 	</div>
 
-	See [[#cyclic-percentage-contribution]]
-	for details on how to resolve percentages
-	when the size of the [=containing block=] depends
-	on the size of its content.
+	参见 [[#cyclic-percentage-contribution]]来了解
+	当 [=containing block=] 依赖于其内容尺寸时
+	如何解析百分比值的详细信息。
 
 <!--
 ████ ██    ██ ████████ ████████  ████ ██    ██  ██████  ████  ██████
@@ -874,19 +872,22 @@ Intrinsic Size Determination</h2>
 <h3 id='intrinsic-sizes'>
 Intrinsic Sizes</h3>
 
-	The <a>min-content size</a> of a box in each axis
-	is the size it would have if it was
-	a float given an ''width/auto'' size in that axis
-	(and no <a lt="min size">minimum</a> or <a>maximum size</a> in that axis)
-	and if its containing block was <em>zero</em>-sized in that axis.
-	(In other words, the minimum size it has when sized as “shrink-to-fit”.)
+	盒子各个轴向的 <a>min-content size</a> 是指
+	如果
+	它在该轴上设置了浮动，且尺寸设置为 ''width/auto'' 
+	（该轴没有 <a lt="min size">minimum</a> or <a>maximum size</a>）
+	且
+	它的包含块在该轴上为 <em>zero</em>-sized 
+	（换句话说，当按照“shrink-to-fit”设置尺寸时它将具有的最小尺寸）
+	的尺寸
 
-The <a>max-content size</a> of a box in each axis
-is the size it would have if it was
-a float given an ''width/auto'' size in that axis
-(and no <a lt="min size">minimum</a> or <a>maximum size</a> in that axis),
-and if its containing block was <em>infinitely</em>-sized in that axis.
-(In other words, the maximum size it has when sized as “shrink-to-fit”.)
+	盒子各个轴向的 <a>max-content size</a> 是指
+	如果
+	它在该轴上设置了浮动，且尺寸设置为 ''width/auto'' 
+	（该轴没有 <a lt="min size">minimum</a> or <a>maximum size</a>）
+	且
+	它的包含块在该轴上为 <em>infinitely</em>-sized
+	（换句话说，当按照“shrink-to-fit”设置尺寸时它将具有的最小尺寸）
 
 [=min-content size=] 与 [=max-content size=] 统称为
 [=intrinsic sizes=]。
@@ -930,13 +931,12 @@ Note: 当盒子具有 [=preferred aspect ratio=] 时，在对侧维度的尺寸
 			并使用横纵比，来计算其他轴向。
 			<!-- More brand-new behavior, to prevent max-content size from going infinite. -->
 
-	<dt>If it has no [=preferred aspect ratio=]:
+	<dt>如果它没有 [=preferred aspect ratio=]:
 	<dd>
-		For both the [=min-content size=] and [=max-content size=]:
+		对于 [=min-content size=] 和 [=max-content size=]：
 
-		* If the box has a <<length>> as its [=computed value|computed=]
-			[=minimum size=] ('min-width'/'min-height') in that dimension,
-			use that size.
+		* 如果盒子在某个维度具有一个 <<length>> 来作为它的 [=computed value|computed=]
+			[=minimum size=] ('min-width'/'min-height')，就使用这个尺寸。
 
 			Note: This author-controllable behavior is made possible
 			by the new ''min-width/auto'' value for the [=min size properties=].
@@ -944,19 +944,18 @@ Note: 当盒子具有 [=preferred aspect ratio=] 时，在对侧维度的尺寸
 			but it is not yet clear if it is Web-compatible,
 			so please send feedback to the CSSWG if there are any problems.
 
-		* Otherwise,
-			use ''300px'' for the width
-			and/or ''150px'' for the height
-			as needed.
+		* 否则，
+			根据需要
+			使用 ''300px'' 作为宽度，
+			和/或 ''150px'' 作为高度
 			<!-- Required by CSS2 (due to Web-compat). -->
 </dl>
 
-	Since a block-level or inline-level replaced element
-	whose 'height' or 'width' <a>behaves as auto</a>
-	is effectively defined to use its <a>max-content size</a>
-	(<a href="https://www.w3.org/TR/CSS2/visudet.html#inline-replaced-width">CSS2&sect;10.3.2</a>),
-	this specification applies the rules above
-	to the undefined case of a replaced element
+	由于 'height' 或 'width' <a>behaves as auto</a> 的
+	块级或内联可替换元素被 effectively 定义为使用它的 <a>max-content size</a>
+	（<a href="https://www.w3.org/TR/CSS2/visudet.html#inline-replaced-width">CSS2&sect;10.3.2</a>），
+	因此本规范应用以上规则到
+	the undefined case of a replaced element
 	whose 'height' and 'width' both <a>behave as auto</a>.
 
 	Note: This specification does not define how to determine
@@ -971,11 +970,10 @@ Note: 当盒子具有 [=preferred aspect ratio=] 时，在对侧维度的尺寸
 
 	<hr>
 
-	Although the ''width/auto'' size of text input controls
-	such as HTML’s <code>&lt;input type=text></code> and <code>&lt;textarea></code> elements
-	is typically a fixed size,
-	the contents of such elements can be used to determine a content-based [=intrinsic size=],
-	as for non-replaced block containers.
+	虽然文本输入控件
+	（例如HTML的 <code>&lt;input type=text></code> 和 <code>&lt;textarea></code> ）元素
+	的 ''width/auto'' 尺寸通常是一个固定尺寸，
+	但这些元素的内容可以为一个块级非替换元素确定一个基于内容的 [=intrinsic size=]。
 	The ''width/min-content'' and ''width/max-content'' keywords of the <a>sizing properties</a>
 	thus represent content-based sizes
 	for form controls which render their value
@@ -1294,13 +1292,13 @@ Intrinsic Contributions of Percentage-Sized Boxes</h4>
 <h4 id="min-content-zero">
 Compressible Replaced Elements</h4>
 
-	In addition to the [=replaced elements=] listed
-	in <a href="https://html.spec.whatwg.org/multipage/rendering.html#replaced-elements">HTML&sect;14.4</a> [[!HTML]],
-	the following HTML elements are also considered to be [=replaced elements=]
-	for the purpose of the <a href="#replaced-percentage-min-contribution">percentage-sized replaced element rule</a> above,
-    and can have their <a>min-content contribution</a> compressed
-	when their 'width'/'height' or 'max-width'/'max-height'
-	is expressed with a cyclic percentage size:
+	除 <a href="https://html.spec.whatwg.org/multipage/rendering.html#replaced-elements">HTML&sect;14.4</a> [[!HTML]]
+	列出的 [=replaced elements=] 之外，
+	下列元素也被视作
+	上文所述的 <a href="#replaced-percentage-min-contribution">percentage-sized replaced element rule</a>
+	的[=replaced elements=]，
+	当它们的 'width'/'height' 或 'max-width'/'max-height' 用循环百分比大小表示时，
+	它们的<a>min-content contribution</a> 可被压缩：
 
 	* <{input}> with any <{input/type}> that is not "button-like";
 		this can vary depending on the UA.
