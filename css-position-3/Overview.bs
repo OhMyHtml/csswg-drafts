@@ -119,12 +119,12 @@ Introduction</h2>
 
 	<em>This section is not normative.</em>
 
-	The CSS layout algorithms, by default,
-	size and position boxes in relation to each other
-	so that nothing overlaps.
+	默认情况下，
+	CSS布局算法会调整盒子尺寸与位置之间关系，
+	以避免重叠。
 
-	This specification defines several ways to violate these assumptions when needed,
-	moving elements around in ways that can make them overlap other content:
+	本规范定义了当我们需要违反这些假定时的几种方式，
+	以可以让它们与其他元素重叠的方式来移动元素：
 
 	* [=Relative positioning=], which visually shifts a box relative to its laid-out location.
 	* [=Sticky positioning=], which visually shifts a box relative to its laid-out location
@@ -138,10 +138,8 @@ Introduction</h2>
 		and affixes it to the viewport or page frame
 		so that it is always visible.
 
-	These [=positioning schemes=],
-	controlled by the 'position' property and the [=inset properties=],
-	are powerful
-	but easy to misuse.
+	这些 [=positioning schemes=] 由 'position' property 和 [=inset properties=]控制。
+	它们很强大，但也容易被误用。
 	With appropriate care,
 	they allow many interesting and useful layouts
 	that couldn't otherwise be achieved with standard layout rules;
@@ -150,8 +148,7 @@ Introduction</h2>
 <h3 id="placement">
 Module Interactions</h3>
 
-	This module replaces and extends the [=positioning scheme=] features
-	defined in [[!CSS2]] sections:
+	本模块替代、扩展了[[!CSS2]]以下章节中定义的 [=positioning scheme=] 功能：
 
 	<ul>
 		<li>
@@ -178,8 +175,8 @@ Module Interactions</h3>
 		<a href="https://www.w3.org/TR/CSS2/visudet.html#abs-replaced-height">10.6.5 Absolutely positioned replaced elements</a>
 	</ul>
 
-	It also replaces and supersedes the 'inset*' property definitions in [[CSS-LOGICAL-1]]
-	([[CSS-LOGICAL-1#inset-properties]]).
+	同时它也取代了 [[CSS-LOGICAL-1]] ([[CSS-LOGICAL-1#inset-properties]]) 中对
+	'inset*' 属性的定义。
 
 <h3 id="values">
 Value Definitions</h3>
@@ -219,19 +216,17 @@ Choosing A Positioning Scheme: 'position' property</h2>
 <dl dfn-for="position" dfn-type="value">
 	<dt><dfn>static</dfn>
 	<dd>
-		The box is not a [=positioned box=],
-		and is laid out according to the rules of its parent [=formatting context=].
-		The [=inset properties=] do not apply.
+		该盒子不是一个 [=positioned box=]，
+		它根据父元素的 [=formatting context=]进行布局。
+		[=inset properties=] 不能应用到盒子上。
 
 	<dt><dfn>relative</dfn>
 	<dd>
-		The box is laid out as for ''static'',
-		then offset from the resulting position.
-		This offsetting is a purely visual effect,
-		and does not affect the size or position of any other box,
-		except insofar as it increases the [=scrollable overflow area=] of its ancestors.
-		This [=positioning scheme=] is called
-		<dfn export dfn for="" lt="relative position | relatively position | relatively-positioned | relatively positioned box" local-lt="relative|relatively">relative positioning</dfn>.
+		该盒子按照''static''进行布局，然后从布局好的位置进行偏移。
+		这种偏移仅仅是视觉上的效果，不会影响其他盒子的尺寸或位置，
+		除非它增加了祖先盒子的[=scrollable overflow area=]。
+		这种 [=positioning scheme=] 被称为 
+		<dfn export dfn for="" lt="relative position | relatively position | relatively-positioned | relatively positioned box" local-lt="relative|relatively">relative positioning</dfn>。
 
 	<dt><dfn>sticky</dfn>
 	<dd>
@@ -247,40 +242,34 @@ Choosing A Positioning Scheme: 'position' property</h2>
 
 	<dt><dfn>absolute</dfn>
 	<dd>
-		The box is taken [=out of flow=]
-		such that it has no impact on the size or position of its siblings and ancestors,
-		and does not participate in its parent’s [=formatting context=].
-
-		Instead, the box is positioned and sized solely in reference to
-		its [=absolute positioning containing block=],
-		as modified by the box's [=inset properties=],
-		see [[#abspos-layout]].
-		It can overlap [=in-flow=] content
-		or other [=absolutely positioned=] elements,
-		and is included in the [=scrollable overflow area=]
-		of the box that generates is [=containing block=].
-		This [=positioning scheme=] is called
-		<dfn export dfn for="" lt="absolute position | absolutely position | absolutely-positioned | absolutely positioned box | absolutely positioned element" local-lt="absolute|absolutely">absolute positioning</dfn>.
+		盒子被taken [=out of flow=]，
+		这将使得它对它的兄弟以及祖先盒子的尺寸或位置没有影响，
+		而且也不会参与它父亲的 [=formatting context=]。
+		相反，盒子的定位与大小仅参考它的 [=absolute positioning containing block=]，
+		并由盒子的 [=inset properties=] 进行更改，
+		请参见 [[#abspos-layout]]。
+		它可以覆盖 [=in-flow=] 内容，
+		或其它 [=absolutely positioned=] 元素，
+		且它包含在生成包含块的盒子的 [=scrollable overflow area=] 中。
+		这种 [=positioning scheme=] 被叫做
+		<dfn export dfn for="" lt="absolute position | absolutely position | absolutely-positioned | absolutely positioned box | absolutely positioned element" local-lt="absolute|absolutely">absolute positioning</dfn>。
 
 	<dt><dfn>fixed</dfn>
 	<dd>
-		Same as ''absolute'',
-		except the box is positioned and sized relative to a [=fixed positioning containing block=]
-		(usually the [=viewport=] in [=continuous media=], or the [=page area=] in [=paged media=]).
-		The box’s position is fixed with respect to this reference rectangle:
-		when attached to the [=viewport=]
-		it does not move when the document is scrolled,
-		and when attached to the [=page area=]
-		is replicated on every page when the document is paginated.
-		This [=positioning scheme=] is called
-		<dfn export dfn for="" lt="fixed position | fixed-positioned | fixed-positioned box" local-lt="fixed">fixed positioning</dfn>
-		and is considered a subset of [=absolute positioning=].
+		与 ''absolute'' 相同，
+		除了该盒子是相对于 [=fixed positioning containing block=] （通常是 [=continuous media=] 中的 [=viewport=]，或 [=paged media=]中的 [=page area=]）。
+		来进行定位以及调整大小的，
+		盒子的位置相对于这个参照矩形来说是固定的：
+		当附加到 [=viewport=]、文档发生滚动时，它不会发生移动。
+		当附加到 [=page area=]、文档发生分页时，它会在每个页面上复制。
+		这种 [=positioning scheme=] 被称为 <dfn export dfn for="" lt="fixed position | fixed-positioned | fixed-positioned box" local-lt="fixed">fixed positioning</dfn>，
+		且它被认为是 [=absolute positioning=] 的一个子集。
 
 		<div class="example">
-			Authors may wish to specify ''fixed'' in a media-dependent way.
-			For instance, an author may want a box to remain at the top of the <a>viewport</a> on the screen,
-			but not at the top of each printed page.
-			The two specifications may be separated by using an <a href="https://www.w3.org/TR/CSS2/media.html#at-media-rule">'@media'</a> rule, as in:
+			作者或许期望以一种依赖于媒体的方式来指定 ''fixed''。
+			例如，作者期望一个盒子保持在屏幕顶部的 <a>viewport</a>，
+			而不是每一个被打印出来的页面上。
+			这可以使用 <a href="https://www.w3.org/TR/CSS2/media.html#at-media-rule">'@media'</a> 规则来区分：
 
 			<pre highlight=css>
 			@media screen {
@@ -293,88 +282,82 @@ Choosing A Positioning Scheme: 'position' property</h2>
 		</div>
 </dl>
 
-A 'position' value of ''position/absolute'' or ''position/fixed''
-[=blockifies=] the box
-and causes 'float' to compute to ''float/none''.
+当 'position' 值为 ''position/absolute'' 或 ''position/fixed'' 时，
+会 [=blockifies=] 盒子（使得盒子成为一个块级盒子），
+并导致 'float' 计算为 ''position/absolute'' 或 ''position/fixed''。
 
 <h3 id="def-cb">
-Containing Blocks of Positioned Boxes</h3>
+定位盒子的包含块</h3>
 
-	The [=containing block=] of a ''position/static'', ''position/relative'', or ''position/sticky'' [=box=]
-	is as defined by its [=formatting context=].
-	For ''position/fixed'' and ''position/absolute'' boxes,
-	it is defined as follows:
+	''position/static''、''position/relative'' 或 ''position/sticky'' 盒子的包含块
+	由它的 [=formatting context=] 所定义。
+	对于 ''position/fixed'' 和 ''position/absolute'' 盒子，则由以下情况来定义：
 
 	<dl class=switch>
-		<dt id="absolute-cb">If the box has ''position: absolute'':
+		<dt id="absolute-cb">如果盒子具有 ''position: absolute''：
 		<dd>
-			The [=containing block=] is established
-			by the nearest ancestor box that establishes an <dfn export>absolute positioning containing block</dfn>,
-			in the following way:
+			[=containing block=] 由最近的、
+			通过下列方法建立了一个 <dfn export>absolute positioning containing block</dfn> 的
+			祖先盒子来建立：
 
 			<dl class=switch>
-				<dt>If the ancestor is not an [=inline box=],
+				<dt>如果祖先不是一个 [=inline box=],
 				<dd>
-					the [=containing block=] is formed by the [=padding edge=] of the ancestor,
-					unless otherwise specified
-					(for example, see [[CSS-GRID-1#abspos-items]]).
+					[=containing block=] 由祖先的 [=padding edge=] 来建立，
+					除非另有规定
+					（例如，见 [[CSS-GRID-1#abspos-items]]）。
 
-				<dt>If the ancestor is an [=inline box=],
+				<dt>如果祖先是一个 [=inline box=]，
 				<dd>
-					the [=containing block=] is formed by
-					the [=block-start=] and [=inline-start=] [=content edges=] of the first [=box fragment=] of the ancestor,
-					and the [=block-end=] and [=inline-end=] [=content edges=] of the last [=box fragment=] of the ancestor.
+					[=containing block=] 由 
+					[=block-start=] 祖先
+					第一个 [=box fragment=] 的 [=inline-start=] 和 [=block-start=] [=content edges=]
+					最后一个 [=box fragment=] 的 [=block-end=] 和 [=inline-end=] [=content edges=] 组成。
 
-					Note: If the ancestor breaks across a line,
-					the “start” position might more end-ward than the “end” position.
+					Note: 如果祖先换行，
+					“start” 位置或许更比 “end” 位置靠后。
 			</dl>
 
-			If no ancestor establishes one,
-			the [=absolute positioning containing block=] is
-			the [=initial containing block=].
+			如果祖先没有建立一个 [=absolute positioning containing block=]，
+			则它为 [=initial containing block=]。
 
-			Note: Properties that can cause a box to establish
-			an [=absolute positioning containing block=] include
-			'position', 'transform', 'will-change', 'contain'&hellip;
+			Note: 能够使[=absolute positioning containing block=] 被建立的属性包括了
+			'position'、'transform'、'will-change'、'contain' &hellip;
 
-		<dt id="fixed-cb">If the box has ''position: fixed'':
+		<dt id="fixed-cb">如果盒子具有 ''position: fixed''：
 		<dd>
-			The [=containing block=] is established
-			by the nearest ancestor box that establishes an <dfn export>fixed positioning containing block</dfn>,
-			with the bounds of the [=containing block=]
-			determined identically to the [=absolute positioning containing block=].
+			[=containing block=] 由最近的、
+			建立了一个 <dfn export>fixed positioning containing block</dfn> 的
+			祖先盒子来建立，
+			[=containing block=] 的确定方式与 [=absolute positioning containing block=] 一致。
 
-			Note: Properties that can cause a box to establish
-			a [=fixed positioning containing block=] include
-			'transform', 'will-change', 'contain'&hellip;
+			Note: 能够使 [=fixed positioning containing block=] 被建立的属性包括了
+			'position'、'transform'、'will-change'、'contain' &hellip;
 
-			If no ancestor establishes one,
-			the [=fixed positioning containing block=] is:
+			如果祖先没有建立一个 [=fixed positioning containing block=]，
+			则它为：
 
-			* in [=continuous media=],
-				the <a>viewport</a>;
-				as a result, [=fixed=] boxes do not move when the document is scrolled.
+			* 在 [=continuous media=]，
+				为 <a>viewport</a>；
+				最终结果是，[=fixed=] 的盒子在文档发生滚动的时候不会移动。
+			
+				Note: 这方面与 [[css-backgrounds-3#background-attachment|fixed background images]]
+				（''background-attachment: fixed''）相似。
 
-				Note: In this respect, they are similar to
-				[[css-backgrounds-3#background-attachment|fixed background images]]
-				(''background-attachment: fixed'').
+			* 在 [=paged media=]，
+				为每页的 [=page area=]；
+				[=fixed positioned=] [=boxes=] 在每一页上都被复制一遍。
+				（它们仅在对应页面盒子上固定，不受 [=viewport=] 中所看到的影响；
+				例如，在打印预览的情况下。）
 
-			* in [=paged media=],
-				the [=page area=] of each page;
-				[=fixed positioned=] [=boxes=] are thus replicated on every page.
-				(They are fixed with respect to the page box only,
-				and are not affected by being seen through a [=viewport=];
-				as in the case of print preview, for example.)
-
-			Note: As a result, parts of [=fixed-positioned boxes=]
-			that extend outside the [=initial containing block=]/[=page area=]
-			cannot be scrolled to
-			and will not print.
+			Note: 最终结果是，延伸到
+			[=initial containing block=] / [=page area=] 外部的部分
+			不能被滚动到，而且也将不会被打印。
 	</dl>
 
 <div class="example">
 
-	With no positioning, the containing blocks (C.B.) in the following document:
+	没有定位时，如下文档中：
 
 	<pre highlight=html>
 		&lt;!DOCTYPE html>
@@ -392,11 +375,11 @@ Containing Blocks of Positioned Boxes</h3>
 		&lt;/html>
 	</pre>
 
-	are established as follows:
+	如下包含块（C.B.）被建立：
 
 	<table class="cb-example-table">
-		<tr><th>For box generated by <th>C.B. is established by
-		<tr><td>html<td>initial C.B. (UA-dependent)
+		<tr><th>盒子由……生成 <th>C.B. 由……建立
+		<tr><td>html<td>初始 C.B. （取决于UA）
 		<tr><td>body<td>html
 		<tr><td>div1<td>body
 		<tr><td>p1<td>div1
@@ -405,57 +388,58 @@ Containing Blocks of Positioned Boxes</h3>
 		<tr><td>strong1<td>p2
 	</table>
 
-	If we position "div1":
+	如果我们定位"div1"：
 
 	<pre highlight=css>
 		#div1 { position: absolute; left: 50px; top: 50px }
 	</pre>
 
-	its containing block is no longer "body"; it becomes the <span>initial containing block</span>
-	(since there are no other positioned ancestor boxes).
+	它的包含块不再是"body"；
+	它的包含块变成了<span>initial containing block</span>
+	（因为没有其它被定位的祖先盒子了）。
 
-	If we position "em1" as well:
+	如果我们也定位"em1"：
 
 	<pre highlight=css>
 		#div1 { position: absolute; left: 50px; top: 50px }
 		#em1	{ position: absolute; left: 100px; top: 100px }
 	</pre>
 
-	the table of containing blocks becomes:
+	包含块表格将变为：
 
 	<table class="cb-example-table">
-		<tr><th>For box generated by <th>C.B. is established by
-		<tr><td>html<td>initial C.B. (UA-dependent)
+		<tr><th>盒子由……生成 <th>C.B. 由……建立
+		<tr><td>html<td>初始 C.B. （取决于UA）
 		<tr><td>body<td>html
-		<tr><td>div1<td>initial C.B.
+		<tr><td>div1<td>初始 C.B. 
 		<tr><td>p1<td>div1
 		<tr><td>p2<td>div1
 		<tr><td>em1<td>div1
 		<tr><td>strong1<td>em1
 	</table>
 
-	By positioning "em1", its containing block becomes the nearest positioned ancestor box
-	(i.e., that generated by "div1").
+	通过定位 "em1"，它的包含块变成了最近的被定位的祖先盒子
+	（也就是由"div1"生成的盒子）。
 </div>
 
 
 <h2 id="coords">
-Positioning Coordinates</h2>
+定位坐标</h2>
 
-	The precise location of a [=positioned box=] is controlled by
-	the <dfn>inset properties</dfn>:
-	the [=physical=] [=inset properties=] 'top', 'right', 'bottom', 'left';
-	the [=flow-relative=] [=inset properties=] 'inset-block-start', 'inset-inline-start', 'inset-block-end', and 'inset-inline-end';
-	and their [=shorthands=], 'inset-block', 'inset-inline', and 'inset'.
+	[=positioned box=] 的精确位置由
+	<dfn>inset properties</dfn> 控制：
+	[=physical=] [=inset properties=]：'top'、'right'、'bottom'、'left'；
+	[=flow-relative=] [=inset properties=]：'inset-block-start'、'inset-inline-start'、'inset-block-end' 和 'inset-inline-end'；
+	以及它们的 [=shorthands=]：'inset-block'、'inset-inline' 和 'inset'。
 
-	The interpretation of these [=inset properties=] varies by [=positioning scheme=]:
+	这些 [=inset properties=] 的解释因 [=positioning scheme=] 而异：
 
-	* for [=absolute positioning=], they represent
-		insets from the containing block.
-	* for [=relative positioning=], they represent
-		insets from the box’s original margin edge.
-	* for [=sticky positioning=], they represent
-		insets from the [=scrollport=] edge.
+	* 对于 [=absolute positioning=]，
+		这些属性表示来自包含块的inset。
+	* 对于 [=relative positioning=]，
+		这些属性表示来自盒子原始留白边缘的inset。
+	* 对于 [=sticky positioning=]，
+		这些属性表示来自[=scrollport=]边缘的inset。
 
 <h3 id="insets">
 Box Insets: the 'top', 'right', 'bottom', 'left', 'inset-block-start', 'inset-inline-start', 'inset-block-end', and 'inset-inline-end' properties </h3>
