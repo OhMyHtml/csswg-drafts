@@ -550,41 +550,39 @@ Box Insets Shorthands: the 'inset-block', 'inset-inline', and 'inset' properties
 
 
 <h3 id="relpos-insets" oldids="relpos">
-Relative Positioning</h3>
+相对定位</h3>
 
-	For a [=relatively positioned=] box,
-	the [=inset properties=] move the box inward
-	from the respective edge,
-	without changing its size.
-	'left' moves the box to the right, 'right' moves it to the left, etc.
-	Since boxes are not split or stretched as a result of [=relative positioning=]
-	opposing [=used values=] in a given axis must be negations of each other:
+	对于 [=relatively positioned=] 盒子，
+	[=inset properties=] 沿着相应边缘向内移动，
+	而不会改变盒子的尺寸。
+	'left' 将盒子右移，'right' 将盒子左移，诸如此类。
+	由于 [=relative positioning=] 不会拆分或拉伸盒子，
+	因此给定轴上相反的 [=used values=] 必须相互否定：
 
 	<ul>
 		<li>
-			If opposing [=inset properties=] in an axis both compute to ''top/auto''
-			(their [=initial values=]),
-			their [=used values=] are zero
-			(i.e., the boxes stay in their original position in that axis).
+			如果在一个轴上，两个相反的 [=inset properties=] 都被计算为 ''top/auto''（初始值），
+			它们 [=used values=] 将是 0
+			（即盒子在该轴上保持原位）
 
 		<li>
-			If only one is ''top/auto'',
-			its [=used value=] becomes the negation of the other,
-			and the box is shifted by the specified amount.
+			如果其中一个是 ''top/auto''，
+			它 [=used value=] 将会是另一个的否定值，
+			盒子将会按照给定数量进行移动。
 
 		<li>
-			If neither is ''top/auto'',
-			the position is over-constrained;
-			(with respect to the [=writing mode=] of its [=containing block=])
-			the [=computed value|computed=] [=CSS/end=] side value is ignored,
-			and its [=used value=] becomes the negation of the [=CSS/start=] side.
+			如果没有任何一个是 ''top/auto''，
+			那么位置就过度约束了；
+			（相对于它 [=containing block=] 的 [=writing mode=]）
+			[=computed value|computed=] [=CSS/end=] 端值将被忽略，
+			它 [=used value=] 将会是 [=CSS/start=] 端的否定值。
 	</ul>
 
 
 	<div class="example">
 
-		The following three rules are equivalent,
-		and shift the box ''1em'' to the left:
+		下列三个规则是相等的，
+		都会将盒子向左移动 ''1em''：
 
 		<pre highlight=css>
 		div.a8 { position: relative; direction: ltr; left: -1em; right: auto }
@@ -682,17 +680,16 @@ Scroll Position of Sticky-Positioned Boxes</h4>
 
 
 <h3 id="abspos-insets" oldids="abs-pos,fixed-pos">
-Absolute (and Fixed) Positioning</h3>
+绝对（以及固定）定位</h3>
 
-	For an [=absolutely positioned=] box,
-	the [=inset properties=] effectively reduce the [=containing block=]
-	into which it is sized and positioned
-	by the specified amounts.
+	对于一个 [=absolutely positioned=] 盒子，
+	[=inset properties=] 有效地减少了 [=containing block=]，
+	它被调整大小和定位到指定数量。
 
-	If only one [=inset property=] in a given axis is ''top/auto'',
-	it is set to zero.
-	If both [=inset properties=] in a given axis are ''top/auto'', then,
-	depending on the box’s [=self-alignment property=] in the relevant axis:
+	如果在给定轴上仅有一个 [=inset property=] 值为 ''top/auto''，
+	那么它的值为0。
+	如果在给定轴上，两个 [=inset properties=] 都是 ''top/auto''，那么，
+	将取决于在对应轴上盒子的 [=self-alignment property=]：
 
 	<dl class=switch>
 		<dt>for ''align-self/self-start'' alignment or its equivalent
@@ -923,10 +920,11 @@ Auto Margins of Absolutely-Positioned Boxes</h3>
 	and the [=inline-end|end=] margin receives the <var>remaining space</var>.
 
 <h2 id="abspos-old">
-Old Absolute Positioning Layout Model</h2>
+过时的绝对定位布局模型</h2>
 
-	ISSUE: This section is being replaced with the new [[#abspos-layout]] section.
-	It is preserved here for comparison:
+	ISSUE: 本章节已被新的 [[#abspos-layout]] 所取代。
+	保留于此用以对比：
+	
 	both models should yield the same result
 	in [=horizontal writing modes=] when the box’s [=self-alignment=] is ''align-self/normal''.
 
